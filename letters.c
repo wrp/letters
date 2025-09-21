@@ -15,6 +15,7 @@
 #include <string.h>
 #include <time.h>
 #include <math.h>
+#include <unistd.h>
 
 #include "config.h"
 #include "kinput.h"
