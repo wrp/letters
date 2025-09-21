@@ -6,15 +6,15 @@
  */
 
 #ifdef __TURBOC__
-# define CTRL(c)		(c & 0x3f)
-# define putchar		putch
-# define random			rand
+# define CTRL(c)  (c & 0x3f)
+# define putchar  putch
+# define random   rand
 #else
-# define CTRL(c)		(c & 037)
+# define CTRL(c)  (c & 037)
 #endif
 
-#define TRUE	1
-#define FALSE	0
+#define TRUE 1
+#define FALSE 0
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -47,12 +47,12 @@
 
 struct s_word {
 	struct s_word *nextword;
-	int	posx;
-	int	posy;
-	int	length;
-	int	drop;
-	int	matches;
-	char	word[1];	/* extensible */
+	int posx;
+	int posy;
+	int length;
+	int drop;
+	int matches;
+	char word[1]; /* extensible */
 };
 
 int  move();
@@ -85,10 +85,10 @@ int levels_played = -1;
 unsigned int word_count = 0;
 static int lives = 2;
 static long delay;
-struct s_word	*words, *lastword, *prev_word;
-int	bonus = FALSE;	/* to determine if we're in a bonus round */
-int	wpm = 0;
-int	letters = 0;
+struct s_word *words, *lastword, *prev_word;
+int bonus = FALSE; /* to determine if we're in a bonus round */
+int wpm = 0;
+int letters = 0;
 char *dictionary = DICTIONARY;
 char *choice = NULL;
 int   choicelen = 0;
@@ -105,8 +105,8 @@ int
 main(int argc, char **argv)
 {
 	char *progname;
-	int	foo;
-	int	newdict = 0;
+	int foo;
+	int newdict = 0;
 
 	/*
 	 * make sure the person is on a tty
@@ -134,7 +134,7 @@ main(int argc, char **argv)
 	/*
 	 * initialize display stuff
 	 */
-	init_term();		/* termcap stuff */
+	init_term();  /* termcap stuff */
 
 	/*
 	 * get name of program
@@ -172,7 +172,7 @@ main(int argc, char **argv)
 				case 'l':
 					sscanf(&argv[0][2], "%d", &level);
 					if(DELAY(level) <= PAUSE) {
-						fprintf(stderr,	"You may not start at level %d\n", level);
+						fprintf(stderr, "You may not start at level %d\n", level);
 						exit(0);
 					}
 					break;
@@ -202,7 +202,7 @@ main(int argc, char **argv)
 #ifdef AMIGA
 	fixedwin(argc,progname);
 #endif
-	setterm(NEW);		/* signal stuff, keyboard stuff */
+	setterm(NEW);  /* signal stuff, keyboard stuff */
 #ifndef __TURBOC__
 	srandom(getpid());
 #else
@@ -261,7 +261,7 @@ main(int argc, char **argv)
 int move()
 {
 	struct s_word  *wordp, *next;
-	int		died;
+	int  died;
 
 	died = 0;
 	for(wordp = words; wordp != NULL; wordp = next) {
@@ -286,7 +286,7 @@ int move()
 void erase(wordp)
 struct s_word *wordp;
 {
-	int	i;
+	int i;
 
 	goto_xy(wordp->posx, wordp->posy);
 	for(i = 0; i < wordp->length; i++)
@@ -299,7 +299,7 @@ struct s_word *wordp;
 void putword(wordp)
 struct s_word *wordp;
 {
-	int	i;
+	int i;
 
 	goto_xy(wordp->posx, wordp->posy);
 
@@ -324,13 +324,13 @@ struct s_word *wordp;
  */
 int game()
 {
-	int		key;
-	long		i; /* this gets compared to a long so if nothing breaks
+	int  key;
+	long  i; /* this gets compared to a long so if nothing breaks
 				it should stay this way */
-	int		died;
-	struct s_word	*curr_word, *temp_word;
+	int  died;
+	struct s_word *curr_word, *temp_word;
 #ifdef SYSV2
-	long		before;
+	long  before;
 #endif
 
 	/*
@@ -427,7 +427,7 @@ int game()
 #endif
 		}
 
-		died = move();		/* NB: move may invalidate curr_word */
+		died = move();  /* NB: move may invalidate curr_word */
 		if (died > 0)
 		{
 			/*
@@ -509,8 +509,8 @@ void redraw() {
  * display the status line in inverse video
  */
 void status() {
-	static char	line[SCREENWIDTH];
-	int		i;
+	static char line[SCREENWIDTH];
+	int  i;
 
 	sprintf(line, "Score: %-7uLevel: %-3uWords: %-6uLives: %-3dWPM: %-4d",
 		score, level, word_count, lives, wpm);
@@ -536,9 +536,9 @@ void status() {
  */
 void new_level()
 {
-	struct s_word	*next, *wordp;
-	static time_t	last_time = 0L;
-	time_t		curr_time;
+	struct s_word *next, *wordp;
+	static time_t last_time = 0L;
+	time_t  curr_time;
 
 	/*
 	 * update the words per minute
@@ -612,9 +612,9 @@ void new_level()
 struct s_word *newword(wordp)
 struct s_word *wordp;
 {
-	struct s_word	*nword;
-	char		*word, *getword(), *bonusword();
-	int		length;
+	struct s_word *nword;
+	char  *word, *getword(), *bonusword();
+	int  length;
 
 	if(bonus == TRUE)
 		word = bonusword();
@@ -653,7 +653,7 @@ struct s_word *searchstr(key, str, len)
 char *str;
 int  len, key;
 {
-	struct s_word	*wordp, *best;
+	struct s_word *wordp, *best;
 
 	for(best = NULL, prev_word = NULL, wordp = words;
 	    wordp != NULL;
