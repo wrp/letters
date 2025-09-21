@@ -5,13 +5,7 @@
  * copyright 2018 David C Sterratt (david.c.sterratt@ed.ac.uk)
  */
 
-#ifdef __TURBOC__
-# define CTRL(c)  (c & 0x3f)
-# define putchar  putch
-# define random   rand
-#else
 # define CTRL(c)  (c & 037)
-#endif
 
 #define TRUE 1
 #define FALSE 0
@@ -20,30 +14,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-#ifdef AMIGA
-# include <math.h>
-#endif
-#ifdef __TURBOC__
-# include <math.h>
-# include <stdlib.h>
-# include <time.h>
-#endif
-
-#ifdef SYSV2
-# include <sys/types.h>
-# include <sys/times.h>
-#endif
+#include <math.h>
 
 #include "config.h"
 #include "kinput.h"
 #include "terms.h"
 #include "term.h"
 #include "turboc.h"
-
-#if defined(SYSV)
-# define srandom srand48
-# define random lrand48
-#endif
 
 struct s_word {
 	struct s_word *nextword;
