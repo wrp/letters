@@ -42,14 +42,10 @@ char     enter_standout_mode[64], exit_standout_mode[64];
 char     enter_underline_mode[64], exit_underline_mode[64];
 
 
-bell() {
-#ifdef __TURBOC__
-	sound(440);
-	delay(500);
-	nosound();
-#else
+void
+bell(void)
+{
 	putp(bell_str);
-#endif
 }
 
 quiet() {

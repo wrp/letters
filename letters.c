@@ -43,7 +43,7 @@ void banner();
 struct s_word *newword();
 struct s_word *searchstr(), *searchchar();
 void kill_word();
-int (*ding)(); /* audio bell sound */
+int (*ding)(void); /* audio bell sound */
 
 void free();
 

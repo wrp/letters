@@ -16,7 +16,7 @@ extern char     enter_underline_mode[], exit_underline_mode[];
 
 #define outc putchar
 
-extern bell();
+extern void bell(void);
 extern quiet();
 
 extern int Lines, Columns; /* screen size */
