@@ -707,11 +707,7 @@ char *text;
 	clrdisp();
 	goto_xy((SCREENWIDTH - strlen(text))/2, 10);
 	sleep(3);
-#ifdef __TURBOC__
-	cputs(text);
-#else
 	puts(text);
-#endif
 	goto_xy(SCREENWIDTH,SCREENLENGTH);
 	fflush(stdout);
 	sleep(2);

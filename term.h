@@ -8,7 +8,7 @@
 #ifdef __TURBOC__
 # include <conio.h>
 
-# define putp(str)	cputs(str)
+# define putp(str)      puts(str)
 # define HAS_CAP(str)	(*str)
 # define clrdisp()	clrscr()
 # define home()		putp(cursor_home)

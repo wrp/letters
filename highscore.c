@@ -4,11 +4,6 @@
  * copyright 1991 by Larry Moss (lm03_cif@uhura.cc.rochester.edu)
  */
 
-#ifdef __TURBOC__
-# define AMIGA __TURBOC__
-# define printf cprintf
-# define fputs(A,B) cputs(A)
-#endif
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -149,7 +144,7 @@ void update_scores() {
 				strncpy(high_scores[i].name, buffer, 8);
 				raw(stdin);
 #else  /* not __TURBOC__ */
-				cputs("Enter your name (8 char. max, no spaces): ");
+				puts("Enter your name (8 char. max, no spaces): ");
 				buffer[0] = 8;
 				cgets(buffer);
 				if((p=strchr(buffer+2,' ')))

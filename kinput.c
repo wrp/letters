@@ -198,7 +198,7 @@ int	sig;
 	setterm(ORIG);
 #ifdef __TURBOC__
 	clrscr();
-	cputs("are you sure you want to quit? ");
+	puts("are you sure you want to quit? ");
 	if((c = getch()) == 'y' || c == 'Y') {
 		textattr_clr;
 		printf("\n\nfinal: score = %u\twords = %u\t level = %d\n",
