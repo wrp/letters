@@ -190,7 +190,7 @@ void show_scores() {
 	underline(1);
 	printf("  name      level words score");
 	underline(0);
-	
+
 	for(i = 0; i < 10; i++) {
 		goto_xy(18, 8 + i);
 		printf("%3d %-10s%5d%6d%6d", i+1, high_scores[i].name,
