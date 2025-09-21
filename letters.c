@@ -54,7 +54,7 @@ struct s_word {
 	int	matches;
 	char	word[1];	/* extensible */
 };
-	
+
 int  move();
 void putword();
 int  game();
@@ -126,7 +126,7 @@ char *argv[];
  		fputs("This game can only be played on a terminal!\n", stderr);
  		exit(0);
  	}
- 	
+
 	/*
 	 * default bell sound
 	 */
@@ -196,7 +196,7 @@ char *argv[];
 			usage(progname);
 		}
 	}
-	
+
 	/*
 	 * get stuff initialized
 	 */
@@ -213,7 +213,7 @@ char *argv[];
 	new_level();
 	status();
 	words = NULL;
-	
+
 	for(;;) {
 		/*
 		 * allocate memory for the first word and then find a word
@@ -225,7 +225,7 @@ char *argv[];
 			prev_word = NULL;
 			putword(lastword);
 		}
-		
+
 		if(game() == 0) {
 			/*
 			 * all finished.  print score and clean up.
@@ -263,7 +263,7 @@ int move()
 {
 	struct s_word  *wordp, *next;
 	int		died;
-	
+
 	died = 0;
 	for(wordp = words; wordp != NULL; wordp = next) {
 		next = wordp->nextword;
@@ -343,11 +343,11 @@ int game()
 			break;
 	if (!curr_word)
 		curr_word = words;
-#ifdef SYSV2	
+#ifdef SYSV2
   	while(curr_word->matches < curr_word->length) {
-		for(i = 0; i < delay 
+		for(i = 0; i < delay
 			   && curr_word->matches < curr_word->length; ) {
-			before = timenow();	
+			before = timenow();
 /*			printf("i = %ld   delay = %ld   before = %ld\r",
 			       i, delay, before); */
 #else
@@ -441,7 +441,7 @@ int game()
 				lives -= died;
 			else if(died > 0)
 				new_level();
-				
+
 			if (lives < 0)
 				lives = 0;
 			status();
@@ -492,7 +492,7 @@ int game()
 			score += 10 * level;
 		new_level();
 	}
-	
+
 	return 1;
 }
 
@@ -579,7 +579,7 @@ void new_level()
 	 */
 	if(level <= levels_played)
 		level++;
-		
+
 	delay = handicap * DELAY(level);
 
 	/*
@@ -603,7 +603,7 @@ void new_level()
 		banner("Prepare for bonus words");
 		lives++;
 	}
-	
+
 	status();
 }
 
@@ -621,7 +621,7 @@ struct s_word *wordp;
 		word = bonusword();
 	else
 		word = getword();
-		
+
 	length = strlen(word);
 
 	nword = (struct s_word *)malloc(sizeof(struct s_word) + length);
@@ -642,7 +642,7 @@ struct s_word *wordp;
 
 	if(wordp != NULL)
 		wordp->nextword = nword;
-		
+
 	return nword;
 }
 
@@ -678,7 +678,7 @@ struct s_word *searchchar(key)
 char key;
 {
 	struct s_word	*wordp, *best;
-	
+
 	for(best = NULL, prev_word = NULL, wordp = words; wordp != NULL;
 	    prev_word = wordp,  wordp = wordp->nextword) {
 		if(wordp->word[0] == key
@@ -702,7 +702,7 @@ struct s_word *wordp;
 			prev = temp;
 			temp = temp->nextword;
 		}
-		    
+
 	if(prev != NULL) {
 		prev->nextword = wordp->nextword;
 	} else
@@ -753,6 +753,6 @@ long timenow()
 	struct tms tm;
 	long foo;
 
-	return times(&tm) * 16666; 
+	return times(&tm) * 16666;
 }
 #endif
