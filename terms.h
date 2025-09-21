@@ -14,7 +14,8 @@ extern char     cursor_address[];
 extern char     enter_standout_mode[], exit_standout_mode[];
 extern char     enter_underline_mode[], exit_underline_mode[];
 
-extern outc();
+#define outc putchar
+
 extern bell();
 extern quiet();
 

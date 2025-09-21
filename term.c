@@ -41,10 +41,6 @@ char     cursor_address[128];
 char     enter_standout_mode[64], exit_standout_mode[64];
 char     enter_underline_mode[64], exit_underline_mode[64];
 
-outc(c)
-{
-	putchar(c);
-}
 
 bell() {
 #ifdef __TURBOC__
