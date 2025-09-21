@@ -121,22 +121,8 @@ main(int argc, char **argv)
 
 	check_tty();
 	ding = quiet;
-
-	/*
-	 * initialize display stuff
-	 */
-	init_term();  /* termcap stuff */
-
-	/*
-	 * get name of program
-	 */
-#ifdef AMIGA
-	if(argc==0) {  /* called from Workbench */
-		progname="letters";
-		argv[1]=NULL;
-	} else
-#endif
-		progname = argv[0];
+	init_term();
+	progname = argv[0];
 
 	/*
 	 * check for options
