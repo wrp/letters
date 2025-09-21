@@ -101,6 +101,17 @@ char *progname;
 	exit(0);
 }
 
+/* Ensure the process is running on a tty. */
+static void
+check_tty(void)
+{
+	if (! isatty(STDIN_FILENO) || ! isatty(STDOUT_FILENO)) {
+		fputs("This game can only be played on a terminal!\n", stderr);
+		exit(EXIT_FAILURE);
+	}
+}
+
+
 int
 main(int argc, char **argv)
 {
@@ -108,24 +119,7 @@ main(int argc, char **argv)
 	int foo;
 	int newdict = 0;
 
-	/*
-	 * make sure the person is on a tty
-	 */
-	if(!isatty(0)) {
-		fputs("where are you?\n", stderr);
-		exit(1);
-	}
-
-	/*
-	 * this should also really check to make sure it's being played on
-	 * the terminal of the person running it.  People around here have
-	 * the habit of redirecting random programs to other screens.
-	 */
- 	if(!isatty(1)) {
- 		fputs("This game can only be played on a terminal!\n", stderr);
- 		exit(0);
- 	}
-
+	check_tty();
 	/*
 	 * default bell sound
 	 */
