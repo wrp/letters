@@ -101,9 +101,8 @@ char *progname;
 	exit(0);
 }
 
-void main(argc, argv)
-int argc;
-char *argv[];
+int
+main(int argc, char **argv)
 {
 	char *progname;
 	int	foo;
