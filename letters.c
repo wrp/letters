@@ -66,7 +66,7 @@ void banner();
 struct s_word *newword();
 struct s_word *searchstr(), *searchchar();
 void kill_word();
-int (*ding)();
+int (*ding)(); /* audio bell sound */
 
 void free();
 
@@ -120,9 +120,6 @@ main(int argc, char **argv)
 	int newdict = 0;
 
 	check_tty();
-	/*
-	 * default bell sound
-	 */
 	ding = quiet;
 
 	/*
