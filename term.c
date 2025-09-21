@@ -48,8 +48,7 @@ bell(void)
 	putp(bell_str);
 }
 
-quiet() {
-}
+void quiet(void) { }
 
 #ifndef __TURBOC__
 int Lines, Columns;	/* screen size */
