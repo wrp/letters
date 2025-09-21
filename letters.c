@@ -500,11 +500,7 @@ void status() {
 
 	highlight(1);
 	goto_xy(0, SCREENLENGTH);
-#ifdef __TURBOC__
-	cputs(line);
-#else
 	fputs(line, stdout);
-#endif
 	highlight(0);
 }
 
