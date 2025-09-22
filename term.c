@@ -35,7 +35,6 @@ char	PC, *BC, *UP;
 char		*term_name;
 char	XBC[64], XUP[64];
 char     cursor_home[64];
-char     enter_underline_mode[64], exit_underline_mode[64];
 
 
 
@@ -72,22 +71,14 @@ char *cap, *buf;
 
 #endif /* __TURBOC__ */
 
-
-underline(on)
+int
+underline(int on)
 {
-#ifdef __TURBOC__
-	return 0;
-#else
-	if (garbage_size)
-		return 0;
-	if (!HAS_CAP(enter_underline_mode))
-		return 0;
-	putp(on ? enter_underline_mode : exit_underline_mode);
-	return 1;
-#endif /* __TURBOC__ */
+	return on ? attron(A_UNDERLINE) : attroff(A_UNDERLINE);
 }
 
-highlight(on)
+void
+highlight(int on)
 {
 #ifdef __TURBOC__
 
