@@ -12,10 +12,6 @@
 #define HIGHSCORES "letters.high"
 #endif
 
-#ifdef SYSV2
-# define SYSV
-#endif
-
 /*
  * probably best to leave these so it's the same everywhere.  Otherwise,
  * anyone with an xterminal is likely to get higher scores.
@@ -61,11 +57,7 @@
  * length of pause before reading keyboard again (in usecs).  There has to
  * be some pause.
  */
-#ifdef SYSV2
-# define PAUSE		100000
-#else
 # define PAUSE		10000
-#endif
 
 /*
  * This is how likely it is that another word will appear on the screen

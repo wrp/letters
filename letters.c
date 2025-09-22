@@ -52,10 +52,6 @@ void (*ding)(void); /* audio bell sound */
 
 void free();
 
-#ifdef SYSV2
-long timenow();
-#endif
-
 /*
  * There are too many globals for my taste, but I took the easy way out in
  * a few places
@@ -277,9 +273,6 @@ int game()
 				it should stay this way */
 	int  died;
 	struct s_word *curr_word, *temp_word;
-#ifdef SYSV2
-	long  before;
-#endif
 
 	/*
 	 * look to see if we already have a partial match, if not
@@ -290,17 +283,8 @@ int game()
 			break;
 	if (!curr_word)
 		curr_word = words;
-#ifdef SYSV2
-  	while(curr_word->matches < curr_word->length) {
-		for(i = 0; i < delay
-			   && curr_word->matches < curr_word->length; ) {
-			before = timenow();
-/*			printf("i = %ld   delay = %ld   before = %ld\r",
-			       i, delay, before); */
-#else
 	while(curr_word->matches < curr_word->length) {
 		for(i = 0; i < delay; i+= PAUSE) {
-#endif
 			while((curr_word->matches != curr_word->length) &&
 			      ((key = key_pressed()) != -1)) {
 				if(key == CTRL('L')) {
@@ -368,11 +352,7 @@ int game()
 
 				fflush(stdout);
 			}
-#ifdef SYSV2
-			i+= timenow() - before;
-#else
 			usleep(PAUSE);
-#endif
 		}
 
 		died = move_words();  /* NB: may invalidate curr_word */
@@ -685,13 +665,3 @@ char *text;
 	 */
 	while(key_pressed() != -1);
 }
-
-#ifdef SYSV2
-long timenow()
-{
-	struct tms tm;
-	long foo;
-
-	return times(&tm) * 16666;
-}
-#endif

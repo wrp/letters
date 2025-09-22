@@ -94,11 +94,7 @@ int setting;
 		termrec.c_iflag &= ~(IGNPAR|PARMRK|INLCR|IGNCR|ICRNL);
 		termrec.c_iflag |= BRKINT;
 		termrec.c_lflag &= ~(ICANON|ECHO);
-#ifdef SYSV2
-		termrec.c_cc[VTIME] = PAUSE / 100000;
-#else
 		termrec.c_cc[VTIME] = 0;
-#endif
 		termrec.c_cc[VMIN] = 0;
 		ioctl(0, TCSETAF, &termrec);
 #elif !defined(__TURBOC__)
