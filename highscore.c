@@ -5,6 +5,7 @@
  */
 
 
+#include <curses.h>
 #include <stdlib.h>
 #include <stdio.h>
 # include <string.h>
@@ -42,7 +43,7 @@ void read_scores() {
 		textattr_clr;
 		fprintf(stderr, "Cannot stat %s: ", highscores);
 		perror("");
-		setterm(ORIG);
+		endwin();
 		exit(1);
 	}
 
@@ -52,7 +53,7 @@ void read_scores() {
 		textattr_clr;
 		fprintf(stderr, "Cannot open %s: ", highscores);
 		perror("");
-		setterm(ORIG);
+		endwin();
 		exit(1);
 	}
 
@@ -77,7 +78,7 @@ int write_scores() {
 		textattr_clr;
 		fprintf(stderr, "Cannot stat %s: ", highscores);
 		perror("");
-		setterm(ORIG);
+		endwin();
 		exit(1);
 	}
 
@@ -88,7 +89,7 @@ int write_scores() {
 		textattr_clr;
 		fprintf(stderr, "Cannot write to %s: ", highscores);
 		perror("");
-		setterm(ORIG);
+		endwin();
 		exit(1);
 	}
 

@@ -193,7 +193,6 @@ main(int argc, char **argv)
 	 * flush keyboard and quit.
 	 */
 	while(key_pressed() != -1);
-	setterm(ORIG);
 	textattr_clr;
 
 	endwin();
@@ -552,7 +551,7 @@ struct s_word *wordp;
 	nword = (struct s_word *)malloc(sizeof(struct s_word) + length);
 	if(nword == (struct s_word *)0) {
 		perror("\nmalloc");
-		setterm(ORIG);
+		endwin();
 		textattr_clr;
 		exit(1);
 	}

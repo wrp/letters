@@ -46,78 +46,6 @@ key_pressed(void)
 
 
 /*
- * Set the terminal to cbreak mode, turn off echo and prevent special
- * characters from affecting the input.  We will handle EOF and other fun
- * stuff our own way.  Backup copies of the current setup will be kept
- * to insure the terminal gets returned to its initial state.
- */
-void setterm(setting)
-int setting;
-{
-#ifndef __TURBOC__
-# ifdef SYSV
-	struct termio	termrec;
-	static struct termio	old_termrec;
-# else  /* SYSV */
-	struct sgttyb	termrec;
-	struct tchars	trec;
-	static struct tchars	old_trec;
-	static struct sgttyb	old_termrec;
-# endif /* SYSV */
-#endif /* __TURBOC__ */
-	if(setting == NEW) {
-		signal(SIGINT, intrrpt);
-#ifndef __TURBOC__
-		signal(SIGQUIT, die);
-#endif
-		signal(SIGTERM, die);
-#ifndef NOJOB
-		signal(SIGTSTP, pause);
-		signal(SIGCONT, cont);
-#endif /* NOJOB */
-#ifdef SYSV
-		ioctl(0, TCGETA, &termrec);
-		old_termrec = termrec;
-		termrec.c_iflag &= ~(IGNPAR|PARMRK|INLCR|IGNCR|ICRNL);
-		termrec.c_iflag |= BRKINT;
-		termrec.c_lflag &= ~(ICANON|ECHO);
-		termrec.c_cc[VTIME] = 0;
-		termrec.c_cc[VMIN] = 0;
-		ioctl(0, TCSETAF, &termrec);
-#elif !defined(__TURBOC__)
-		ioctl(0, TIOCGETP, &termrec);
-		old_termrec = termrec;
-		termrec.sg_flags |= CBREAK;
-		termrec.sg_flags &= ~ECHO;
-		ioctl(0, TIOCSETP, &termrec);
-
-		ioctl(0, TIOCGETC, &trec);
-		old_trec = trec;
-		trec.t_eofc = (char) -1;
-		trec.t_quitc = (char) -1;
-		ioctl(0, TIOCSETC, &trec);
-#endif /* SYSV */
-	} else {
-		signal(SIGINT, SIG_DFL);
-#ifndef __TURBOC__
-		signal(SIGQUIT, SIG_DFL);
-#endif
-		signal(SIGTERM, SIG_DFL);
-#ifndef NOJOB
-		signal(SIGTSTP, SIG_DFL);
-#endif  /* NOJOB */
-
-#ifdef SYSV
-		ioctl(0, TCSETAF, &old_termrec);
-#elif !defined(__TURBOC__)
-		ioctl(0, TIOCSETP, &old_termrec);
-		ioctl(0, TIOCSETC, &old_trec);
-# endif /* SYSV */
-	}
-}
-
-
-/*
  * Interrupt handlers
  */
 
@@ -129,7 +57,7 @@ int	sig;
 	signal(sig, intrrpt);
 #endif /* SYSV */
 	goto_xy(0, SCREENLENGTH + 1);
-	setterm(ORIG);
+	endwin();
 	putchar('\n');
 	kill(getpid(), SIGSTOP);
 }
@@ -140,7 +68,7 @@ int	sig;
 #ifdef SYSV
 	signal(sig, intrrpt);
 #endif /* SYSV */
-	setterm(NEW);
+	clear();
 	redraw();
 }
 
@@ -151,7 +79,6 @@ int	sig;
 {
 	char	c;
 
-	setterm(ORIG);
 #ifdef __TURBOC__
 	clrscr();
 	puts("are you sure you want to quit? ");
@@ -159,6 +86,7 @@ int	sig;
 		textattr_clr;
 		printf("\n\nfinal: score = %u\twords = %u\t level = %d\n",
 		       score, word_count, level);
+		endwin();
 		exit(1);
 #else
 	printf("\n\rare you sure you want to quit? ");
@@ -167,13 +95,14 @@ int	sig;
 		printf("\n\nfinal: score = %u\twords = %u\t level = %d\n",
 		       score, word_count, level);
 		highlight(0);
+		endwin();
 		exit(1);
 #endif
 	} else {
 #ifdef SYSV
 		signal(sig, intrrpt);
 #endif /* SYSV */
-		setterm(NEW);
+		erase();
 		redraw();
 	}
 }
@@ -183,7 +112,7 @@ int	sig;
 {
 	textattr_clr;
 #ifndef __TURBOC__
-	setterm(ORIG);
+	endwin();
 	erase();
 	highlight(0);
 	exit(1);

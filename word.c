@@ -61,7 +61,7 @@ char *getword()
 		 */
 		if((fp = fopen(dictionary, "r")) == NULL) {
 			fprintf(stderr, "can't open file: %s.\n", dictionary);
-			setterm(ORIG);
+			endwin();
 			textattr_clr;
 			exit(1);
 		}
@@ -72,7 +72,7 @@ char *getword()
 		 */
 		if(stat(dictionary, &s_buf) == -1) {
 			perror("stat");
-			setterm(ORIG);
+			endwin();
 			textattr_clr;
 			exit(1);
 		}
