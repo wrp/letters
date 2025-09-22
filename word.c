@@ -25,7 +25,8 @@
 extern char *dictionary, *choice;
 extern int choicelen;
 
-char *getword()
+char *
+getword(void)
 {
 	static char	buf[512];
 	static FILE	*fp = NULL;
@@ -90,14 +91,13 @@ char *getword()
 	/*
 	 * read until the end of a line, then read the next word.
 	 */
-	fscanf(fp, "%*s%s", buf);
+	if( fscanf(fp, "%*s%s", buf) != 1 ){
 
 	/*
 	 * Since we're reading two words at a time it's possible to go past
 	 * the end of the file.  If that happens, use the first word in the
 	 * dictionary.
 	 */
-	if(buf == NULL) {
 		fseek(fp, 0L, 0);
 		fscanf(fp, "%s", buf);
 	}
