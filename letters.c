@@ -39,7 +39,6 @@ int key_pressed(void);
 void update_scores(void);
 void read_scores(void);
 void show_scores(void);
-void quiet(void) { }
 void putword();
 int  game();
 void redraw();
@@ -50,7 +49,7 @@ void banner();
 struct s_word *newword();
 struct s_word *searchstr(), *searchchar();
 void kill_word();
-void (*ding)(void); /* audio bell sound */
+int (*ding)(void); /* beep or flash */
 
 void free();
 
@@ -103,7 +102,7 @@ main(int argc, char **argv)
 	int newdict = 0;
 
 	check_tty();
-	ding = quiet;
+	ding = flash;
 	progname = argv[0];
 
 	/*
@@ -113,10 +112,10 @@ main(int argc, char **argv)
 		if((*argv)[0] == '-') {
 			switch((*argv)[1]) {
 				case 'b':
-					ding = bell;
+					ding = beep;
 					break;
 				case 'q':
-					ding = quiet;
+					ding = flash;
 					break;
 				case 'H':
 					sscanf(&argv[0][2], "%d", &handicap);
