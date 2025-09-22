@@ -48,8 +48,6 @@ bell(void)
 	putp(bell_str);
 }
 
-void quiet(void) { }
-
 #ifndef __TURBOC__
 int Lines, Columns;	/* screen size */
 int garbage_size;	/* number of garbage chars left from so */

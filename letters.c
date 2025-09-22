@@ -39,6 +39,7 @@ int key_pressed(void);
 void update_scores(void);
 void read_scores(void);
 void show_scores(void);
+void quiet(void) { }
 void putword();
 int  game();
 void redraw();
