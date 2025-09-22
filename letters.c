@@ -16,7 +16,6 @@
 #include <time.h>
 #include <math.h>
 #include <term.h>
-#include <unistd.h>
 
 #include "config.h"
 #include "kinput.h"
