@@ -38,7 +38,7 @@ static int move_words(void);
 void putword();
 int  game();
 void redraw();
-void erase();
+void erase_word(struct s_word *wordp);
 void status();
 void new_level();
 void banner();
@@ -212,7 +212,7 @@ move_words(void)
 	died = 0;
 	for(wordp = words; wordp != NULL; wordp = next) {
 		next = wordp->nextword;
-		erase(wordp);
+		erase_word(wordp);
 		wordp->posy += wordp->drop;
 
 		if(wordp->posy >= SCREENLENGTH) {
@@ -229,8 +229,7 @@ move_words(void)
 /*
  * erase a word on the screen by printing the correct number of blanks
  */
-void erase(wordp)
-struct s_word *wordp;
+void erase_word(struct s_word *wordp)
 {
 	int i;
 
@@ -344,14 +343,14 @@ int game()
 				} else if(temp_word = searchstr(key,
 							curr_word->word,
 							curr_word->matches)) {
-					erase(temp_word);
+					erase_word(temp_word);
 					temp_word->matches = curr_word->matches;
 					curr_word->matches = 0;
 					putword(curr_word);
 					curr_word = temp_word;
 					curr_word->matches++;
 				} else if(temp_word = searchchar(key)) {
-					erase(temp_word);
+					erase_word(temp_word);
 					curr_word->matches = 0;
 					putword(curr_word);
 					curr_word = temp_word;
@@ -360,7 +359,7 @@ int game()
 					ding();
 					curr_word->matches = 0;
 				}
-				erase(curr_word);
+				erase_word(curr_word);
 				putword(curr_word);
 				goto_xy(SCREENWIDTH,SCREENLENGTH);
 
@@ -412,7 +411,7 @@ int game()
 	 */
 	if(curr_word->length == curr_word->matches) {
 		ding(); ding();
-		erase(curr_word);
+		erase_word(curr_word);
 	}
 
 	/*
