@@ -100,7 +100,6 @@ main(int argc, char **argv)
 
 	check_tty();
 	ding = quiet;
-	initscr();
 	progname = argv[0];
 
 	/*
@@ -152,19 +151,9 @@ main(int argc, char **argv)
 		}
 	}
 
-	/*
-	 * get stuff initialized
-	 */
-#ifdef AMIGA
-	fixedwin(argc,progname);
-#endif
-	setterm(NEW);  /* signal stuff, keyboard stuff */
-#ifndef __TURBOC__
-	srandom(getpid());
-#else
+	initscr();
 	randomize();
-#endif
-	clrdisp();
+	clear();
 	new_level();
 	status();
 	words = NULL;
