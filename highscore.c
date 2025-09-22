@@ -65,7 +65,8 @@ void read_scores() {
 	fclose(fp);
 }
 
-int write_scores() {
+int
+write_scores(void) {
 	int	i;
 	FILE	*fp;
 
@@ -98,7 +99,7 @@ int write_scores() {
 		       high_scores[i].score);
 	}
 
-	fclose(fp);
+	return fclose(fp);
 }
 
 
