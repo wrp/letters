@@ -16,12 +16,12 @@
 #include <string.h>
 #include <time.h>
 #include <math.h>
+#include <term.h>
 #include <unistd.h>
 
 #include "config.h"
 #include "kinput.h"
 #include "terms.h"
-#include "term.h"
 #include "turboc.h"
 
 struct s_word {

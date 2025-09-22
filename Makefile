@@ -35,7 +35,7 @@ DOCDIR = $(PREFIX)/man
 # I know this includes ultrix 4.2 and hp-ux 7.? and many sys V based machines.
 # Don't know about others. if you need usleep and your machine does not have
 # select, change usleep.o to usleep5.o (mostly sysV machines).
-OBJS = letters.o kinput.o term.o word.o highscore.o # usleep.o
+OBJS = letters.o kinput.o word.o highscore.o # usleep.o
 
 # The following line will stop gcc from complaining about the arguments
 # sun's make uses.  It shouldn't bother anyone else.
@@ -47,10 +47,6 @@ letters: $(OBJS)
 
 letters.o word.o kinput.o: \
 		kinput.h
-letters.o term.o highscore.o kinput.o: \
-		term.h
-letters.o highscore.o kinput.o: \
-		terms.h
 word.o highscore.o letters.o: \
 		config.h
 
