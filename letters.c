@@ -329,16 +329,16 @@ int game()
 							curr_word->word[i] = '-';
 					continue;
 
-				} else if(temp_word = searchstr(key,
+				} else if( (temp_word = searchstr(key,
 							curr_word->word,
-							curr_word->matches)) {
+							curr_word->matches))) {
 					erase_word(temp_word);
 					temp_word->matches = curr_word->matches;
 					curr_word->matches = 0;
 					putword(curr_word);
 					curr_word = temp_word;
 					curr_word->matches++;
-				} else if(temp_word = searchchar(key)) {
+				} else if( (temp_word = searchchar(key))) {
 					erase_word(temp_word);
 					curr_word->matches = 0;
 					putword(curr_word);
