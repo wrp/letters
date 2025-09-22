@@ -35,7 +35,6 @@ char	PC, *BC, *UP;
 char		*term_name;
 char	XBC[64], XUP[64];
 char     cursor_home[64];
-char     enter_standout_mode[64], exit_standout_mode[64];
 char     enter_underline_mode[64], exit_underline_mode[64];
 
 
@@ -98,11 +97,11 @@ highlight(on)
 		textattr(0x71); /* highlight off: blue on light gray */
 
 #else
-	if (garbage_size)
-		return 0;
-	if (!HAS_CAP(enter_standout_mode))
-		return 0;
-	putp(on ? enter_standout_mode : exit_standout_mode);
+	if (on) {
+		attron(A_STANDOUT);
+	} else {
+		attroff(A_STANDOUT);
+	}
 #endif /* __TURBOC__ */
 	return 1;
 }
