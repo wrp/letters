@@ -195,6 +195,7 @@ main(int argc, char **argv)
 	setterm(ORIG);
 	textattr_clr;
 
+	endwin();
 	exit(0);
 }
 
