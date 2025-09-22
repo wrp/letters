@@ -430,7 +430,7 @@ int game()
  * clear the screen and redraw it
  */
 void redraw() {
-	clrdisp();
+	erase();
 	status();
 	fflush(stdout);
 }
@@ -653,14 +653,14 @@ char *text;
 	/*
 	 * display banner message
 	 */
-	clrdisp();
+	erase();
 	goto_xy((SCREENWIDTH - strlen(text))/2, 10);
 	sleep(3);
 	puts(text);
 	goto_xy(SCREENWIDTH,SCREENLENGTH);
 	fflush(stdout);
 	sleep(2);
-	clrdisp();
+	erase();
 
 	/*
 	 * flush keyboard

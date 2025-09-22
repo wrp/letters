@@ -176,7 +176,7 @@ int	sig;
 #else
 	printf("\n\rare you sure you want to quit? ");
 	if((c = getchar()) == 'y' || c == 'Y') {
-		clrdisp();
+		erase();
 		printf("\n\nfinal: score = %u\twords = %u\t level = %d\n",
 		       score, word_count, level);
 		highlight(0);
@@ -197,7 +197,7 @@ int	sig;
 	textattr_clr;
 #ifndef __TURBOC__
 	setterm(ORIG);
-	clrdisp();
+	erase();
 	highlight(0);
 	exit(1);
 #endif

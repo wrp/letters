@@ -136,7 +136,7 @@ void show_scores() {
 	int i;
 
 	highlight(0);
-	clrdisp();
+	erase();
 	goto_xy(18, 5);
 	highlight(1);
 	printf("Top Ten Scores for Letter Invaders");
