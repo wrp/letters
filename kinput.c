@@ -26,7 +26,6 @@ int key_pressed(void);
 static void intrrpt();
 
 #ifndef NOJOB
-static void pause();
 static void cont();
 #endif
 
@@ -45,23 +44,6 @@ key_pressed(void)
 	return c == ERR ? -1 : c;
 }
 
-
-/*
- * Interrupt handlers
- */
-
-#ifndef NOJOB
-static void pause(sig)
-int	sig;
-{
-#ifdef SYSV
-	signal(sig, intrrpt);
-#endif /* SYSV */
-	goto_xy(0, SCREENLENGTH + 1);
-	endwin();
-	putchar('\n');
-	kill(getpid(), SIGSTOP);
-}
 
 static void cont(sig)
 int	sig;
