@@ -55,7 +55,6 @@ int	sig;
 	redraw();
 }
 
-#endif /* NOJOB */
 
 static void intrrpt(sig)
 int	sig;
