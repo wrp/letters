@@ -16,7 +16,7 @@ SYSTYPE = SYSV
 CFLAGS = -O -D$(SYSTYPE) -DHIGHSCORES=\"$(LIBDIR)/letters.high\" \
 	-DDICTIONARY=\"$(DICTIONARY)\"
 
-LDFLAGS = -ltermcap
+LDFLAGS = -ltermcap -lcurses
 
 PREFIX = /usr/local
 BINDIR = $(PREFIX)/bin

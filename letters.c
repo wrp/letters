@@ -667,3 +667,10 @@ highlight(int s)
 	case 1: attron(A_REVERSE); break;
 	}
 }
+
+
+int
+underline(int on)
+{
+	return on ? attron(A_UNDERLINE) : attroff(A_UNDERLINE);
+}
