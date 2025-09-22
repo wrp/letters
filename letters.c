@@ -667,3 +667,13 @@ char *text;
 	 */
 	while(key_pressed() != -1);
 }
+
+
+void
+highlight(int s)
+{
+	switch(s) {
+	case 0: attroff(A_REVERSE); break;
+	case 1: attron(A_REVERSE); break;
+	}
+}
