@@ -35,7 +35,6 @@ char	PC, *BC, *UP;
 char		*term_name;
 char	XBC[64], XUP[64];
 char     cursor_home[64];
-char     cursor_address[128];
 char     enter_standout_mode[64], exit_standout_mode[64];
 char     enter_underline_mode[64], exit_underline_mode[64];
 
