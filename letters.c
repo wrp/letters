@@ -21,7 +21,6 @@
 
 #include "config.h"
 #include "kinput.h"
-#include "terms.h"
 #include "turboc.h"
 
 struct s_word {
