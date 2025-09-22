@@ -15,5 +15,3 @@
 #define MAXLENGTH	1024
 #define NEW		1
 #define ORIG		0
-
-void setterm();
