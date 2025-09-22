@@ -8,13 +8,13 @@
 #include <stdio.h>
 #include <signal.h>
 #include <sys/types.h>
+#include <term.h>
+#include <sys/time.h>
+
 #include "config.h"
-	/* I know some systems prefer <time.h>, but I'm not sure which */
-# include <sys/time.h>
 
 #include "kinput.h"
 #include "terms.h"
-#include "term.h"
 #include "turboc.h"
 
 extern unsigned int score, word_count, level;
