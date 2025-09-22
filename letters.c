@@ -154,7 +154,7 @@ main(int argc, char **argv)
 	}
 
 	initscr();
-	randomize();
+	srand((unsigned)time(NULL));
 	clear();
 	new_level();
 	status();
