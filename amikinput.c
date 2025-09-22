@@ -33,22 +33,16 @@
 
 extern unsigned int score;
 
-int key_pressed();
-
 /*
  * This function will return -1 if no key is available, or the key
  * that was pressed by the user.  It is checking stdin, without blocking.
  */
-int key_pressed()
+int
+key_pressed(void)
 {
-	struct UFB	*in;
-
-	if(!(in=chkufb(0)))
-		return(-1);
-	if(WaitForChar(in->ufbfh,1))
-		return(getchar());
-	else
-		return(-1);
+	/* TODO: ensure curses is in no-delay mode */
+	int c = getch();
+	return c == ERR ? -1 : c;
 }
 
 /*

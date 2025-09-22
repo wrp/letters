@@ -33,9 +33,7 @@
 
 extern unsigned int score, word_count, level;
 
-#ifndef __TURBOC__
-int key_pressed();
-#endif
+int key_pressed(void);
 
 static void intrrpt();
 
@@ -46,44 +44,19 @@ static void cont();
 
 static void die();
 
+
 /*
  * This function will return -1 if no key is available, or the key
  * that was pressed by the user.  It is checking stdin, without blocking.
  */
-int key_pressed()
+int
+key_pressed(void)
 {
-#ifdef SYSV
-	int		chars_read;
-	static char	keypressed;
-
-	chars_read = read(0, &keypressed, 1);
-	if (chars_read == 1)
-		return((int)keypressed);
-	return(-1);
-#elif __TURBOC__
-	if (kbhit())
-		return getch();  /* don't echo */
-	else
-		return -1;
-#else /* SYSV */
-	int		mask = 1, chars_read;
-	static char	keypressed;
-	struct timeval	waittime;
-
-	waittime.tv_sec=0;
-#ifdef SYSV2
-	waittime.tv_usec=PAUSE;
-#else
-	waittime.tv_usec=4;
-#endif
-	if (select(1, &mask, 0, 0, &waittime)) {
-		chars_read = read(0, &keypressed, 1);
-		if (chars_read == 1)
-			return((int)keypressed);
-	}
-	return(-1);
-#endif /* SYSV */
+	/* TODO: ensure curses is in no-delay mode */
+	int c = getch();
+	return c == ERR ? -1 : c;
 }
+
 
 /*
  * Set the terminal to cbreak mode, turn off echo and prevent special
