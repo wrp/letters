@@ -10,6 +10,7 @@
 #define TRUE 1
 #define FALSE 0
 
+#include <curses.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -99,7 +100,7 @@ main(int argc, char **argv)
 
 	check_tty();
 	ding = quiet;
-	init_term();
+	initscr();
 	progname = argv[0];
 
 	/*
