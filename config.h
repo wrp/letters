@@ -1,3 +1,15 @@
+
+
+/* This will become the standard letters.h, and we
+ * will let configure build config.h
+ *
+ * For now, to enable builds, put common delcarations here prior
+ * to renaming.
+ *
+ */
+
+#define goto_xy(x, y)   move((y), (x))
+
 /*
  * configurable stuff in letters.  Most things here probably shouldn't need
  * to be changed but are here because someone may want to tinker with this
