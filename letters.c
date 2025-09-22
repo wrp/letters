@@ -189,12 +189,6 @@ main(int argc, char **argv)
 	printf("\n\nfinal: score = %u\twords = %u\t level = %d\n",
 	       score, word_count, level);
 
-	/*
-	 * flush keyboard and quit.
-	 */
-	while(key_pressed() != -1);
-	textattr_clr;
-
 	endwin();
 	exit(0);
 }
