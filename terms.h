@@ -8,7 +8,6 @@ extern char PC, *BC, *UP;
 extern char    *term_name;
 extern char     XBC[], XUP[];
 extern char     bell_str[];
-extern char    *cursor_home;
 extern char     clear_screen[];
 extern char     cursor_address[];
 extern char     enter_standout_mode[], exit_standout_mode[];
