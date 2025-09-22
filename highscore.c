@@ -111,7 +111,9 @@ int write_scores() {
 
 
 
-void update_scores() {
+void
+update_scores(void)
+{
 	int i, j;
 #ifdef AMIGA
 	char *u;
