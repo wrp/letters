@@ -107,11 +107,7 @@ void
 update_scores(void)
 {
 	int i, j;
-#ifdef AMIGA
-	char *u;
-#else
 	struct passwd *p;
-#endif
 
 	for(i = 0; i < 10; i++)
 		if(score > high_scores[i].score) {
@@ -121,40 +117,10 @@ update_scores(void)
 				high_scores[j].score = high_scores[j-1].score;
 				high_scores[j].level = high_scores[j-1].level;
 			}
-#ifdef AMIGA
-                        if((u = getenv("USER")) == NULL) {
-				char buffer[128],*p;
-				clrdisp();
-				goto_xy(18, 5);
-#ifndef __TURBOC__
-				cooked(stdin);
-				fputs("Enter your name (8 char. max, no spaces): ",stdout);
-				fflush(stdout);
-				gets(buffer);
-				if((p=strchr(buffer,' ')))
-					*p='\0';
-				if(!buffer[0])
-					strcpy(buffer,"nobody");
-				strncpy(high_scores[i].name, buffer, 8);
-				raw(stdin);
-#else  /* not __TURBOC__ */
-				puts("Enter your name (8 char. max, no spaces): ");
-				buffer[0] = 8;
-				cgets(buffer);
-				if((p=strchr(buffer+2,' ')))
-					*p='\0';
-				if(!buffer[2])
-					strcpy(buffer+2,"nobody");
-				strncpy(high_scores[i].name, buffer+2, 8);
-#endif  /* __TURBOC__ */
-                        } else
-                                strcpy(high_scores[i].name, u);
-#else  /* if not AMIGA */
 			if((p = getpwuid(getuid())) == NULL)
                                 strcpy(high_scores[i].name, "nobody");
 			else
 				strcpy(high_scores[i].name, p->pw_name);
-#endif /* AMIGA */
 			high_scores[i].score = score;
 			high_scores[i].words = word_count;
 			high_scores[i].level = level;
@@ -188,12 +154,4 @@ void show_scores() {
 	}
 
 	printf("\n");
-#ifdef AMIGA
-	{
-		char bogus;
-		fputs("\nPress RETURN... ",stdout);
-		fflush(stdout);
-		bogus=getchar();
-	}
-#endif
 }
