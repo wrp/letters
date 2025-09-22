@@ -3,7 +3,7 @@
  */
 /*
  * usleep -- support routine for 4.2BSD system call emulations
- * 
+ *
  * last edit:	29-Oct-1984	D A Gwyn
  */
 

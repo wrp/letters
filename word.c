@@ -41,7 +41,7 @@ char *getword()
 		int   wlen;
 
 		start = choice + (random() % choicelen);
-		wlen  = (MINSTRING + (random() % (MAXSTRING - MINSTRING))) 
+		wlen  = (MINSTRING + (random() % (MAXSTRING - MINSTRING)))
 		      % sizeof(buf);
 		while(wlen--) {
 			if (*start == '\0')
@@ -65,7 +65,7 @@ char *getword()
 			textattr_clr;
 			exit(1);
 		}
-		
+
 		/*
 		 * Get length of dictionary in bytes so we can pick a
 		 * random entry in it.
@@ -77,7 +77,7 @@ char *getword()
 			exit(1);
 		}
 	}
-	
+
 	/*
 	 * pick a random place in the dictionary
 	 */

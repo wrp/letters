@@ -1,11 +1,11 @@
-/**** 
+/****
  * raw.c	(Borrowed from UUPC)
  *
  * This is a routine for setting a given stream to raw or cooked mode.
  * This is useful when you are using Lattice C to produce programs that
  * want to read single characters with the "getch()" or "fgetc" call.
  *
- * Written : 18-Jun-87 By Chuck McManis. 
+ * Written : 18-Jun-87 By Chuck McManis.
  * 	     If you use it I would appreciate credit for it somewhere.
  */
 #include <exec/types.h>
@@ -39,7 +39,7 @@ FILE *fp;
   long			Arg[1],res;
 
   ufb = (struct UFB *) chkufb(fileno(fp));  /* Step one, get the file handle */
-  afh = (struct FileHandle *)(ufb->ufbfh); 
+  afh = (struct FileHandle *)(ufb->ufbfh);
 
   if (!IsInteractive((BPTR)afh)) {  /* Step 2, check to see if it's a console */
     errno = ENOTTY;
@@ -88,14 +88,14 @@ FILE *fp;
 }
 
 /****
- * Sendpacket.c 
+ * Sendpacket.c
  *
  * An invaluable addition to your Amiga.lib file. This code sends a packet
  * the given message port. This makes working around DOS lots easier.
- * 
+ *
  * Note, I didn't write this, those wonderful folks at CBM did. I do suggest
  * however that you may wish to add it to Amiga.Lib, to do so, compile it
- * and say 'oml lib:amiga.lib -r sendpacket.o' 
+ * and say 'oml lib:amiga.lib -r sendpacket.o'
  */
 
 /*
@@ -113,14 +113,14 @@ long action,          /* packet type ... (what you want handler to do )   */
 {
   struct MsgPort        *replyport;
   struct StandardPacket *packet;
- 
+
   long  count, *pargs, res1;
 
   replyport = (struct MsgPort *) CreatePort(NULL,0);
   if(!replyport) return(0);
 
   /* Allocate space for a packet, make it public and clear it */
-  packet = (struct StandardPacket *) 
+  packet = (struct StandardPacket *)
     AllocMem((long)sizeof(struct StandardPacket),MEMF_PUBLIC|MEMF_CLEAR);
   if(!packet) {
     DeletePort(replyport);
@@ -134,18 +134,18 @@ long action,          /* packet type ... (what you want handler to do )   */
 
   /* copy the args into the packet */
   pargs = &(packet->sp_Pkt.dp_Arg1);       /* address of first argument */
-  for(count=0;count < nargs;count++) 
+  for(count=0;count < nargs;count++)
     pargs[count]=args[count];
- 
+
   PutMsg(pid,(struct Message *)packet); /* send packet */
 
   WaitPort(replyport);
-  GetMsg(replyport); 
+  GetMsg(replyport);
 
   res1 = packet->sp_Pkt.dp_Res1;
 
   FreeMem(packet,(long)sizeof(struct StandardPacket));
-  DeletePort(replyport); 
+  DeletePort(replyport);
 
   return(res1);
 }

@@ -70,7 +70,7 @@
  */
 #define BONUSLENGTH	10
 
-/* 
+/*
  * minimum and maximum length of character strings chosen from
  * -s argument
  */

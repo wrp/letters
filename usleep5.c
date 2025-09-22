@@ -1,7 +1,7 @@
 	/*
 	 * subseconds sleeps for System V - or anything that has poll() Don
 	 * Libes, 4/1/1991
-	 * 
+	 *
 	 * The BSD analog to this function is defined in terms of microseconds
 	 * while poll() is defined in terms of milliseconds.  For
 	 * compatibility, this function provides accuracy "over the long run"
@@ -9,15 +9,15 @@
 	 * microseconds across calls with the idea that you are probably
 	 * calling it in a tight loop, and that over the long run, the error
 	 * will even out.
-	 * 
+	 *
 	 * If you aren't calling it in a tight loop, then you almost certainly
 	 * aren't making microsecond-resolution requests anyway, in which
 	 * case you don't care about microseconds.  And if you did, you
 	 * wouldn't be using UNIX anyway because random system indigestion
 	 * (i.e., scheduling) can make mincemeat out of any timing code.
-	 * 
+	 *
 	 * Returns 0 if successful timeout, -1 if unsuccessful.
-	 * 
+	 *
 	 */
 
 #include <poll.h>
