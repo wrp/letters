@@ -10,6 +10,7 @@
 
 #define goto_xy(x, y)   move((y), (x))
 void highlight(int);
+void redraw(void);
 
 /*
  * configurable stuff in letters.  Most things here probably shouldn't need

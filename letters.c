@@ -41,7 +41,6 @@ void read_scores(void);
 void show_scores(void);
 void putword();
 int  game();
-void redraw();
 void erase_word(struct s_word *wordp);
 void status();
 void new_level();
