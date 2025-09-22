@@ -8,19 +8,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 # include <string.h>
-#ifdef AMIGA
-# include <stdlib.h>
-# include <string.h>
-#else
 # include <pwd.h>
-#endif /* AMIGA */
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "config.h"
 #include "term.h"
-#ifndef __TURBOC__
-# include "terms.h"
-#endif
 #include "kinput.h"
 #include "turboc.h"
 
