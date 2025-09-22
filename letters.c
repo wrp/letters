@@ -173,10 +173,7 @@ main(int argc, char **argv)
 		}
 
 		if(game() == 0) {
-			/*
-			 * all finished.  print score and clean up.
-			 */
-			goto_xy(0, SCREENLENGTH);
+			move(0, SCREENLENGTH);
 			fflush(stdout);
 			putchar('\n');
 			break;
