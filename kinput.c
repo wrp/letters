@@ -9,25 +9,11 @@
 #include <signal.h>
 #include <sys/types.h>
 #include "config.h"
-#ifdef __TURBOC__
-# include <stdlib.h>
-# include <conio.h>
-#else
 	/* I know some systems prefer <time.h>, but I'm not sure which */
 # include <sys/time.h>
-#endif
-#ifdef SYSV
-# include <termio.h>
-#else  /* SYSV */
-# ifndef __TURBOC__
-#  include <sgtty.h>
-# endif /* __TURBOC__ */
-#endif /* SYSV */
 
 #include "kinput.h"
-#ifndef __TURBOC__
-# include "terms.h"
-#endif
+#include "terms.h"
 #include "term.h"
 #include "turboc.h"
 
