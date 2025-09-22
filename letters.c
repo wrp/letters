@@ -34,7 +34,7 @@ struct s_word {
 	char word[1]; /* extensible */
 };
 
-int  move();
+static int move_words(void);
 void putword();
 int  game();
 void redraw();
@@ -203,7 +203,8 @@ main(int argc, char **argv)
  * move all words down 1 or more lines.
  * return the number of words that have fallen off the bottom of the screen
  */
-int move()
+static int
+move_words(void)
 {
 	struct s_word  *wordp, *next;
 	int  died;
@@ -372,7 +373,7 @@ int game()
 #endif
 		}
 
-		died = move();  /* NB: move may invalidate curr_word */
+		died = move_words();  /* NB: may invalidate curr_word */
 		if (died > 0)
 		{
 			/*
