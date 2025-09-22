@@ -71,11 +71,14 @@ char *dictionary = DICTIONARY;
 char *choice = NULL;
 int   choicelen = 0;
 
-void usage(progname)
-char *progname;
+void
+usage(const char *progname)
 {
-	fprintf(stderr, "Usage: %s [-q | -b] [-H#] [-l#] [-ddictionary] [-sstring]\n", progname);
-	fprintf(stderr, "       %s [-h]\n", progname);
+	printf(
+		"Usage: %s [-q|-b] [-h] [-H#] [-l#] [-ddictionary] "
+		"[-sstring]\n",
+		progname
+	);
 	exit(0);
 }
 
