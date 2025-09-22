@@ -35,6 +35,8 @@ struct s_word {
 };
 
 static int move_words(void);
+
+int key_pressed(void);
 void update_scores(void);
 void read_scores(void);
 void show_scores(void);
