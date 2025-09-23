@@ -31,7 +31,7 @@ INSTALL = /usr/bin/install
 # in this directory will be used to make a wordlist.
 DOCDIR = $(PREFIX)/man
 
-OBJS = letters.o kinput.o word.o highscore.o
+OBJS = letters.o word.o highscore.o
 
 # The following line will stop gcc from complaining about the arguments
 # sun's make uses.  It shouldn't bother anyone else.
