@@ -66,6 +66,7 @@ int letters = 0;
 char *dictionary = DICTIONARY;
 char *choice = NULL;
 int   choicelen = 0;
+int newdict = 0;
 
 void
 usage(const char *progname)
@@ -114,21 +115,11 @@ intrrpt(int sig)
 	}
 }
 
-
-int
-main(int argc, char **argv)
+static void
+parse_cmd_line(int argc, char **argv)
 {
 	char *progname;
-	int foo;
-	int newdict = 0;
-
-	check_tty();
-	ding = no_op;
 	progname = argv[0];
-
-	/*
-	 * check for options
-	 */
 	while(*++argv) {
 		if((*argv)[0] == '-') {
 			switch((*argv)[1]) {
@@ -173,6 +164,15 @@ main(int argc, char **argv)
 			usage(progname);
 		}
 	}
+}
+
+
+int
+main(int argc, char **argv)
+{
+	check_tty();
+	ding = no_op;
+	parse_cmd_line(argc, argv);
 
 	srand48(time(NULL));
 	initscr();
