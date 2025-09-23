@@ -533,10 +533,7 @@ newword(struct s_word *wordp)
 	char  *word;
 	int  length;
 
-	if(bonus == TRUE)
-		word = bonusword();
-	else
-		word = getword();
+	word = (bonus == TRUE) ? bonusword() : getword();
 
 	length = strlen(word);
 
