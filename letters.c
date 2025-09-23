@@ -279,7 +279,7 @@ int game()
 	if (!curr_word)
 		curr_word = words;
 	while(curr_word->matches < curr_word->length) {
-		for(i = 0; i < delay; i+= PAUSE) {
+		for(i = 0; i < delay; i += PAUSE) {
 			while((curr_word->matches != curr_word->length) &&
 			      ((key = key_pressed()) != -1)) {
 				if(key == CTRL('L')) {
