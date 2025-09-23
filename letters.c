@@ -11,6 +11,9 @@
  * Build system (meson?)
  * Test suite
  * Refactor!
+ * Rename config.h and build config.h at build time
+ * signal handlers
+ * quit cleanly with prompt
  */
 
 # define CTRL(c)  (c & 037)
