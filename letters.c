@@ -151,12 +151,12 @@ main(int argc, char **argv)
 		}
 	}
 
+	srand48(time(NULL));
 	initscr();
 	cbreak();
 	noecho();
 	keypad(stdscr, TRUE);
 	nodelay(stdscr, TRUE);
-	srand((unsigned)time(NULL));
 	clear();
 	new_level();
 	status();
