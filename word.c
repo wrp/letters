@@ -71,19 +71,14 @@ getword(char *buf, size_t bufsiz)
 
 	return strlen(buf);
 }
-
-#define BONUSLENGTH 10
-
 size_t
 bonusword(char *buf, size_t bufsiz)
 {
-	int		i;
-
-	for(i = 0; i < BONUSLENGTH; i++)
-		buf[i] = choice ? *(choice + (random() % choicelen))
-				: (char)(random() % 94) + 33;
-
-	buf[BONUSLENGTH] = 0;
-
-	return i;
+	char *values =
+		"abcdefghijklmnopqrstuvwxyz"
+		"abcdefghijklmnopqrstuvwxyz"
+		"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+		"0123456789"
+		"+!?.,@#$%^&*()-_[]{}~|\\";
+	return build_random_string(buf, bufsiz, values);
 }
