@@ -19,25 +19,6 @@ extern unsigned int score, word_count, level;
 static void die();
 
 
-/* TODO: establish signal handlers */
-static void
-intrrpt(int sig)
-{
-	int c;
-
-	printf("\n\rare you sure you want to quit? ");
-	if((c = getchar()) == 'y' || c == 'Y') {
-		endwin();
-		printf("\n\nfinal: score = %u\twords = %u\t level = %d\n",
-		       score, word_count, level);
-		exit(0);
-	} else {
-		signal(sig, intrrpt);
-		erase();
-		redraw();
-	}
-}
-
 static void die(sig)
 int	sig;
 {

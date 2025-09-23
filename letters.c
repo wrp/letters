@@ -10,6 +10,7 @@
 #define TRUE 1
 #define FALSE 0
 
+#include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -84,6 +85,31 @@ check_tty(void)
 	if (! isatty(STDIN_FILENO) || ! isatty(STDOUT_FILENO)) {
 		fputs("This game can only be played on a terminal!\n", stderr);
 		exit(EXIT_FAILURE);
+	}
+}
+
+
+/* TODO: establish signal handlers */
+static void
+intrrpt(int sig)
+{
+	int c;
+
+	printf("\n\rare you sure you want to quit? ");
+	if((c = getchar()) == 'y' || c == 'Y') {
+		endwin();
+		assert(false && "DO NOT CALL PRINTF IN A SIGNAL HANDLER");
+		printf(
+			"\n\nfinal: score = %u\twords = %u\t level = %d\n",
+			score,
+			word_count,
+			level
+		);
+		exit(0);
+	} else {
+		signal(sig, intrrpt);
+		erase();
+		redraw();
 	}
 }
 
