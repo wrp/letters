@@ -21,7 +21,6 @@ extern unsigned int score, word_count, level;
 
 int key_pressed(void);
 
-static void intrrpt();
 static void die();
 
 
@@ -38,34 +37,20 @@ key_pressed(void)
 }
 
 
-static void intrrpt(sig)
-int	sig;
+/* TODO: establish signal handlers */
+static void
+intrrpt(int sig)
 {
-	char	c;
+	int c;
 
-#ifdef __TURBOC__
-	clrscr();
-	puts("are you sure you want to quit? ");
-	if((c = getch()) == 'y' || c == 'Y') {
-		textattr_clr;
-		printf("\n\nfinal: score = %u\twords = %u\t level = %d\n",
-		       score, word_count, level);
-		endwin();
-		exit(1);
-#else
 	printf("\n\rare you sure you want to quit? ");
 	if((c = getchar()) == 'y' || c == 'Y') {
-		erase();
+		endwin();
 		printf("\n\nfinal: score = %u\twords = %u\t level = %d\n",
 		       score, word_count, level);
-		highlight(0);
-		endwin();
-		exit(1);
-#endif
+		exit(0);
 	} else {
-#ifdef SYSV
 		signal(sig, intrrpt);
-#endif /* SYSV */
 		erase();
 		redraw();
 	}
