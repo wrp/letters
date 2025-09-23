@@ -242,12 +242,12 @@ putword(struct s_word *wordp)
 	 */
 	highlight(1);
 	for(i = 0; i < wordp->matches; i++)
-		putchar(wordp->word[i]);
+		printw("%c", wordp->word[i]);
 	highlight(0);
 
 	/* print the rest of the word  */
 	for(i = wordp->matches; i < wordp->length; i++)
-		putchar(wordp->word[i]);
+		printw("%c", wordp->word[i]);
 }
 
 /*
@@ -651,8 +651,8 @@ void
 highlight(int s)
 {
 	switch(s) {
-	case 0: attroff(A_REVERSE); break;
-	case 1: attron(A_REVERSE); break;
+	case 0: attroff(A_STANDOUT); break;
+	case 1: attron(A_STANDOUT); break;
 	}
 }
 
