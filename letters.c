@@ -163,11 +163,6 @@ main(int argc, char **argv)
 	words = NULL;
 
 	for(;;) {
-		/*
-		 * allocate memory for the first word and then find a word
-		 * if there are no others on the screen.  There must always
-		 * be at least one word active.
-		 */
 		if(words == NULL) {
 			lastword = words = newword((struct s_word *)NULL);
 			prev_word = NULL;
