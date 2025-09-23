@@ -12,15 +12,7 @@
 #include "kinput.h"
 #include "turboc.h"
 
-#ifdef __TURBOC__
-# include <conio.h>
-# include <stdlib.h>
-# define random rand
-#endif
-
-#ifdef SYSV
 # define random lrand48
-#endif
 
 extern char *dictionary, *choice;
 extern int choicelen;

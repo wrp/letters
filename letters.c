@@ -228,11 +228,9 @@ void erase_word(struct s_word *wordp)
 		putchar(' ');
 }
 
-/*
- * write the word to the screen with already typed letters highlighted
- */
-void putword(wordp)
-struct s_word *wordp;
+/* write the word to the screen with already typed letters highlighted */
+void
+putword(struct s_word *wordp)
 {
 	int i;
 
@@ -247,9 +245,7 @@ struct s_word *wordp;
 		putchar(wordp->word[i]);
 	highlight(0);
 
-	/*
-	 * print the rest of the word.
-	 */
+	/* print the rest of the word  */
 	for(i = wordp->matches; i < wordp->length; i++)
 		putchar(wordp->word[i]);
 }
