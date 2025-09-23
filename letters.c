@@ -14,6 +14,7 @@
  * Rename config.h and build config.h at build time
  * signal handlers
  * quit cleanly with prompt
+ * Make bonus rounds more interesting; 80% of each word should be a-zA-Z
  */
 
 # define CTRL(c)  (c & 037)
