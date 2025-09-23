@@ -9,7 +9,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "config.h"
-#include "kinput.h"
 
 # define random lrand48
 

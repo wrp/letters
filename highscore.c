@@ -13,7 +13,6 @@
 #include <sys/stat.h>
 #include "config.h"
 #include "term.h"
-#include "kinput.h"
 
 struct score_rec {
 	char	name[9];

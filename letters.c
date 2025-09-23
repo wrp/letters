@@ -18,7 +18,6 @@
 #include <term.h>
 
 #include "config.h"
-#include "kinput.h"
 
 struct s_word {
 	struct s_word *nextword;

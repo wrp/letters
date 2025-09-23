@@ -13,7 +13,6 @@
 
 #include "config.h"
 
-#include "kinput.h"
 
 extern unsigned int score, word_count, level;
 

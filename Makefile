@@ -41,8 +41,6 @@ OBJS = letters.o kinput.o word.o highscore.o
 letters: $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o letters $(LDFLAGS)
 
-letters.o word.o kinput.o: \
-		kinput.h
 word.o highscore.o letters.o: \
 		config.h
 
