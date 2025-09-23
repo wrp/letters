@@ -171,8 +171,6 @@ main(int argc, char **argv)
 
 		if(game() == 0) {
 			move(0, SCREENLENGTH);
-			fflush(stdout);
-			putchar('\n');
 			break;
 		}
 	}
@@ -182,10 +180,10 @@ main(int argc, char **argv)
 		update_scores();
 	sleep(2);
 	show_scores();
+	endwin();
 	printf("\n\nfinal: score = %u\twords = %u\t level = %d\n",
 	       score, word_count, level);
 
-	endwin();
 	exit(0);
 }
 
@@ -225,7 +223,7 @@ void erase_word(struct s_word *wordp)
 
 	goto_xy(wordp->posx, wordp->posy);
 	for(i = 0; i < wordp->length; i++)
-		putchar(' ');
+		printw("%c", ' ');
 }
 
 /* write the word to the screen with already typed letters highlighted */
@@ -299,7 +297,7 @@ int game()
 				   key == curr_word->word[curr_word->matches]) {
 					goto_xy(curr_word->posx + curr_word->matches, curr_word->posy);
 					highlight(1);
-					putchar(curr_word->word[curr_word->matches]);
+					printw("%c", curr_word->word[curr_word->matches]);
 					highlight(0);
 					goto_xy(SCREENWIDTH,SCREENLENGTH);
 					fflush(stdout);
@@ -436,8 +434,8 @@ void status() {
 		line[i] = ' ';
 
 	highlight(1);
-	goto_xy(0, SCREENLENGTH);
-	fputs(line, stdout);
+	goto_xy(0, SCREENLENGTH - 1);
+	printw("%s", line);
 	highlight(0);
 }
 
