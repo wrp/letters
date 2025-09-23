@@ -149,6 +149,7 @@ main(int argc, char **argv)
 
 	srand48(time(NULL));
 	initscr();
+	curs_set(0);
 	cbreak();
 	noecho();
 	keypad(stdscr, TRUE);
