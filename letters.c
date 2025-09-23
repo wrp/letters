@@ -44,7 +44,7 @@ void banner();
 struct s_word *newword();
 struct s_word *searchstr(), *searchchar();
 void kill_word();
-int (*ding)(void); /* beep or flash */
+int (*ding)(void); /* beep, flash, or no-op */
 
 void free();
 
@@ -78,6 +78,7 @@ usage(const char *progname)
 	exit(0);
 }
 
+int no_op(void) { return 0; }  /* Do nothing function */
 /* Ensure the process is running on a tty. */
 static void
 check_tty(void)
@@ -122,7 +123,7 @@ main(int argc, char **argv)
 	int newdict = 0;
 
 	check_tty();
-	ding = flash;
+	ding = no_op;
 	progname = argv[0];
 
 	/*
