@@ -265,8 +265,7 @@ struct s_word *wordp;
 int game()
 {
 	int  key;
-	long  i; /* this gets compared to a long so if nothing breaks
-				it should stay this way */
+	long  i;
 	int  died;
 	struct s_word *curr_word, *temp_word;
 
