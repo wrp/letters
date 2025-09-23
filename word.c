@@ -76,7 +76,7 @@ bonusword(char *buf, size_t bufsiz)
 {
 	char *values =
 		"abcdefghijklmnopqrstuvwxyz"
-		"abcdefghijklmnopqrstuvwxyz"
+		"qazwsxol.p;/xcvbnm,<>\"'~z"
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 		"0123456789"
 		"+!?.,@#$%^&*()-_[]{}~|\\";
