@@ -39,7 +39,7 @@ struct s_word {
 	int length;
 	int drop;
 	int matches;
-	char word[1]; /* extensible */
+	char word[32];
 };
 
 static int move_words(void);
@@ -561,21 +561,20 @@ struct s_word *
 newword(struct s_word *wordp)
 {
 	struct s_word *nword;
-	char  word[128];
 	int  length;
-	size_t s = sizeof word;
+	size_t s = sizeof nword->word;
+
+	nword = malloc(sizeof *nword);
+	char *word = nword->word;
 
 	length = (bonus == TRUE) ? bonusword(word, s) : getword(word, s);
 
-
-	nword = malloc(sizeof *nword + length);
 	if (nword == NULL) {
 		endwin();
 		perror("malloc");
 		exit(1);
 	}
 
-	strncpy(nword->word, word, length);
 	nword->length = length;
 	nword->drop = length > 6 ? 1 : length > 3 ? 2 : 3;
 	nword->matches = 0;
