@@ -532,11 +532,10 @@ newword(struct s_word *wordp)
 
 	length = strlen(word);
 
-	nword = (struct s_word *)malloc(sizeof(struct s_word) + length);
-	if(nword == (struct s_word *)0) {
-		perror("\nmalloc");
+	nword = malloc(sizeof *nword + length);
+	if (nword == NULL) {
 		endwin();
-		textattr_clr;
+		perror("malloc");
 		exit(1);
 	}
 
