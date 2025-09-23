@@ -377,6 +377,7 @@ int game()
 
 				fflush(stdout);
 			}
+			/* TODO: use an itimer for more precision */
 			usleep(PAUSE);
 		}
 
