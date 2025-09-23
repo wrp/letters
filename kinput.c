@@ -22,11 +22,6 @@ extern unsigned int score, word_count, level;
 int key_pressed(void);
 
 static void intrrpt();
-
-#ifndef NOJOB
-static void cont();
-#endif
-
 static void die();
 
 
@@ -40,17 +35,6 @@ key_pressed(void)
 	/* TODO: ensure curses is in no-delay mode */
 	int c = getch();
 	return c == ERR ? -1 : c;
-}
-
-
-static void cont(sig)
-int	sig;
-{
-#ifdef SYSV
-	signal(sig, intrrpt);
-#endif /* SYSV */
-	clear();
-	redraw();
 }
 
 
