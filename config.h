@@ -31,6 +31,7 @@ char * bonusword(void);
 #define HIGHSCORES "letters.high"
 #endif
 
+/* TODO: get the actual screensize and handle SIGWINCH */
 #define SCREENLENGTH 51
 #define SCREENWIDTH  178
 
