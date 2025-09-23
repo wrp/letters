@@ -27,7 +27,9 @@ static struct score_rec high_scores[10];
 static struct stat	s_buf;
 time_t	readtime;
 
-void read_scores() {
+int
+read_scores(void)
+{
 	int		 i;
 	FILE		 *fp;
 
@@ -36,21 +38,15 @@ void read_scores() {
 	 * the scores before saving a new file.  Only important on
 	 * multiuser systems.
 	 */
-	if(stat(highscores, &s_buf) == -1) {
-		fprintf(stderr, "Cannot stat %s: ", highscores);
-		perror("");
-		endwin();
-		exit(1);
+	if(
+		stat(highscores, &s_buf) == -1 ||
+		(fp = fopen(highscores, "r")) == NULL
+	) {
+		perror(highscores);
+		return 1;
 	}
 
 	readtime = s_buf.st_mtime;
-
-	if((fp = fopen(highscores, "r")) == NULL) {
-		fprintf(stderr, "Cannot open %s: ", highscores);
-		perror("");
-		endwin();
-		exit(1);
-	}
 
 	for(i = 0; i < 10; i++) {
 		fscanf(fp, "%s%d%d%d", high_scores[i].name,
@@ -59,6 +55,7 @@ void read_scores() {
 	}
 
 	fclose(fp);
+	return 0;
 }
 
 int

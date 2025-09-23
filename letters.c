@@ -44,7 +44,7 @@ struct s_word {
 static int move_words(void);
 
 void update_scores(void);
-void read_scores(void);
+int read_scores(void);
 void show_scores(void);
 void putword();
 int  game();
