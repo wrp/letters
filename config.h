@@ -14,6 +14,7 @@ void redraw(void);
 #include <curses.h>
 #include <unistd.h>
 int underline(int on);
+char * getword(void);
 
 /*
  * configurable stuff in letters.  Most things here probably shouldn't need

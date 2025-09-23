@@ -530,7 +530,7 @@ struct s_word *
 newword(struct s_word *wordp)
 {
 	struct s_word *nword;
-	char  *word, *getword(), *bonusword();
+	char  *word, *bonusword();
 	int  length;
 
 	if(bonus == TRUE)
