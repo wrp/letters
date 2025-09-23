@@ -560,12 +560,12 @@ struct s_word *
 newword(struct s_word *wordp)
 {
 	struct s_word *nword;
-	char  *word;
+	char  word[128];
 	int  length;
+	size_t s = sizeof word;
 
-	word = (bonus == TRUE) ? bonusword() : getword();
+	length = (bonus == TRUE) ? bonusword(word, s) : getword(word, s);
 
-	length = strlen(word);
 
 	nword = malloc(sizeof *nword + length);
 	if (nword == NULL) {

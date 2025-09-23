@@ -6,6 +6,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "config.h"
@@ -15,12 +16,13 @@
 extern char *dictionary, *choice;
 extern int choicelen;
 
-char *
-getword(void)
+size_t
+getword(char *buf, size_t bufsiz)
 {
-	static char	buf[512];
 	static FILE	*fp = NULL;
 	static struct stat	s_buf;
+
+	char fmt[64];
 
 	/*
 	 * if there's a 'choice' string set, choose a selection of letters
@@ -32,15 +34,15 @@ getword(void)
 		int   wlen;
 
 		start = choice + (random() % choicelen);
-		wlen  = (MINSTRING + (random() % (MAXSTRING - MINSTRING)))
-		      % sizeof(buf);
+		wlen  = (MINSTRING + (random() % (MAXSTRING - MINSTRING)));
+		wlen %= bufsiz;
 		while(wlen--) {
 			if (*start == '\0')
 				start = choice;
 			*p++ = *start++;
 		}
 		*p = '\0';
-		return buf;
+		return p - buf;
 	}
 
 	/*
@@ -58,19 +60,20 @@ getword(void)
 	}
 
 	fseek(fp, random() % s_buf.st_size, 0);
+	sprintf(fmt, "%%*s%%%lus", bufsiz - 1);
 	if( fscanf(fp, "%*s%s", buf) != 1 ){
 		fseek(fp, 0L, 0);
 		fscanf(fp, "%s", buf);
 	}
 
-	return buf;
+	return strlen(buf);
 }
 
+#define BONUSLENGTH 10
 
-char *
-bonusword(void)
+size_t
+bonusword(char *buf, size_t bufsiz)
 {
-	static char	buf[BONUSLENGTH + 1];
 	int		i;
 
 	for(i = 0; i < BONUSLENGTH; i++)
@@ -79,5 +82,5 @@ bonusword(void)
 
 	buf[BONUSLENGTH] = 0;
 
-	return buf;
+	return i;
 }

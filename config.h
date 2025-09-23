@@ -14,8 +14,8 @@ void redraw(void);
 #include <curses.h>
 #include <unistd.h>
 int underline(int on);
-char * getword(void);
-char * bonusword(void);
+size_t getword(char *buf, size_t bufsiz);
+size_t bonusword(char *buf, size_t bufsiz);
 
 /*
  * configurable stuff in letters.  Most things here probably shouldn't need
@@ -65,11 +65,6 @@ char * bonusword(void);
  * while words are falling.  there isa 1/ADDWORD chance of a new word
  */
 #define ADDWORD		6
-
-/*
- * length of words in bonus round
- */
-#define BONUSLENGTH	10
 
 /*
  * minimum and maximum length of character strings chosen from
