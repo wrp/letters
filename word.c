@@ -57,24 +57,12 @@ getword(void)
 	 * This is stuff that only needs to get done once.
 	 */
 	if(fp == NULL) {
-		/*
-		 * open the dictionary file
-		 */
-		if((fp = fopen(dictionary, "r")) == NULL) {
-			fprintf(stderr, "can't open file: %s.\n", dictionary);
+		if(
+			(fp = fopen(dictionary, "r")) == NULL ||
+			stat(dictionary, &s_buf) == -1
+		) {
 			endwin();
-			textattr_clr;
-			exit(1);
-		}
-
-		/*
-		 * Get length of dictionary in bytes so we can pick a
-		 * random entry in it.
-		 */
-		if(stat(dictionary, &s_buf) == -1) {
-			perror("stat");
-			endwin();
-			textattr_clr;
+			perror(dictionary);
 			exit(1);
 		}
 	}
