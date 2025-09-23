@@ -16,22 +16,7 @@
 
 extern unsigned int score, word_count, level;
 
-int key_pressed(void);
-
 static void die();
-
-
-/*
- * This function will return -1 if no key is available, or the key
- * that was pressed by the user.  It is checking stdin, without blocking.
- */
-int
-key_pressed(void)
-{
-	/* TODO: ensure curses is in no-delay mode */
-	int c = getch();
-	return c == ERR ? -1 : c;
-}
 
 
 /* TODO: establish signal handlers */

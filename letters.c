@@ -31,7 +31,6 @@ struct s_word {
 
 static int move_words(void);
 
-int key_pressed(void);
 void update_scores(void);
 void read_scores(void);
 void show_scores(void);
@@ -268,7 +267,7 @@ int game()
 		for(i = 0; i < delay; i += PAUSE) {
 			while(
 				(curr_word->matches != curr_word->length) &&
-				((key = key_pressed()) != -1)
+				((key = getch()) != ERR)
 			) {
 				if(key == CTRL('L')) {
 					redraw();
@@ -633,8 +632,9 @@ banner(const char *text)
 	sleep(3);
 	erase();
 
-	while(key_pressed() != -1)
+	while (getch() != ERR) {
 		;
+	}
 }
 
 
