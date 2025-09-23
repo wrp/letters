@@ -525,11 +525,9 @@ void new_level()
 	status();
 }
 
-/*
- * allocate memory for a new word and get it all set up to use.
- */
-struct s_word *newword(wordp)
-struct s_word *wordp;
+/* Initialize a new word. */
+struct s_word *
+newword(struct s_word *wordp)
 {
 	struct s_word *nword;
 	char  *word, *getword(), *bonusword();
