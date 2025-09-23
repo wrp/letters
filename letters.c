@@ -205,7 +205,7 @@ main(int argc, char **argv)
 		}
 
 		if(game() == 0) {
-			move(0, SCREENLENGTH);
+			move(0, LINES);
 			break;
 		}
 	}
@@ -238,7 +238,7 @@ move_words(void)
 		erase_word(wordp);
 		wordp->posy += wordp->drop;
 
-		if(wordp->posy >= SCREENLENGTH) {
+		if(wordp->posy >= LINES) {
 			kill_word(wordp);
 			died++;
 		}
@@ -336,7 +336,7 @@ int game()
 					highlight(1);
 					printw("%c", curr_word->word[curr_word->matches]);
 					highlight(0);
-					goto_xy(SCREENWIDTH,SCREENLENGTH);
+					goto_xy(COLS, LINES);
 					fflush(stdout);
 					curr_word->matches++;
 					/*
@@ -369,7 +369,7 @@ int game()
 				}
 				erase_word(curr_word);
 				putword(curr_word);
-				goto_xy(SCREENWIDTH,SCREENLENGTH);
+				goto_xy(COLS, LINES);
 
 				fflush(stdout);
 			}
@@ -393,11 +393,11 @@ int game()
 			if (lives < 0)
 				lives = 0;
 			status();
-			goto_xy(SCREENWIDTH,SCREENLENGTH);
+			goto_xy(COLS, LINES);
 			fflush(stdout);
 			return (lives != 0);
 		} else {
-			goto_xy(SCREENWIDTH,SCREENLENGTH);
+			goto_xy(COLS, LINES);
 			fflush(stdout);
 		}
 		if((random() % ADDWORD) == 0) {
@@ -458,7 +458,7 @@ void redraw() {
  * display the status line in inverse video
  */
 void status() {
-	static char line[SCREENWIDTH];
+	char line[COLS];
 	int  i;
 
 	sprintf(line, "Score: %-7uLevel: %-3uWords: %-6uLives: %-3dWPM: %-4d",
@@ -467,11 +467,11 @@ void status() {
 	/*
 	 * fill the line with spaces
 	 */
-	for(i = strlen(line); i < SCREENWIDTH - 2; i++)
+	for(i = strlen(line); i < COLS - 2; i++)
 		line[i] = ' ';
 
 	highlight(1);
-	goto_xy(0, SCREENLENGTH - 1);
+	goto_xy(0, LINES - 1);
 	printw("%s", line);
 	highlight(0);
 }
@@ -574,7 +574,7 @@ newword(struct s_word *wordp)
 	nword->length = length;
 	nword->drop = length > 6 ? 1 : length > 3 ? 2 : 3;
 	nword->matches = 0;
-	nword->posx = random() % ((SCREENWIDTH - 1) - nword->length);
+	nword->posx = random() % ((COLS - 1) - nword->length);
 	nword->posy = 0;
 	nword->nextword = NULL;
 
@@ -664,9 +664,9 @@ void
 banner(const char *text)
 {
 	erase();
-	goto_xy((SCREENWIDTH - strlen(text))/2, 10);
+	goto_xy((COLS - strlen(text))/2, 10);
 	printw("%s", text);
-	goto_xy(SCREENWIDTH, SCREENLENGTH);
+	goto_xy(COLS, LINES);
 	refresh();
 	sleep(3);
 	erase();
