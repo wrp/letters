@@ -16,6 +16,22 @@
 extern char *dictionary, *choice;
 extern int choicelen;
 
+static size_t
+build_random_string(char *buf, size_t siz, const char *string)
+{
+	char *p = buf;
+	int wlen;
+	size_t len = strlen(string);
+
+	wlen  = (MINSTRING + (random() % (MAXSTRING - MINSTRING)));
+	wlen %= siz;
+	while(wlen--) {
+		*p++ = string[(random() % len)];
+	}
+	*p = '\0';
+	return p - buf;
+}
+
 size_t
 getword(char *buf, size_t bufsiz)
 {
@@ -29,20 +45,7 @@ getword(char *buf, size_t bufsiz)
 	 * from it instead of reading the dictionary.
 	 */
 	if (choice) {
-
-		char *start, *p = buf;
-		int   wlen;
-
-		start = choice + (random() % choicelen);
-		wlen  = (MINSTRING + (random() % (MAXSTRING - MINSTRING)));
-		wlen %= bufsiz;
-		while(wlen--) {
-			if (*start == '\0')
-				start = choice;
-			*p++ = *start++;
-		}
-		*p = '\0';
-		return p - buf;
+		return build_random_string(buf, bufsiz, choice);
 	}
 
 	/*
