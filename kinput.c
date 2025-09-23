@@ -14,7 +14,6 @@
 #include "config.h"
 
 #include "kinput.h"
-#include "terms.h"
 #include "turboc.h"
 
 extern unsigned int score, word_count, level;
