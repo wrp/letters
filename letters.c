@@ -623,25 +623,19 @@ struct s_word *wordp;
  * momentarily display a banner message across the screen and eliminate any
  * random keystrokes form the last round
  */
-void banner(text)
-char *text;
+void
+banner(const char *text)
 {
-	/*
-	 * display banner message
-	 */
 	erase();
 	goto_xy((SCREENWIDTH - strlen(text))/2, 10);
+	printw("%s", text);
+	goto_xy(SCREENWIDTH, SCREENLENGTH);
+	refresh();
 	sleep(3);
-	puts(text);
-	goto_xy(SCREENWIDTH,SCREENLENGTH);
-	fflush(stdout);
-	sleep(2);
 	erase();
 
-	/*
-	 * flush keyboard
-	 */
-	while(key_pressed() != -1);
+	while(key_pressed() != -1)
+		;
 }
 
 
