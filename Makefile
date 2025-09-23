@@ -31,11 +31,7 @@ INSTALL = /usr/bin/install
 # in this directory will be used to make a wordlist.
 DOCDIR = $(PREFIX)/man
 
-# If your machine doesn't have usleep uncomment it in the following line.
-# I know this includes ultrix 4.2 and hp-ux 7.? and many sys V based machines.
-# Don't know about others. if you need usleep and your machine does not have
-# select, change usleep.o to usleep5.o (mostly sysV machines).
-OBJS = letters.o kinput.o word.o highscore.o # usleep.o
+OBJS = letters.o kinput.o word.o highscore.o
 
 # The following line will stop gcc from complaining about the arguments
 # sun's make uses.  It shouldn't bother anyone else.
