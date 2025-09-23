@@ -29,23 +29,8 @@ int underline(int on);
 #define HIGHSCORES "letters.high"
 #endif
 
-/*
- * probably best to leave these so it's the same everywhere.  Otherwise,
- * anyone with an xterminal is likely to get higher scores.
- */
-#ifdef AMIGA
-#define SCREENLENGTH	22
-#elif __TURBOC__
-#define SCREENLENGTH	24
-#else
-#define SCREENLENGTH	23
-#endif
-
-#ifdef __TURBOC__
-#define SCREENWIDTH	79
-#else
-#define SCREENWIDTH	80
-#endif
+#define SCREENLENGTH 51
+#define SCREENWIDTH  178
 
 /*
  * initial delay in usecs before words move to the next line
