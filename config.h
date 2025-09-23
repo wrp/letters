@@ -15,6 +15,7 @@ void redraw(void);
 #include <unistd.h>
 int underline(int on);
 char * getword(void);
+char * bonusword(void);
 
 /*
  * configurable stuff in letters.  Most things here probably shouldn't need

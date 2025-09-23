@@ -106,7 +106,8 @@ getword(void)
 }
 
 
-char *bonusword()
+char *
+bonusword(void)
 {
 	static char	buf[BONUSLENGTH + 1];
 	int		i;
