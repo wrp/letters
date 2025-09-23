@@ -67,25 +67,8 @@ getword(void)
 		}
 	}
 
-	/*
-	 * pick a random place in the dictionary
-	 */
-#ifdef __TURBOC__
- 	fseek(fp, ((((long)rand() << 16) | rand())) % s_buf.st_size, 0);
-#else
 	fseek(fp, random() % s_buf.st_size, 0);
-#endif
-
-	/*
-	 * read until the end of a line, then read the next word.
-	 */
 	if( fscanf(fp, "%*s%s", buf) != 1 ){
-
-	/*
-	 * Since we're reading two words at a time it's possible to go past
-	 * the end of the file.  If that happens, use the first word in the
-	 * dictionary.
-	 */
 		fseek(fp, 0L, 0);
 		fscanf(fp, "%s", buf);
 	}
