@@ -14,7 +14,6 @@
 #include "config.h"
 
 #include "kinput.h"
-#include "turboc.h"
 
 extern unsigned int score, word_count, level;
 
@@ -58,11 +57,8 @@ intrrpt(int sig)
 static void die(sig)
 int	sig;
 {
-	textattr_clr;
-#ifndef __TURBOC__
 	endwin();
 	erase();
 	highlight(0);
 	exit(1);
-#endif
 }

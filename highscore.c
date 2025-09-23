@@ -14,7 +14,6 @@
 #include "config.h"
 #include "term.h"
 #include "kinput.h"
-#include "turboc.h"
 
 struct score_rec {
 	char	name[9];
@@ -39,7 +38,6 @@ void read_scores() {
 	 * multiuser systems.
 	 */
 	if(stat(highscores, &s_buf) == -1) {
-		textattr_clr;
 		fprintf(stderr, "Cannot stat %s: ", highscores);
 		perror("");
 		endwin();
@@ -49,7 +47,6 @@ void read_scores() {
 	readtime = s_buf.st_mtime;
 
 	if((fp = fopen(highscores, "r")) == NULL) {
-		textattr_clr;
 		fprintf(stderr, "Cannot open %s: ", highscores);
 		perror("");
 		endwin();
@@ -75,7 +72,6 @@ write_scores(void) {
 	 * since we read it.
 	 */
 	if(stat(highscores, &s_buf) == -1) {
-		textattr_clr;
 		fprintf(stderr, "Cannot stat %s: ", highscores);
 		perror("");
 		endwin();
@@ -86,7 +82,6 @@ write_scores(void) {
 		return -1;
 
 	if((fp = fopen(highscores, "w")) == NULL) {
-		textattr_clr;
 		fprintf(stderr, "Cannot write to %s: ", highscores);
 		perror("");
 		endwin();

@@ -10,7 +10,6 @@
 #include <sys/stat.h>
 #include "config.h"
 #include "kinput.h"
-#include "turboc.h"
 
 # define random lrand48
 

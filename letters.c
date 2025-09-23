@@ -19,7 +19,6 @@
 
 #include "config.h"
 #include "kinput.h"
-#include "turboc.h"
 
 struct s_word {
 	struct s_word *nextword;
@@ -121,7 +120,6 @@ main(int argc, char **argv)
 				case 'h':
 					read_scores();
 					show_scores();
-					textattr_clr;
 					exit(0);
 					break;
 				case 'l':
