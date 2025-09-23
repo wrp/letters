@@ -308,7 +308,10 @@ int game()
 				(curr_word->matches != curr_word->length) &&
 				((key = getch()) != ERR)
 			) {
-				if(key == CTRL('L')) {
+				if(
+					key == CTRL('L') ||
+					key == KEY_RESIZE
+				) {
 					redraw();
 					continue;
 				}
