@@ -5,6 +5,14 @@
  * copyright 2018 David C Sterratt (david.c.sterratt@ed.ac.uk)
  */
 
+/*
+ * TODO
+ * Add LICENSE file and figure out how to handle prior non-license
+ * Build system (meson?)
+ * Test suite
+ * Refactor!
+ */
+
 # define CTRL(c)  (c & 037)
 
 #define TRUE 1
