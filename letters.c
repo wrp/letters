@@ -354,7 +354,6 @@ game(struct state *S)
 					printw("%c", curr_word->word[curr_word->matches]);
 					highlight(0);
 					goto_xy(COLS, LINES);
-					fflush(stdout);
 					curr_word->matches++;
 					/*
 					 * fill the word with characters to
@@ -391,7 +390,6 @@ game(struct state *S)
 				putword(curr_word);
 				goto_xy(COLS, LINES);
 
-				fflush(stdout);
 			}
 			/* TODO: use an itimer for more precision */
 			usleep(PAUSE);
@@ -416,7 +414,6 @@ game(struct state *S)
 			}
 			status(S);
 			goto_xy(COLS, LINES);
-			fflush(stdout);
 			return (lives != 0);
 		}
 		refresh();
