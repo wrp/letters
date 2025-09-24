@@ -115,7 +115,6 @@ intrrpt(struct state *S)
 	default:
 		erase();
 		status(S);
-		refresh();
 	}
 }
 
@@ -417,7 +416,6 @@ game(struct state *S)
 			goto_xy(COLS, LINES);
 			return (lives != 0);
 		}
-		refresh();
 		if((random() % ADDWORD) == 0) {
 			S->lastword = newword(S->lastword);
 			putword(S->lastword);
