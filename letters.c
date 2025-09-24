@@ -50,7 +50,7 @@ void show_scores(void);
 void putword();
 int  game();
 void erase_word(struct s_word *wordp);
-void status();
+void status(void);
 void new_level(struct state *);
 void banner();
 struct s_word *newword();
@@ -470,25 +470,17 @@ void redraw() {
 	fflush(stdout);
 }
 
-/*
- * display the status line in inverse video
- */
-void status() {
-	char line[COLS];
-	int  i;
-
-	sprintf(line, "Score: %-7uLevel: %-3uWords: %-6uLives: %-3dWPM: %-4d",
-		score, level, word_count, lives, wpm);
-
-	/*
-	 * fill the line with spaces
-	 */
-	for(i = strlen(line); i < COLS - 2; i++)
-		line[i] = ' ';
-
+/* Display the status line. */
+void
+status(void)
+{
+	goto_xy(COLS / 2 - 28, 0);
 	highlight(1);
-	goto_xy(0, LINES - 1);
-	printw("%s", line);
+	printw("Score: %-7u", score);
+	printw("Level: %-3u", level);
+	printw("Words: %-6u", word_count);
+	printw("Lives: %-3d", lives);
+	printw("WPM: %-4d", wpm);
 	highlight(0);
 }
 
@@ -591,7 +583,7 @@ newword(struct s_word *wordp)
 	nword->drop = length > 6 ? 1 : length > 3 ? 2 : 3;
 	nword->matches = 0;
 	nword->posx = random() % ((COLS - 1) - nword->length);
-	nword->posy = 0;
+	nword->posy = 1;
 	nword->nextword = NULL;
 
 	if(wordp != NULL)
