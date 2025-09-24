@@ -269,22 +269,17 @@ void erase_word(struct s_word *wordp)
 void
 putword(struct s_word *wordp)
 {
-	int i;
+	int idx = wordp->matches;
+	int c = wordp->word[idx];
 
+	assert(idx <= wordp->length);
 	goto_xy(wordp->posx, wordp->posy);
-
-	/*
-	 * print the letters in the word that have so far been matched
-	 * correctly.
-	 */
 	highlight(1);
-	for(i = 0; i < wordp->matches; i++)
-		printw("%c", wordp->word[i]);
+	wordp->word[idx] = '\0';
+	printw("%s", wordp->word);
+	wordp->word[idx] = c;
 	highlight(0);
-
-	/* print the rest of the word  */
-	for(i = wordp->matches; i < wordp->length; i++)
-		printw("%c", wordp->word[i]);
+	printw("%s", wordp->word + wordp->matches);
 }
 
 
