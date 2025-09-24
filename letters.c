@@ -289,6 +289,32 @@ putword(struct s_word *wordp)
 		printw("%c", wordp->word[i]);
 }
 
+
+static int
+handle_ctrl_key(struct state *S, int key)
+{
+	switch(key) {
+	case CTRL('L'):
+	case KEY_RESIZE:
+		erase();
+		status(S);
+		break;
+	case CTRL('N'):
+		S->level += 1;
+		S->delay = S->handicap * DELAY(S->level);
+		if(S->delay < PAUSE)
+			S->delay = PAUSE;
+		status(S);
+		break;
+	case CTRL('C'):
+		intrrpt(S);
+		break;
+	default:
+		return 0;
+	}
+	return 1;
+}
+
 /*
  * Here's the main routine of the actual game.
  */
@@ -315,24 +341,7 @@ game(struct state *S)
 				(curr_word->matches != curr_word->length) &&
 				((key = getch()) != ERR)
 			) {
-				if(
-					key == CTRL('L') ||
-					key == KEY_RESIZE
-				) {
-					erase();
-					status(S);
-					continue;
-				}
-				if(key == CTRL('N')) {
-					S->level++;
-					S->delay = S->handicap * DELAY(S->level);
-					if(S->delay < PAUSE)
-						S->delay = PAUSE;
-					status(S);
-					continue;
-				}
-				if(key == CTRL('C')) {
-					intrrpt(S);
+				if (handle_ctrl_key(S, key)) {
 					continue;
 				}
 				/*
