@@ -449,9 +449,6 @@ game(struct state *S)
 	word_count++;
 	status(S);
 
-	/*
-	 * delete the completed word and revise pointers.
-	 */
 	kill_word(curr_word, S);
 
 	/*
@@ -636,6 +633,7 @@ searchchar(int key, struct state *S)
 	return best;
 }
 
+/* Delete the completed word and revise pointers  */
 void
 kill_word(struct s_word *wordp, struct state *S)
 {
