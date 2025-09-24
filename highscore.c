@@ -21,7 +21,7 @@ struct score_rec {
 
 static char highscores[] = HIGHSCORES;
 
-extern unsigned score, word_count, level;
+extern unsigned word_count, level;
 
 static struct score_rec high_scores[10];
 static struct stat	s_buf;
@@ -96,7 +96,7 @@ write_scores(void) {
 
 
 void
-update_scores(void)
+update_scores(unsigned score)
 {
 	int i, j;
 	struct passwd *p;
@@ -118,7 +118,7 @@ update_scores(void)
 			high_scores[i].level = level;
 			if(write_scores() == -1) {
 				read_scores();
-				update_scores();
+				update_scores(score);
 			}
 			break;
 		}

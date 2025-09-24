@@ -41,7 +41,7 @@ struct s_word {
 struct state;
 static int move_words(struct state *);
 
-void update_scores(void);
+void update_scores(unsigned);
 int read_scores(void);
 void show_scores(void);
 void putword();
@@ -64,8 +64,8 @@ void free();
  */
 struct state {
 	struct s_word *words, *lastword, *prev_word;
+	unsigned int score;
 };
-unsigned int score = 0;
 int handicap = 1;
 int level = 0;
 int levels_played = -1;
@@ -112,7 +112,7 @@ intrrpt(struct state *S)
 		endwin();
 		printf(
 			"\n\nfinal: score = %u\twords = %u\t level = %d\n",
-			score,
+			S->score,
 			word_count,
 			level
 		);
@@ -220,12 +220,12 @@ main(int argc, char **argv)
 
 	read_scores();
 	if(handicap == 1 && newdict == 0 && choice == NULL)
-		update_scores();
+		update_scores(S->score);
 	sleep(2);
 	show_scores();
 	endwin();
 	printf("\n\nfinal: score = %u\twords = %u\t level = %d\n",
-	       score, word_count, level);
+		S->score, word_count, level);
 
 	exit(0);
 }
@@ -441,7 +441,7 @@ game(struct state *S)
 	/*
 	 * add on an appropriate score.
 	 */
-	score += curr_word->length + (2 * level);
+	S->score += curr_word->length + (2 * level);
 	letters+= curr_word->length;
 	word_count++;
 	status(S);
@@ -457,7 +457,7 @@ game(struct state *S)
 	 */
 	if(word_count % LEVEL_CHANGE == 0) {
 		if (bonus)
-			score += 10 * level;
+			S->score += 10 * level;
 		new_level(S);
 	}
 
@@ -471,7 +471,7 @@ status(struct state *S)
 {
 	goto_xy(COLS / 2 - 28, 0);
 	highlight(1);
-	printw("Score: %-7u", score);
+	printw("Score: %-7u", S->score);
 	printw("Level: %-3u", level);
 	printw("Words: %-6u", word_count);
 	printw("Lives: %-3d", lives);
