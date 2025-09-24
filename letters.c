@@ -68,12 +68,12 @@ struct state {
 	struct s_word *words, *lastword, *prev_word;
 	unsigned int score;
 	jmp_buf jbuf;
+	long delay;
 };
 int handicap = 1;
 int levels_played = -1;
 unsigned int word_count = 0;
 static int lives = 2;
-static long delay;
 int bonus = 0; /* to determine if we're in a bonus round */
 int wpm = 0;
 int letters = 0;
@@ -307,7 +307,7 @@ game(struct state *S)
 	if (!curr_word)
 		curr_word = S->words;
 	while(curr_word->matches < curr_word->length) {
-		for(i = 0; i < delay; i += PAUSE) {
+		for(i = 0; i < S->delay; i += PAUSE) {
 			while(
 				(curr_word->matches != curr_word->length) &&
 				((key = getch()) != ERR)
@@ -322,9 +322,9 @@ game(struct state *S)
 				}
 				if(key == CTRL('N')) {
 					S->level++;
-					delay = handicap * DELAY(S->level);
-					if(delay < PAUSE)
-						delay = PAUSE;
+					S->delay = handicap * DELAY(S->level);
+					if(S->delay < PAUSE)
+						S->delay = PAUSE;
 					status(S);
 					continue;
 				}
@@ -520,14 +520,14 @@ new_level(struct state *S)
 	if(S->level <= levels_played)
 		S->level += 1;
 
-	delay = handicap * DELAY(S->level);
+	S->delay = handicap * DELAY(S->level);
 
 	/*
 	 * no one should ever reach a level where there is no delay, but
 	 * just to be safe ...
 	 */
-	if(delay < PAUSE)
-		delay = PAUSE;
+	if(S->delay < PAUSE)
+		S->delay = PAUSE;
 
 	if((levels_played % 3 == 0) && (levels_played != 0)) {
 		bonus = 1;
