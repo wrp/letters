@@ -309,6 +309,22 @@ handle_ctrl_key(struct state *S, int key)
 }
 
 /*
+ * Find any word that has a partial match, or return S->words
+ */
+static struct s_word *
+find_match(const struct state *S)
+{
+	struct s_word *this;
+	for (this = S->words; this; this = this->nextword) {
+		if (this->matches > 0) {
+			return this;
+		}
+	}
+	return S->words;
+}
+
+
+/*
  * Here's the main routine of the actual game.
  */
 int
@@ -319,15 +335,7 @@ game(struct state *S)
 	int  died;
 	struct s_word *curr_word, *temp_word;
 
-	/*
-	 * look to see if we already have a partial match, if not
-	 * set the current word pointer to the first word
-	 */
-	for(curr_word = S->words; curr_word; curr_word = curr_word->nextword)
-		if (curr_word->matches > 0)
-			break;
-	if (!curr_word)
-		curr_word = S->words;
+	curr_word = find_match(S);
 	while(curr_word->matches < curr_word->length) {
 		for(i = 0; i < S->delay; i += PAUSE) {
 			while(
