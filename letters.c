@@ -126,7 +126,7 @@ intrrpt(int sig)
 	} else {
 		signal(sig, intrrpt);
 		erase();
-		redraw();
+		refresh();
 	}
 }
 
@@ -321,7 +321,8 @@ game(struct state *S)
 					key == CTRL('L') ||
 					key == KEY_RESIZE
 				) {
-					redraw();
+					erase();
+					status();
 					continue;
 				}
 				if(key == CTRL('N')) {
@@ -412,10 +413,8 @@ game(struct state *S)
 			goto_xy(COLS, LINES);
 			fflush(stdout);
 			return (lives != 0);
-		} else {
-			goto_xy(COLS, LINES);
-			fflush(stdout);
 		}
+		refresh();
 		if((random() % ADDWORD) == 0) {
 			S->lastword = newword(S->lastword);
 			putword(S->lastword);
@@ -461,15 +460,6 @@ game(struct state *S)
 }
 
 
-/*
- * clear the screen and redraw it
- */
-void redraw() {
-	erase();
-	status();
-	fflush(stdout);
-}
-
 /* Display the status line. */
 void
 status(void)
@@ -481,6 +471,7 @@ status(void)
 	printw("Words: %-6u", word_count);
 	printw("Lives: %-3d", lives);
 	printw("WPM: %-4d", wpm);
+	clrtoeol();
 	highlight(0);
 }
 
