@@ -47,7 +47,7 @@ void show_scores(void);
 void putword();
 int  game();
 void erase_word(struct s_word *wordp);
-void status(void);
+void status(struct state *);
 void new_level(struct state *);
 int banner(const char *, int);
 struct s_word *newword();
@@ -119,7 +119,7 @@ intrrpt(struct state *S)
 		exit(0);
 	default:
 		erase();
-		status();
+		status(S);
 		refresh();
 	}
 }
@@ -195,7 +195,7 @@ init(struct state *S, int argc, char **argv)
 	nodelay(stdscr, 1);
 	clear();
 	new_level(S);
-	status();
+	status(S);
 	S->words = NULL;
 }
 
@@ -322,7 +322,7 @@ game(struct state *S)
 					key == KEY_RESIZE
 				) {
 					erase();
-					status();
+					status(S);
 					continue;
 				}
 				if(key == CTRL('N')) {
@@ -330,7 +330,7 @@ game(struct state *S)
 					delay = handicap * DELAY(level);
 					if(delay < PAUSE)
 						delay = PAUSE;
-					status();
+					status(S);
 					continue;
 				}
 				if(key == CTRL('C')) {
@@ -414,7 +414,7 @@ game(struct state *S)
 			if (lives < 0) {
 				lives = 0;
 			}
-			status();
+			status(S);
 			goto_xy(COLS, LINES);
 			fflush(stdout);
 			return (lives != 0);
@@ -444,7 +444,7 @@ game(struct state *S)
 	score += curr_word->length + (2 * level);
 	letters+= curr_word->length;
 	word_count++;
-	status();
+	status(S);
 
 	/*
 	 * delete the completed word and revise pointers.
@@ -467,7 +467,7 @@ game(struct state *S)
 
 /* Display the status line. */
 void
-status(void)
+status(struct state *S)
 {
 	goto_xy(COLS / 2 - 28, 0);
 	highlight(1);
@@ -515,7 +515,7 @@ new_level(struct state *S)
 			kill_word(wordp, S);
 		}
 
-		status();
+		status(S);
 		return;
 	}
 
@@ -553,7 +553,7 @@ new_level(struct state *S)
 		lives++;
 	}
 
-	status();
+	status(S);
 }
 
 /* Initialize a new word. */
