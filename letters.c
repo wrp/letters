@@ -655,9 +655,6 @@ kill_word(struct s_word *wordp, struct state *S)
 	} else
 		S->words = wordp->nextword;
 
-	if(wordp->nextword != NULL)
-		wordp->nextword = wordp->nextword->nextword;
-
 	if(wordp == S->lastword)
 		S->lastword = prev;
 
