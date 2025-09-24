@@ -64,7 +64,7 @@ void free();
  */
 struct state {
 	int level;
-	struct s_word *words, *lastword, *prev_word;
+	struct s_word *words, *lastword;
 	unsigned int score;
 	jmp_buf jbuf;
 	long delay;
@@ -209,7 +209,6 @@ main(int argc, char **argv)
 	do {
 		if (S->words == NULL) {
 			S->lastword = S->words = newword(NULL);
-			S->prev_word = NULL;
 			putword(S->lastword);
 		}
 	} while (game(S));
@@ -590,7 +589,6 @@ searchstr(int key, char *str, int len, struct state *S)
 	struct s_word *wordp = S->words;
 	struct s_word *best = NULL;
 
-	S->prev_word = NULL;
 	while (wordp) {
 		if(
 			wordp->length > len
@@ -600,7 +598,6 @@ searchstr(int key, char *str, int len, struct state *S)
 		) {
 			best = wordp;
 		}
-		S->prev_word = wordp;
 		wordp = wordp->nextword;
 	}
 
@@ -617,9 +614,9 @@ searchchar(int key, struct state *S)
 {
 	struct s_word	*wordp, *best;
 
-	for(best = NULL, S->prev_word = NULL, wordp = S->words;
+	for(best = NULL, wordp = S->words;
 		wordp != NULL;
-		S->prev_word = wordp,  wordp = wordp->nextword
+		wordp = wordp->nextword
 	) {
 		if(wordp->word[0] == key
  		&& (!best || best->posy < wordp->posy))
