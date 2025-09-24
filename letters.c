@@ -49,7 +49,7 @@ int  game();
 void erase_word(struct s_word *wordp);
 void status(void);
 void new_level(struct state *);
-void banner();
+int banner(const char *, int);
 struct s_word *newword();
 struct s_word *searchstr(int key, char *str, int len, struct state *S);
 struct s_word *searchchar(int, struct state *);
@@ -103,16 +103,13 @@ check_tty(void)
 }
 
 
-/* TODO: establish signal handlers */
 static void
-intrrpt(int sig)
+intrrpt(struct state *S)
 {
-	int c;
-
-	printf("\n\rare you sure you want to quit? ");
-	if((c = getchar()) == 'y' || c == 'Y') {
+	switch(banner("Are you sure you want to quit?", 0)) {
+	case 'y':
+	case 'Y':
 		endwin();
-		assert(false && "DO NOT CALL PRINTF IN A SIGNAL HANDLER");
 		printf(
 			"\n\nfinal: score = %u\twords = %u\t level = %d\n",
 			score,
@@ -120,9 +117,9 @@ intrrpt(int sig)
 			level
 		);
 		exit(0);
-	} else {
-		signal(sig, intrrpt);
+	default:
 		erase();
+		status();
 		refresh();
 	}
 }
@@ -192,8 +189,8 @@ main(int argc, char **argv)
 
 	srand48(time(NULL));
 	initscr();
+	raw();
 	curs_set(0);
-	cbreak();
 	noecho();
 	keypad(stdscr, 1);
 	nodelay(stdscr, 1);
@@ -328,6 +325,10 @@ game(struct state *S)
 					if(delay < PAUSE)
 						delay = PAUSE;
 					status();
+					continue;
+				}
+				if(key == CTRL('C')) {
+					intrrpt(S);
 					continue;
 				}
 				/*
@@ -497,7 +498,7 @@ new_level(struct state *S)
 	 */
 	if (bonus) {
 		bonus = 0;
-		banner("Bonus round finished");
+		banner("Bonus round finished", 3);
 
 		/*
 		 * erase all existing words so we can go back to a normal
@@ -542,7 +543,7 @@ new_level(struct state *S)
 			kill_word(wordp, S);
 		}
 
-		banner("Prepare for bonus words");
+		banner("Prepare for bonus words", 3);
 		lives++;
 	}
 
@@ -656,23 +657,26 @@ kill_word(struct s_word *wordp, struct state *S)
 
 
 /*
- * momentarily display a banner message across the screen and eliminate any
- * random keystrokes form the last round
+ * momentarily display a banner message across the screen
  */
-void
-banner(const char *text)
+int
+banner(const char *text, int delay_sec)
 {
+	int c = ERR;
+
 	erase();
 	goto_xy((COLS - strlen(text))/2, 10);
 	printw("%s", text);
-	goto_xy(COLS, LINES);
 	refresh();
-	sleep(3);
-	erase();
-
-	while (getch() != ERR) {
-		;
+	if (delay_sec) {
+		sleep(delay_sec);
+	} else {
+		timeout(-1);
+		c = getch();
+		timeout(0);
 	}
+	erase();
+	return c;
 }
 
 
