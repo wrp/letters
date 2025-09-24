@@ -355,22 +355,16 @@ game(struct state *S)
 				 * can't play too often at work)
 				 */
 				if(curr_word->matches > 0 &&
-				   key == curr_word->word[curr_word->matches]) {
-					goto_xy(curr_word->posx + curr_word->matches, curr_word->posy);
+					key == curr_word->word[curr_word->matches])
+				{
+					int x = curr_word->posx;
+					int y = curr_word->posy;
+					goto_xy(x + curr_word->matches, y);
 					highlight(1);
-					printw("%c", curr_word->word[curr_word->matches]);
+					printw("%c", key);
 					highlight(0);
-					goto_xy(COLS, LINES);
-					curr_word->matches++;
-					/*
-					 * fill the word with characters to
-					 * "explode" it.
-					 */
-					if(curr_word->matches >= curr_word->length)
-						for (i = 0; i<curr_word->length; i++)
-							curr_word->word[i] = '-';
+					curr_word->matches += 1;
 					continue;
-
 				} else if ((temp_word = searchstr(
 					key,
 					curr_word->word,
