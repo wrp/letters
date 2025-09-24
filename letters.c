@@ -16,7 +16,7 @@
  * quit cleanly with prompt
  */
 
-# define CTRL(c)  (c & 037)
+# define CTRL(c)  (c & 0x1f)
 
 #define TRUE 1
 #define FALSE 0
