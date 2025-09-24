@@ -582,23 +582,26 @@ newword(struct s_word *wordp)
 }
 
 /*
- * look at the first characters in each of the words to find one which
- * one matches the amount of stuff typed so far
+ * Find the word that matches that has highest posy
  */
 struct s_word *
 searchstr(int key, char *str, int len, struct state *S)
 {
-	struct s_word *wordp, *best;
+	struct s_word *wordp = S->words;
+	struct s_word *best = NULL;
 
-	for(best = NULL, S->prev_word = NULL, wordp = S->words;
-		wordp != NULL;
-		S->prev_word = wordp,  wordp = wordp->nextword
-	) {
-		if(wordp->length > len
-		&& strncmp(wordp->word, str, len) == 0
-		&& wordp->word[len] == key
-		&& (!best || best->posy < wordp->posy))
+	S->prev_word = NULL;
+	while (wordp) {
+		if(
+			wordp->length > len
+			&& strncmp(wordp->word, str, len) == 0
+			&& wordp->word[len] == key
+			&& (!best || best->posy < wordp->posy)
+		) {
 			best = wordp;
+		}
+		S->prev_word = wordp;
+		wordp = wordp->nextword;
 	}
 
 	return best;
