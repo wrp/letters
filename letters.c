@@ -42,7 +42,7 @@ struct s_word {
 struct state;
 static int move_words(struct state *);
 
-void update_scores(unsigned);
+void update_scores(unsigned, unsigned);
 int read_scores(void);
 void show_scores(void);
 void putword();
@@ -64,12 +64,12 @@ void free();
  * a few places
  */
 struct state {
+	int level;
 	struct s_word *words, *lastword, *prev_word;
 	unsigned int score;
 	jmp_buf jbuf;
 };
 int handicap = 1;
-int level = 0;
 int levels_played = -1;
 unsigned int word_count = 0;
 static int lives = 2;
@@ -142,9 +142,9 @@ parse_cmd_line(int argc, char **argv, struct state *S)
 					exit(0);
 					break;
 				case 'l':
-					sscanf(&argv[0][2], "%d", &level);
-					if(DELAY(level) <= PAUSE) {
-						fprintf(stderr, "You may not start at level %d\n", level);
+					sscanf(&argv[0][2], "%d", &S->level);
+					if(DELAY(S->level) <= PAUSE) {
+						fprintf(stderr, "You may not start at level %d\n", S->level);
 						exit(0);
 					}
 					break;
@@ -214,13 +214,13 @@ main(int argc, char **argv)
 
 	read_scores();
 	if(handicap == 1 && newdict == 0 && choice == NULL)
-		update_scores(S->score);
+		update_scores(S->score, S->level);
 	sleep(2);
 	show_scores();
 exit:
 	endwin();
 	printf("\n\nfinal: score = %u\twords = %u\t level = %d\n",
-		S->score, word_count, level);
+		S->score, word_count, S->level);
 
 	exit(0);
 }
@@ -321,8 +321,8 @@ game(struct state *S)
 					continue;
 				}
 				if(key == CTRL('N')) {
-					level++;
-					delay = handicap * DELAY(level);
+					S->level++;
+					delay = handicap * DELAY(S->level);
 					if(delay < PAUSE)
 						delay = PAUSE;
 					status(S);
@@ -432,7 +432,7 @@ game(struct state *S)
 	/*
 	 * add on an appropriate score.
 	 */
-	S->score += curr_word->length + (2 * level);
+	S->score += curr_word->length + (2 * S->level);
 	letters+= curr_word->length;
 	word_count++;
 	status(S);
@@ -448,7 +448,7 @@ game(struct state *S)
 	 */
 	if(word_count % LEVEL_CHANGE == 0) {
 		if (bonus)
-			S->score += 10 * level;
+			S->score += 10 * S->level;
 		new_level(S);
 	}
 
@@ -463,7 +463,7 @@ status(struct state *S)
 	goto_xy(COLS / 2 - 28, 0);
 	highlight(1);
 	printw("Score: %-7u", S->score);
-	printw("Level: %-3u", level);
+	printw("Level: %-3u", S->level);
 	printw("Words: %-6u", word_count);
 	printw("Lives: %-3d", lives);
 	printw("WPM: %-4d", wpm);
@@ -517,10 +517,10 @@ new_level(struct state *S)
 	 * actually change until you've completed a number of levels equal
 	 * to the starting level.
 	 */
-	if(level <= levels_played)
-		level++;
+	if(S->level <= levels_played)
+		S->level += 1;
 
-	delay = handicap * DELAY(level);
+	delay = handicap * DELAY(S->level);
 
 	/*
 	 * no one should ever reach a level where there is no delay, but
