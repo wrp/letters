@@ -41,7 +41,8 @@ struct s_word {
 	char word[32];
 };
 
-static int move_words(void);
+struct state;
+static int move_words(struct state *);
 
 void update_scores(void);
 int read_scores(void);
@@ -50,11 +51,12 @@ void putword();
 int  game();
 void erase_word(struct s_word *wordp);
 void status();
-void new_level();
+void new_level(struct state *);
 void banner();
 struct s_word *newword();
-struct s_word *searchstr(), *searchchar();
-void kill_word();
+struct s_word *searchstr(int key, char *str, int len, struct state *S);
+struct s_word *searchchar(int, struct state *);
+void kill_word(struct s_word *wordp, struct state *S);
 int (*ding)(void); /* beep, flash, or no-op */
 
 void free();
@@ -63,6 +65,9 @@ void free();
  * There are too many globals for my taste, but I took the easy way out in
  * a few places
  */
+struct state {
+	struct s_word *words, *lastword, *prev_word;
+};
 unsigned int score = 0;
 int handicap = 1;
 int level = 0;
@@ -70,7 +75,6 @@ int levels_played = -1;
 unsigned int word_count = 0;
 static int lives = 2;
 static long delay;
-struct s_word *words, *lastword, *prev_word;
 int bonus = FALSE; /* to determine if we're in a bonus round */
 int wpm = 0;
 int letters = 0;
@@ -181,6 +185,7 @@ parse_cmd_line(int argc, char **argv)
 int
 main(int argc, char **argv)
 {
+	struct state S = {0};
 	check_tty();
 	ding = no_op;
 	parse_cmd_line(argc, argv);
@@ -193,18 +198,18 @@ main(int argc, char **argv)
 	keypad(stdscr, TRUE);
 	nodelay(stdscr, TRUE);
 	clear();
-	new_level();
+	new_level(&S);
 	status();
-	words = NULL;
+	S.words = NULL;
 
 	for(;;) {
-		if(words == NULL) {
-			lastword = words = newword((struct s_word *)NULL);
-			prev_word = NULL;
-			putword(lastword);
+		if(S.words == NULL) {
+			S.lastword = S.words = newword(NULL);
+			S.prev_word = NULL;
+			putword(S.lastword);
 		}
 
-		if(game() == 0) {
+		if(game(&S) == 0) {
 			move(0, LINES);
 			break;
 		}
@@ -227,19 +232,19 @@ main(int argc, char **argv)
  * return the number of words that have fallen off the bottom of the screen
  */
 static int
-move_words(void)
+move_words(struct state *S)
 {
 	struct s_word  *wordp, *next;
 	int  died;
 
 	died = 0;
-	for(wordp = words; wordp != NULL; wordp = next) {
+	for(wordp = S->words; wordp != NULL; wordp = next) {
 		next = wordp->nextword;
 		erase_word(wordp);
 		wordp->posy += wordp->drop;
 
 		if(wordp->posy >= LINES) {
-			kill_word(wordp);
+			kill_word(wordp, S);
 			died++;
 		}
 		else {
@@ -286,7 +291,8 @@ putword(struct s_word *wordp)
 /*
  * Here's the main routine of the actual game.
  */
-int game()
+int
+game(struct state *S)
 {
 	int  key;
 	long  i;
@@ -297,11 +303,11 @@ int game()
 	 * look to see if we already have a partial match, if not
 	 * set the current word pointer to the first word
 	 */
-	for(curr_word = words; curr_word; curr_word = curr_word->nextword)
+	for(curr_word = S->words; curr_word; curr_word = curr_word->nextword)
 		if (curr_word->matches > 0)
 			break;
 	if (!curr_word)
-		curr_word = words;
+		curr_word = S->words;
 	while(curr_word->matches < curr_word->length) {
 		for(i = 0; i < delay; i += PAUSE) {
 			while(
@@ -351,16 +357,19 @@ int game()
 							curr_word->word[i] = '-';
 					continue;
 
-				} else if( (temp_word = searchstr(key,
-							curr_word->word,
-							curr_word->matches))) {
+				} else if ((temp_word = searchstr(
+					key,
+					curr_word->word,
+					curr_word->matches,
+					S
+				) )) {
 					erase_word(temp_word);
 					temp_word->matches = curr_word->matches;
 					curr_word->matches = 0;
 					putword(curr_word);
 					curr_word = temp_word;
 					curr_word->matches++;
-				} else if( (temp_word = searchchar(key))) {
+				} else if( (temp_word = searchchar(key, S))) {
 					erase_word(temp_word);
 					curr_word->matches = 0;
 					putword(curr_word);
@@ -380,7 +389,7 @@ int game()
 			usleep(PAUSE);
 		}
 
-		died = move_words();  /* NB: may invalidate curr_word */
+		died = move_words(S);  /* NB: may invalidate curr_word */
 		if (died > 0)
 		{
 			/*
@@ -392,7 +401,7 @@ int game()
 			if(bonus == FALSE)
 				lives -= died;
 			else if(died > 0)
-				new_level();
+				new_level(S);
 
 			if (lives < 0)
 				lives = 0;
@@ -405,8 +414,8 @@ int game()
 			fflush(stdout);
 		}
 		if((random() % ADDWORD) == 0) {
-			lastword = newword(lastword);
-			putword(lastword);
+			S->lastword = newword(S->lastword);
+			putword(S->lastword);
 		}
 	}
 
@@ -433,7 +442,7 @@ int game()
 	/*
 	 * delete the completed word and revise pointers.
 	 */
-	kill_word(curr_word);
+	kill_word(curr_word, S);
 
 	/*
 	 * increment the level if it's time.  If it's a bonus round, reward
@@ -442,7 +451,7 @@ int game()
 	if(word_count % LEVEL_CHANGE == 0) {
 		if(bonus == TRUE)
 			score += 10 * level;
-		new_level();
+		new_level(S);
 	}
 
 	return 1;
@@ -483,7 +492,8 @@ void status() {
 /*
  * do stuff to change levels.  This is where special rounds can be stuck in.
  */
-void new_level()
+void
+new_level(struct state *S)
 {
 	struct s_word *next, *wordp;
 	static time_t last_time = 0L;
@@ -509,9 +519,9 @@ void new_level()
 		 * erase all existing words so we can go back to a normal
 		 * round
 		 */
-		for(wordp = words; wordp != NULL; wordp = next) {
+		for(wordp = S->words; wordp != NULL; wordp = next) {
 			next = wordp->nextword;
-			kill_word(wordp);
+			kill_word(wordp, S);
 		}
 
 		status();
@@ -543,9 +553,9 @@ void new_level()
 		/*
 		 * erase all existing words so we can have a bonus round
 		 */
-		for(wordp = words; wordp != NULL; wordp = next) {
+		for(wordp = S->words; wordp != NULL; wordp = next) {
 			next = wordp->nextword;
-			kill_word(wordp);
+			kill_word(wordp, S);
 		}
 
 		banner("Prepare for bonus words");
@@ -591,15 +601,15 @@ newword(struct s_word *wordp)
  * look at the first characters in each of the words to find one which
  * one matches the amount of stuff typed so far
  */
-struct s_word *searchstr(key, str, len)
-char *str;
-int  len, key;
+struct s_word *
+searchstr(int key, char *str, int len, struct state *S)
 {
 	struct s_word *wordp, *best;
 
-	for(best = NULL, prev_word = NULL, wordp = words;
-	    wordp != NULL;
-	    prev_word = wordp,  wordp = wordp->nextword) {
+	for(best = NULL, S->prev_word = NULL, wordp = S->words;
+		wordp != NULL;
+		S->prev_word = wordp,  wordp = wordp->nextword
+	) {
 		if(wordp->length > len
 		&& strncmp(wordp->word, str, len) == 0
 		&& wordp->word[len] == key
@@ -615,13 +625,15 @@ int  len, key;
  * look at the first character in each of the words to see if any match the
  * one that was typed.
  */
-struct s_word *searchchar(key)
-char key;
+struct s_word *
+searchchar(int key, struct state *S)
 {
 	struct s_word	*wordp, *best;
 
-	for(best = NULL, prev_word = NULL, wordp = words; wordp != NULL;
-	    prev_word = wordp,  wordp = wordp->nextword) {
+	for(best = NULL, S->prev_word = NULL, wordp = S->words;
+		wordp != NULL;
+		S->prev_word = wordp,  wordp = wordp->nextword
+	) {
 		if(wordp->word[0] == key
  		&& (!best || best->posy < wordp->posy))
 			best = wordp;
@@ -630,16 +642,16 @@ char key;
 	return best;
 }
 
-void kill_word(wordp)
-struct s_word *wordp;
+void
+kill_word(struct s_word *wordp, struct state *S)
 {
 	struct s_word *temp, *prev = NULL;
 
 	/*
 	 * check to see if the current word is the first one on our list
 	 */
-	if(wordp != words)
-		for(prev = words, temp = words->nextword; temp != wordp;) {
+	if(wordp != S->words)
+		for(prev = S->words, temp = S->words->nextword; temp != wordp;) {
 			prev = temp;
 			temp = temp->nextword;
 		}
@@ -647,13 +659,13 @@ struct s_word *wordp;
 	if(prev != NULL) {
 		prev->nextword = wordp->nextword;
 	} else
-		words = wordp->nextword;
+		S->words = wordp->nextword;
 
 	if(wordp->nextword != NULL)
 		wordp->nextword = wordp->nextword->nextword;
 
-	if(wordp == lastword)
-		lastword = prev;
+	if(wordp == S->lastword)
+		S->lastword = prev;
 
 	free((char *)wordp);
 }
