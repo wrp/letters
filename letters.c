@@ -119,7 +119,7 @@ intrrpt(struct state *S)
 }
 
 static void
-parse_cmd_line(int argc, char **argv)
+parse_cmd_line(int argc, char **argv, struct state *S)
 {
 	char *progname;
 	progname = argv[0];
@@ -178,7 +178,7 @@ init(struct state *S, int argc, char **argv)
 	unsetenv("LINES");
 
 	ding = no_op;
-	parse_cmd_line(argc, argv);
+	parse_cmd_line(argc, argv, S);
 
 	srand48(time(NULL));
 	initscr();
