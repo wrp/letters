@@ -18,9 +18,6 @@
 
 # define CTRL(c)  (c & 0x1f)
 
-#define TRUE 1
-#define FALSE 0
-
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -75,7 +72,7 @@ int levels_played = -1;
 unsigned int word_count = 0;
 static int lives = 2;
 static long delay;
-int bonus = FALSE; /* to determine if we're in a bonus round */
+int bonus = 0; /* to determine if we're in a bonus round */
 int wpm = 0;
 int letters = 0;
 char *dictionary = DICTIONARY;
@@ -198,8 +195,8 @@ main(int argc, char **argv)
 	curs_set(0);
 	cbreak();
 	noecho();
-	keypad(stdscr, TRUE);
-	nodelay(stdscr, TRUE);
+	keypad(stdscr, 1);
+	nodelay(stdscr, 1);
 	clear();
 	new_level(&S);
 	status();
@@ -402,13 +399,14 @@ game(struct state *S)
 			 * bottom during bonus play, just end the bonus
 			 * round.
 			 */
-			if(bonus == FALSE)
+			if (! bonus) {
 				lives -= died;
-			else if(died > 0)
+			} else if (died > 0) {
 				new_level(S);
-
-			if (lives < 0)
+			}
+			if (lives < 0) {
 				lives = 0;
+			}
 			status();
 			goto_xy(COLS, LINES);
 			fflush(stdout);
@@ -451,7 +449,7 @@ game(struct state *S)
 	 * the person for finishing it.
 	 */
 	if(word_count % LEVEL_CHANGE == 0) {
-		if(bonus == TRUE)
+		if (bonus)
 			score += 10 * level;
 		new_level(S);
 	}
@@ -497,8 +495,8 @@ new_level(struct state *S)
 	 * if we're inside a bonus round we don't need to change anything
 	 * else so just take us out of the bonus round and exit this routine
 	 */
-	if(bonus == TRUE) {
-		bonus = FALSE;
+	if (bonus) {
+		bonus = 0;
 		banner("Bonus round finished");
 
 		/*
@@ -534,7 +532,7 @@ new_level(struct state *S)
 		delay = PAUSE;
 
 	if((levels_played % 3 == 0) && (levels_played != 0)) {
-		bonus = TRUE;
+		bonus = 1;
 
 		/*
 		 * erase all existing words so we can have a bonus round
@@ -562,7 +560,7 @@ newword(struct s_word *wordp)
 	nword = malloc(sizeof *nword);
 	char *word = nword->word;
 
-	length = (bonus == TRUE) ? bonusword(word, s) : getword(word, s);
+	length = (bonus) ? bonusword(word, s) : getword(word, s);
 
 	if (nword == NULL) {
 		endwin();
