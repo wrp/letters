@@ -179,7 +179,7 @@ parse_cmd_line(int argc, char **argv)
 int
 main(int argc, char **argv)
 {
-	struct state S = {0};
+	struct state S[1] = {{0}};
 	check_tty();
 	unsetenv("COLUMNS");
 	unsetenv("LINES");
@@ -195,18 +195,18 @@ main(int argc, char **argv)
 	keypad(stdscr, 1);
 	nodelay(stdscr, 1);
 	clear();
-	new_level(&S);
+	new_level(S);
 	status();
-	S.words = NULL;
+	S->words = NULL;
 
 	for(;;) {
-		if(S.words == NULL) {
-			S.lastword = S.words = newword(NULL);
-			S.prev_word = NULL;
-			putword(S.lastword);
+		if(S->words == NULL) {
+			S->lastword = S->words = newword(NULL);
+			S->prev_word = NULL;
+			putword(S->lastword);
 		}
 
-		if(game(&S) == 0) {
+		if(game(S) == 0) {
 			move(0, LINES);
 			break;
 		}
