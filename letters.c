@@ -12,8 +12,7 @@
  * Test suite
  * Refactor!
  * Rename config.h and build config.h at build time
- * signal handlers
- * quit cleanly with prompt
+ * "Explode" words -- display with "----" or "****" before killing
  */
 
 # define CTRL(c)  (c & 0x1f)
