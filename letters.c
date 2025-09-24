@@ -69,8 +69,8 @@ struct state {
 	unsigned int score;
 	jmp_buf jbuf;
 	long delay;
+	int handicap;
 };
-int handicap = 1;
 int levels_played = -1;
 unsigned int word_count = 0;
 static int lives = 2;
@@ -133,8 +133,10 @@ parse_cmd_line(int argc, char **argv, struct state *S)
 					ding = flash;
 					break;
 				case 'H':
-					sscanf(&argv[0][2], "%d", &handicap);
-					if (handicap < 1) handicap = 1;
+					sscanf(&argv[0][2], "%d", &S->handicap);
+					if (S->handicap < 1) {
+						S->handicap = 1;
+					}
 					break;
 				case 'h':
 					read_scores();
@@ -178,6 +180,7 @@ init(struct state *S, int argc, char **argv)
 	unsetenv("LINES");
 
 	ding = no_op;
+	S->handicap = 1;
 	parse_cmd_line(argc, argv, S);
 
 	srand48(time(NULL));
@@ -213,7 +216,7 @@ main(int argc, char **argv)
 	} while (game(S));
 
 	read_scores();
-	if(handicap == 1 && newdict == 0 && choice == NULL)
+	if (S->handicap == 1 && newdict == 0 && choice == NULL)
 		update_scores(S->score, S->level);
 	sleep(2);
 	show_scores();
@@ -322,7 +325,7 @@ game(struct state *S)
 				}
 				if(key == CTRL('N')) {
 					S->level++;
-					S->delay = handicap * DELAY(S->level);
+					S->delay = S->handicap * DELAY(S->level);
 					if(S->delay < PAUSE)
 						S->delay = PAUSE;
 					status(S);
@@ -520,7 +523,7 @@ new_level(struct state *S)
 	if(S->level <= levels_played)
 		S->level += 1;
 
-	S->delay = handicap * DELAY(S->level);
+	S->delay = S->handicap * DELAY(S->level);
 
 	/*
 	 * no one should ever reach a level where there is no delay, but
