@@ -19,6 +19,7 @@
 # define CTRL(c)  (c & 0x1f)
 
 #include <assert.h>
+#include <setjmp.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -65,6 +66,7 @@ void free();
 struct state {
 	struct s_word *words, *lastword, *prev_word;
 	unsigned int score;
+	jmp_buf jbuf;
 };
 int handicap = 1;
 int level = 0;
@@ -109,14 +111,7 @@ intrrpt(struct state *S)
 	switch(banner("Are you sure you want to quit?", 0)) {
 	case 'y':
 	case 'Y':
-		endwin();
-		printf(
-			"\n\nfinal: score = %u\twords = %u\t level = %d\n",
-			S->score,
-			word_count,
-			level
-		);
-		exit(0);
+		longjmp(S->jbuf, 1);
 	default:
 		erase();
 		status(S);
@@ -204,7 +199,12 @@ int
 main(int argc, char **argv)
 {
 	struct state S[1] = {{0}};
+
 	init(S, argc, argv);
+
+	if (setjmp(S->jbuf)) {
+		goto exit;
+	}
 	for(;;) {
 		if(S->words == NULL) {
 			S->lastword = S->words = newword(NULL);
@@ -223,6 +223,7 @@ main(int argc, char **argv)
 		update_scores(S->score);
 	sleep(2);
 	show_scores();
+exit:
 	endwin();
 	printf("\n\nfinal: score = %u\twords = %u\t level = %d\n",
 		S->score, word_count, level);
