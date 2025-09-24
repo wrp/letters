@@ -204,18 +204,13 @@ main(int argc, char **argv)
 	if (setjmp(S->jbuf)) {
 		goto exit;
 	}
-	for(;;) {
-		if(S->words == NULL) {
+	do {
+		if (S->words == NULL) {
 			S->lastword = S->words = newword(NULL);
 			S->prev_word = NULL;
 			putword(S->lastword);
 		}
-
-		if(game(S) == 0) {
-			move(0, LINES);
-			break;
-		}
-	}
+	} while (game(S));
 
 	read_scores();
 	if(handicap == 1 && newdict == 0 && choice == NULL)
