@@ -187,6 +187,9 @@ main(int argc, char **argv)
 {
 	struct state S = {0};
 	check_tty();
+	unsetenv("COLUMNS");
+	unsetenv("LINES");
+
 	ding = no_op;
 	parse_cmd_line(argc, argv);
 
