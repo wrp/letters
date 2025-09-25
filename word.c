@@ -63,8 +63,8 @@ getword(char *buf, size_t bufsiz)
 	}
 
 	fseek(fp, random() % s_buf.st_size, 0);
-	sprintf(fmt, "%%*s%%%lus", bufsiz - 1);
-	if( fscanf(fp, "%*s%s", buf) != 1 ){
+	sprintf(fmt, "%%*s %%%lus", bufsiz - 1);
+	if( fscanf(fp, fmt, buf) != 1 ){
 		fseek(fp, 0L, 0);
 		fscanf(fp, "%s", buf);
 	}
