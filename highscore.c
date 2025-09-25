@@ -122,7 +122,9 @@ update_scores(struct score *score, unsigned level)
 		}
 }
 
-void show_scores() {
+void
+show_scores(void)
+{
 	int i;
 
 	highlight(0);
@@ -144,4 +146,11 @@ void show_scores() {
 	}
 
 	refresh();
+	sleep(1);
+	mvprintw(19, 19, "Press any key to continue");
+	while (getch() != ERR) {
+		;
+	}
+	timeout(-1);
+	getch();
 }
