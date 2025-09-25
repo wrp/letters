@@ -115,13 +115,11 @@ intrrpt(struct state *S)
 	}
 }
 
+
 static void
-parse_cmd_line(int argc, char **argv, struct state *S)
+handle_argument(struct state *S, char **argv)
 {
-	char *progname;
-	progname = argv[0];
-	while(*++argv) {
-		if((*argv)[0] == '-') {
+	char *arg = *argv;
 			switch((*argv)[1]) {
 				case 'b':
 					ding = beep;
@@ -161,9 +159,21 @@ parse_cmd_line(int argc, char **argv, struct state *S)
 						choicelen = strlen(choice);
 					}
 					break;
-				default:
-					usage(progname);
+	default:
+		fprintf(stderr, "Unknown option: -%c\n", arg[1]);
+		exit(1);
 			}
+}
+
+
+static void
+parse_cmd_line(int argc, char **argv, struct state *S)
+{
+	char *progname;
+	progname = argv[0];
+	while(*++argv) {
+		if((*argv)[0] == '-') {
+			handle_argument(S, argv);
 		} else {
 			usage(progname);
 		}
