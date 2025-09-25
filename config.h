@@ -34,15 +34,7 @@ struct state {
 	int handicap;
 };
 
-/*
- * configurable stuff in letters.  Most things here probably shouldn't need
- * to be changed but are here because someone may want to tinker with this
- * stuff to affect the way it performs on different systems.  The stuff
- * most likely to require changes is at the top of the file.
- */
-#ifndef DICTIONARY
-#define DICTIONARY "/usr/dict/words"
-#endif
+#define DICTIONARY "/usr/share/dict/words"
 
 #ifndef HIGHSCORES
 #define HIGHSCORES "letters.high"

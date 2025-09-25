@@ -13,7 +13,7 @@ SYSTYPE = SYSV
 #SYSTYPE = SYSV2
 
 # if you don't have job control add -DNOJOB to CFLAGS.
-CFLAGS = -g -O0 -D$(SYSTYPE) -DDICTIONARY=\"$(DICTIONARY)\"
+CFLAGS = -g -O0 -D$(SYSTYPE)
 
 LDFLAGS = -ltermcap -lcurses
 
@@ -23,7 +23,6 @@ MANDIR = $(PREFIX)/man/man$(MANEXT)
 MANEXT = 6
 LIBDIR = $(PREFIX)/lib
 DICTIONARY = /usr/share/dict/words
-#DICTIONARY = dictfile
 INSTALL = /usr/bin/install
 
 # next line only needed if you need to create a dictionary file.  The files
