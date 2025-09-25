@@ -63,10 +63,9 @@ write_scores(char *highscores) {
 	 * check to make sure the high score list has not been modified
 	 * since we read it.
 	 */
-	if(stat(highscores, &s_buf) == -1) {
-		fprintf(stderr, "Cannot stat %s: ", highscores);
-		perror("");
+	if( stat(highscores, &s_buf) == -1 ) {
 		endwin();
+		perror(highscores);
 		exit(1);
 	}
 
@@ -74,9 +73,8 @@ write_scores(char *highscores) {
 		return -1;
 
 	if((fp = fopen(highscores, "w")) == NULL) {
-		fprintf(stderr, "Cannot write to %s: ", highscores);
-		perror("");
 		endwin();
+		perror(highscores);
 		exit(1);
 	}
 
