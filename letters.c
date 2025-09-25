@@ -410,7 +410,6 @@ game(struct state *S)
 				lives = 0;
 			}
 			status(S);
-			goto_xy(COLS, LINES);
 			return (lives != 0);
 		}
 		if((random() % ADDWORD) == 0) {
