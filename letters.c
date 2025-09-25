@@ -226,11 +226,11 @@ main(int argc, char **argv)
 		}
 	} while (game(S));
 
+exit:
 	read_scores(HIGHSCORES);
 	if (S->handicap == 1 && newdict == 0 && choice == NULL)
 		update_scores(HIGHSCORES, &S->score, S->level);
 	show_scores();
-exit:
 	endwin();
 	printf("\n\nfinal: score = %u\twords = %u\t level = %d\n",
 		S->score.points, S->score.words, S->level);
