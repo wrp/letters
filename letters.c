@@ -41,14 +41,14 @@ struct s_word {
 struct state {
 	int level;
 	struct s_word *words, *lastword;
-	unsigned int score;
+	struct score score;
 	jmp_buf jbuf;
 	long delay;
 	int handicap;
 };
 static int move_words(struct state *);
 
-void update_scores(unsigned, unsigned);
+void update_scores(struct score *, unsigned);
 int read_scores(void);
 void show_scores(void);
 void putword();
@@ -70,11 +70,9 @@ void free();
  * a few places
  */
 int levels_played = -1;
-unsigned int word_count = 0;
 static int lives = 2;
 int bonus = 0; /* to determine if we're in a bonus round */
 int wpm = 0;
-int letters = 0;
 char *dictionary = DICTIONARY;
 char *choice = NULL;
 int   choicelen = 0;
@@ -214,14 +212,14 @@ main(int argc, char **argv)
 
 	read_scores();
 	if (S->handicap == 1 && newdict == 0 && choice == NULL)
-		update_scores(S->score, S->level);
+		update_scores(&S->score, S->level);
 	show_scores();
 	timeout(-1);
 	getch();
 exit:
 	endwin();
 	printf("\n\nfinal: score = %u\twords = %u\t level = %d\n",
-		S->score, word_count, S->level);
+		S->score.points, S->score.words, S->level);
 
 	exit(0);
 }
@@ -439,9 +437,9 @@ game(struct state *S)
 	/*
 	 * add on an appropriate score.
 	 */
-	S->score += curr_word->length + (2 * S->level);
-	letters+= curr_word->length;
-	word_count++;
+	S->score.points += curr_word->length + (2 * S->level);
+	S->score.letters += curr_word->length;
+	S->score.words++;
 	status(S);
 
 	kill_word(curr_word, S);
@@ -450,9 +448,9 @@ game(struct state *S)
 	 * increment the level if it's time.  If it's a bonus round, reward
 	 * the person for finishing it.
 	 */
-	if(word_count % LEVEL_CHANGE == 0) {
+	if(S->score.words % LEVEL_CHANGE == 0) {
 		if (bonus)
-			S->score += 10 * S->level;
+			S->score.points += 10 * S->level;
 		new_level(S);
 	}
 
@@ -466,9 +464,9 @@ status(struct state *S)
 {
 	goto_xy(COLS / 2 - 28, 0);
 	highlight(1);
-	printw("Score: %-7u", S->score);
+	printw("Score: %-7u", S->score.points);
 	printw("Level: %-3u", S->level);
-	printw("Words: %-6u", word_count);
+	printw("Words: %-6u", S->score.words);
 	printw("Lives: %-3d", lives);
 	printw("WPM: %-4d", wpm);
 	clrtoeol();
@@ -489,9 +487,9 @@ new_level(struct state *S)
 	 * update the words per minute
 	 */
 	time(&curr_time);
-	wpm = (letters / 5) / ((curr_time - last_time) / 60.0);
+	wpm = (S->score.letters / 5) / ((curr_time - last_time) / 60.0);
 	last_time = curr_time;
-	letters = 0;
+	S->score.letters  = 0;
 
 	/*
 	 * if we're inside a bonus round we don't need to change anything

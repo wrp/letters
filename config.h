@@ -17,6 +17,12 @@ int underline(int on);
 size_t getword(char *buf, size_t bufsiz);
 size_t bonusword(char *buf, size_t bufsiz);
 
+struct score {
+	unsigned points;
+	unsigned words;
+	unsigned letters;
+};
+
 /*
  * configurable stuff in letters.  Most things here probably shouldn't need
  * to be changed but are here because someone may want to tinker with this

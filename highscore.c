@@ -21,8 +21,6 @@ struct score_rec {
 
 static char highscores[] = HIGHSCORES;
 
-extern unsigned word_count;
-
 static struct score_rec high_scores[10];
 static struct stat	s_buf;
 time_t	readtime;
@@ -96,13 +94,13 @@ write_scores(void) {
 
 
 void
-update_scores(unsigned score, unsigned level)
+update_scores(struct score *score, unsigned level)
 {
 	int i, j;
 	struct passwd *p;
 
 	for(i = 0; i < 10; i++)
-		if(score > high_scores[i].score) {
+		if(score->points > high_scores[i].score) {
 			for(j = 10; j > i; j--) {
 				strcpy(high_scores[j].name, high_scores[j-1].name);
 				high_scores[j].words = high_scores[j-1].words;
@@ -113,8 +111,8 @@ update_scores(unsigned score, unsigned level)
                                 strcpy(high_scores[i].name, "nobody");
 			else
 				strcpy(high_scores[i].name, p->pw_name);
-			high_scores[i].score = score;
-			high_scores[i].words = word_count;
+			high_scores[i].score = score->points;
+			high_scores[i].words = score->words;
 			high_scores[i].level = level;
 			if(write_scores() == -1) {
 				read_scores();
