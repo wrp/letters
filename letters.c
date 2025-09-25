@@ -13,6 +13,8 @@
  * Refactor!
  * Rename config.h and build config.h at build time
  * "Explode" words -- display with "----" or "****" before killing
+ * When getting a top 10 score, highlight the current score in the display
+ * Use itimer and clean up all the pause/delay cruft
  */
 
 # define CTRL(c)  (c & 0x1f)
