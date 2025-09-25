@@ -39,7 +39,7 @@ read_scores(char *highscores)
 	readtime = s_buf.st_mtime;
 
 	for(i = 0; i < 10; i++) {
-		fscanf(fp, "%s%d%d%d", high_scores[i].name,
+		fscanf(fp, "%s %d %d %d", high_scores[i].name,
 		       &high_scores[i].level, &high_scores[i].words,
 		       &high_scores[i].score);
 	}
