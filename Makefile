@@ -13,8 +13,7 @@ SYSTYPE = SYSV
 #SYSTYPE = SYSV2
 
 # if you don't have job control add -DNOJOB to CFLAGS.
-CFLAGS = -g -O0 -D$(SYSTYPE) -DHIGHSCORES=\"$(LIBDIR)/letters.high\" \
-	-DDICTIONARY=\"$(DICTIONARY)\"
+CFLAGS = -g -O0 -D$(SYSTYPE) -DDICTIONARY=\"$(DICTIONARY)\"
 
 LDFLAGS = -ltermcap -lcurses
 
