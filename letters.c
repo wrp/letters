@@ -48,8 +48,8 @@ struct state {
 };
 static int move_words(struct state *);
 
-void update_scores(struct score *, unsigned);
-int read_scores(void);
+void update_scores(char *, struct score *, unsigned);
+int read_scores(char *);
 void show_scores(void);
 void putword();
 int  game();
@@ -135,7 +135,7 @@ parse_cmd_line(int argc, char **argv, struct state *S)
 					}
 					break;
 				case 'h':
-					read_scores();
+					read_scores(HIGHSCORES);
 					show_scores();
 					exit(0);
 					break;
@@ -210,9 +210,9 @@ main(int argc, char **argv)
 		}
 	} while (game(S));
 
-	read_scores();
+	read_scores(HIGHSCORES);
 	if (S->handicap == 1 && newdict == 0 && choice == NULL)
-		update_scores(&S->score, S->level);
+		update_scores(HIGHSCORES, &S->score, S->level);
 	show_scores();
 exit:
 	endwin();

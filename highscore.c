@@ -19,14 +19,12 @@ struct score_rec {
 	int	level, words, score;
 };
 
-static char highscores[] = HIGHSCORES;
-
 static struct score_rec high_scores[10];
 static struct stat	s_buf;
 time_t	readtime;
 
 int
-read_scores(void)
+read_scores(char *highscores)
 {
 	int		 i;
 	FILE		 *fp;
@@ -57,7 +55,7 @@ read_scores(void)
 }
 
 int
-write_scores(void) {
+write_scores(char *highscores) {
 	int	i;
 	FILE	*fp;
 
@@ -94,7 +92,7 @@ write_scores(void) {
 
 
 void
-update_scores(struct score *score, unsigned level)
+update_scores(char *name, struct score *score, unsigned level)
 {
 	int i, j;
 	struct passwd *p;
@@ -114,9 +112,9 @@ update_scores(struct score *score, unsigned level)
 			high_scores[i].score = score->points;
 			high_scores[i].words = score->words;
 			high_scores[i].level = level;
-			if(write_scores() == -1) {
-				read_scores();
-				update_scores(score, level);
+			if (write_scores(name) == -1) {
+				read_scores(name);
+				update_scores(name, score, level);
 			}
 			break;
 		}
