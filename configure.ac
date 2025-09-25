@@ -29,5 +29,8 @@ AC_TYPE_SIZE_T
 AC_FUNC_MALLOC
 AC_CHECK_FUNCS([strtol])
 
+eval eval eval datadir_expanded="$datadir"
+AC_DEFINE_UNQUOTED([DATADIR], ["$datadir_expanded"], [Path to installed data dir])
+
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
