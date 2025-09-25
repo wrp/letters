@@ -7,6 +7,7 @@
 
 #include "config.h"
 
+#define SCORE_FMT "%5d %6d %6d"
 struct score_rec {
 	char	name[9];
 	int	level, words, score;
@@ -124,7 +125,7 @@ next_score(char *buf, size_t siz)
 	}
 
 	struct score_rec *h = high_scores + idx;
-	snprintf(buf, siz, "%3d %-10s%5d%6d%6d",
+	snprintf(buf, siz, "%3d %-10s" SCORE_FMT,
 		idx + 1,
 		h->name,
 		h->level,
@@ -139,7 +140,7 @@ next_score(char *buf, size_t siz)
 
 
 void
-show_scores(void)
+show_scores(struct state *S)
 {
 	erase();
 	goto_xy(18, 5);
@@ -148,7 +149,7 @@ show_scores(void)
 	highlight(0);
 	goto_xy(20, 7);
 	underline(1);
-	printw("  name      level words score");
+	printw("  name      level  words  score");
 	underline(0);
 
 	for (char s[64]; next_score(s, sizeof s); ) {
@@ -157,9 +158,16 @@ show_scores(void)
 		printw("%s", s);
 	}
 
+	mvprintw(19, 21, "%-10s" SCORE_FMT,
+		"Your score:",
+		S->level,
+		S->score.words,
+		S->score.points
+	);
+
 	refresh();
-	sleep(1);
-	mvprintw(19, 19, "Press any key to continue");
+	sleep(2);
+	mvprintw(21, 19, "Press any key to continue");
 	while (getch() != ERR) {
 		;
 	}

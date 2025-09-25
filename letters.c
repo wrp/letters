@@ -29,20 +29,12 @@ struct s_word {
 	char word[32];
 };
 
-struct state {
-	int level;
-	struct s_word *words, *lastword;
-	struct score score;
-	jmp_buf jbuf;
-	long delay;
-	int handicap;
-};
 static int move_words(struct state *);
 
 void update_scores(char *, struct score *, unsigned);
 int read_scores(char *);
 char * next_score(char *buf, size_t siz);
-void show_scores(void);
+void show_scores(struct state *S);
 void putword();
 int  game();
 void erase_word(struct s_word *wordp);
@@ -221,10 +213,8 @@ exit:
 	read_scores(HIGHSCORES);
 	if (S->handicap == 1 && newdict == 0 && choice == NULL)
 		update_scores(HIGHSCORES, &S->score, S->level);
-	show_scores();
+	show_scores(S);
 	endwin();
-	printf("\n\nfinal: score = %u\twords = %u\t level = %d\n",
-		S->score.points, S->score.words, S->level);
 
 	return 0;
 }
