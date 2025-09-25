@@ -131,19 +131,19 @@ void show_scores() {
 	erase();
 	goto_xy(18, 5);
 	highlight(1);
-	printf("Top Ten Scores for Letter Invaders");
+	printw("Top Ten Scores for Letter Invaders");
 	highlight(0);
 	goto_xy(20, 7);
 	underline(1);
-	printf("  name      level words score");
+	printw("  name      level words score");
 	underline(0);
 
-	for(i = 0; i < 10; i++) {
+	for( i = 0; i < 10; i +=1 ) {
 		goto_xy(18, 8 + i);
-		printf("%3d %-10s%5d%6d%6d", i+1, high_scores[i].name,
+		printw("%3d %-10s%5d%6d%6d", i+1, high_scores[i].name,
 		       high_scores[i].level, high_scores[i].words,
 		       high_scores[i].score);
 	}
 
-	printf("\n");
+	refresh();
 }

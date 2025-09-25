@@ -216,8 +216,9 @@ main(int argc, char **argv)
 	read_scores();
 	if (S->handicap == 1 && newdict == 0 && choice == NULL)
 		update_scores(S->score, S->level);
-	sleep(2);
 	show_scores();
+	timeout(-1);
+	getch();
 exit:
 	endwin();
 	printf("\n\nfinal: score = %u\twords = %u\t level = %d\n",
