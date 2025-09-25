@@ -17,15 +17,6 @@
 
 # define CTRL(c)  (c & 0x1f)
 
-#include <assert.h>
-#include <setjmp.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <time.h>
-#include <math.h>
-#include <term.h>
-
 #include "config.h"
 
 struct s_word {

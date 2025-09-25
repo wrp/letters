@@ -1,18 +1,21 @@
 
-
-/* This will become the standard letters.h, and we
- * will let configure build config.h
- *
- * For now, to enable builds, put common delcarations here prior
- * to renaming.
- *
- */
+#include <assert.h>
+#include <curses.h>
+#include <math.h>
+#include <pwd.h>
+#include <setjmp.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <term.h>
+#include <time.h>
+#include <unistd.h>
 
 #define goto_xy(x, y)   move((y), (x))
 void highlight(int);
 void redraw(void);
-#include <curses.h>
-#include <unistd.h>
 int underline(int on);
 size_t getword(char *buf, size_t bufsiz);
 size_t bonusword(char *buf, size_t bufsiz);
@@ -21,6 +24,14 @@ struct score {
 	unsigned points;
 	unsigned words;
 	unsigned letters;
+};
+struct state {
+	int level;
+	struct s_word *words, *lastword;
+	struct score score;
+	jmp_buf jbuf;
+	long delay;
+	int handicap;
 };
 
 /*

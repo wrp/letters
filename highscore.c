@@ -5,14 +5,7 @@
  */
 
 
-#include <stdlib.h>
-#include <stdio.h>
-# include <string.h>
-# include <pwd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include "config.h"
-#include "term.h"
 
 struct score_rec {
 	char	name[9];
