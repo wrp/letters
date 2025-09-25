@@ -119,50 +119,53 @@ intrrpt(struct state *S)
 static void
 handle_argument(struct state *S, char **argv)
 {
+	char *end;
 	char *arg = *argv;
-			switch((*argv)[1]) {
-				case 'b':
-					ding = beep;
-					break;
-				case 'q':
-					ding = flash;
-					break;
-				case 'H':
-					sscanf(&argv[0][2], "%d", &S->handicap);
-					if (S->handicap < 1) {
-						S->handicap = 1;
-					}
-					break;
-				case 'h':
-					read_scores(HIGHSCORES);
-					for (char s[64]; next_score(s, sizeof s); ) {
-						printf("%s\n", s);
-					}
-					exit(0);
-					break;
-				case 'l':
-					sscanf(&argv[0][2], "%d", &S->level);
-					if(DELAY(S->level) <= PAUSE) {
-						fprintf(stderr, "You may not start at level %d\n", S->level);
-						exit(0);
-					}
-					break;
-				case 'd':
-					if ((*argv)[2] ) {
-						dictionary = *argv+2;
-						newdict = 1;
-					}
-					break;
-				case 's':
-					if ((*argv)[2] ) {
-						choice = *argv+2;
-						choicelen = strlen(choice);
-					}
-					break;
+
+	switch(arg[1]) {
+	case 'b': ding = beep; break;
+	case 'q': ding = flash; break;
+	case 'H':
+		S->handicap = (int)strtol(arg + 2, &end, 0);
+		if( *end || S->handicap < 1 ){
+			fprintf(stderr, "Invalid handicap %s\n", arg + 2);
+			exit(1);
+		}
+		break;
+	case 'h':
+		read_scores(HIGHSCORES);
+		for (char s[64]; next_score(s, sizeof s); ) {
+			printf("%s\n", s);
+		}
+		exit(0);
+		break;
+	case 'l':
+		S->level = (int)strtol(arg + 2, &end, 0);
+		if( *end || (DELAY(S->level) <= PAUSE) ) {
+			fprintf(stderr, "Invalid level %s\n", arg + 2);
+			exit(1);
+		}
+		break;
+	case 'd':
+		dictionary = arg + 2;
+		newdict = 1;
+		if (! arg[2]) {
+			fprintf(stderr, "-d option requires an argument\n");
+			exit(1);
+		}
+		break;
+	case 's':
+		if (! arg[2]) {
+			fprintf(stderr, "-s option requires an argument\n");
+			exit(1);
+		}
+		choice = arg + 2;
+		choicelen = strlen(choice);
+		break;
 	default:
 		fprintf(stderr, "Unknown option: -%c\n", arg[1]);
 		exit(1);
-			}
+	}
 }
 
 
