@@ -40,7 +40,7 @@ letters: $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o letters $(LDFLAGS)
 
 word.o highscore.o letters.o: \
-		config.h
+		letters.h
 
 install: letters
 	$(INSTALL) -s -m 2755 letters $(BINDIR)

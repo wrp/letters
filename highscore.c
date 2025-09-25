@@ -5,7 +5,7 @@
  */
 
 
-#include "config.h"
+#include "letters.h"
 
 #define SCORE_FMT "%5d %6d %6d"
 struct score_rec {
