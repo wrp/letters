@@ -125,7 +125,6 @@ show_scores(void)
 {
 	int i;
 
-	highlight(0);
 	erase();
 	goto_xy(18, 5);
 	highlight(1);
