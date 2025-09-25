@@ -120,11 +120,36 @@ update_scores(char *name, struct score *score, unsigned level)
 		}
 }
 
+
+/* Iterate through the high scores, writing a printable string to buf */
+static char *
+next_score(char *buf, size_t siz)
+{
+	static int idx = 0;
+
+	if (idx == sizeof high_scores / sizeof *high_scores) {
+		idx = 0;
+		return NULL;
+	}
+
+	struct score_rec *h = high_scores + idx;
+	snprintf(buf, siz, "%3d %-10s%5d%6d%6d",
+		idx + 1,
+		h->name,
+		h->level,
+		h->words,
+		h->score
+	);
+
+	idx += 1;
+
+	return buf;
+}
+
+
 void
 show_scores(void)
 {
-	int i;
-
 	erase();
 	goto_xy(18, 5);
 	highlight(1);
@@ -135,11 +160,10 @@ show_scores(void)
 	printw("  name      level words score");
 	underline(0);
 
-	for( i = 0; i < 10; i +=1 ) {
-		goto_xy(18, 8 + i);
-		printw("%3d %-10s%5d%6d%6d", i+1, high_scores[i].name,
-		       high_scores[i].level, high_scores[i].words,
-		       high_scores[i].score);
+	for (char s[64]; next_score(s, sizeof s); ) {
+		int y = getcury(stdscr);
+		goto_xy(18, y + 1);
+		printw("%s", s);
 	}
 
 	refresh();
