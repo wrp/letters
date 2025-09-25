@@ -7,7 +7,7 @@ AC_INIT([letters],
 	[william.r.pursell@gmail.com])
 
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
-AC_CONFIG_SRCDIR([config.h])
+AC_CONFIG_SRCDIR([letters.c])
 AC_CONFIG_HEADERS([config.h])
 
 # Checks for programs.
