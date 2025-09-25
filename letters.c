@@ -38,7 +38,14 @@ struct s_word {
 	char word[32];
 };
 
-struct state;
+struct state {
+	int level;
+	struct s_word *words, *lastword;
+	unsigned int score;
+	jmp_buf jbuf;
+	long delay;
+	int handicap;
+};
 static int move_words(struct state *);
 
 void update_scores(unsigned, unsigned);
@@ -62,14 +69,6 @@ void free();
  * There are too many globals for my taste, but I took the easy way out in
  * a few places
  */
-struct state {
-	int level;
-	struct s_word *words, *lastword;
-	unsigned int score;
-	jmp_buf jbuf;
-	long delay;
-	int handicap;
-};
 int levels_played = -1;
 unsigned int word_count = 0;
 static int lives = 2;
