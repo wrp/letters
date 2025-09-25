@@ -235,7 +235,7 @@ exit:
 	printf("\n\nfinal: score = %u\twords = %u\t level = %d\n",
 		S->score.points, S->score.words, S->level);
 
-	exit(0);
+	return 0;
 }
 
 /*
