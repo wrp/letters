@@ -73,7 +73,7 @@ write_scores(char *highscores) {
 	}
 
 	for(i = 0; i < 10; i++) {
-		fprintf(fp, "%s %d %d %d", high_scores[i].name,
+		fprintf(fp, "%s %d %d %d\n", high_scores[i].name,
 		       high_scores[i].level, high_scores[i].words,
 		       high_scores[i].score);
 	}
