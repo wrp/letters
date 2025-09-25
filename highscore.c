@@ -99,7 +99,7 @@ update_scores(char *name, struct score *score, unsigned level)
 
 	for(i = 0; i < 10; i++)
 		if(score->points > high_scores[i].score) {
-			for(j = 10; j > i; j--) {
+			for(j = 9; j > i; j--) {
 				strcpy(high_scores[j].name, high_scores[j-1].name);
 				high_scores[j].words = high_scores[j-1].words;
 				high_scores[j].score = high_scores[j-1].score;
