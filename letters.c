@@ -50,6 +50,7 @@ static int move_words(struct state *);
 
 void update_scores(char *, struct score *, unsigned);
 int read_scores(char *);
+char * next_score(char *buf, size_t siz);
 void show_scores(void);
 void putword();
 int  game();
@@ -136,7 +137,9 @@ parse_cmd_line(int argc, char **argv, struct state *S)
 					break;
 				case 'h':
 					read_scores(HIGHSCORES);
-					show_scores();
+					for (char s[64]; next_score(s, sizeof s); ) {
+						printf("%s\n", s);
+					}
 					exit(0);
 					break;
 				case 'l':

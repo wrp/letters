@@ -122,7 +122,7 @@ update_scores(char *name, struct score *score, unsigned level)
 
 
 /* Iterate through the high scores, writing a printable string to buf */
-static char *
+char *
 next_score(char *buf, size_t siz)
 {
 	static int idx = 0;
