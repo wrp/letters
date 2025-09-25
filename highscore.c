@@ -21,7 +21,7 @@ struct score_rec {
 
 static struct score_rec high_scores[10];
 static struct stat	s_buf;
-time_t	readtime;
+static time_t readtime;
 
 int
 read_scores(char *highscores)
