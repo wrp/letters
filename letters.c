@@ -48,8 +48,6 @@ struct s_word *searchchar(int, struct state *);
 void kill_word(struct s_word *wordp, struct state *S);
 int (*ding)(void); /* beep, flash, or no-op */
 
-void free();
-
 /*
  * There are too many globals for my taste, but I took the easy way out in
  * a few places
