@@ -7,7 +7,6 @@
 
 /*
  * TODO
- * Add LICENSE file and figure out how to handle prior non-license
  * Build system (meson?)
  * Test suite
  * Refactor!
