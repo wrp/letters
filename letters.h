@@ -57,10 +57,11 @@ struct state {
 #define DELAY(lev)   ( (((long)(lev))*DECEL > DELAY_CHANGE/2) ? PAUSE :\
 			(START_DELAY-(DELAY_CHANGE-(lev)*DECEL)*(lev)) )
 
-/*
- * number of words to be completed before level change
- */
+/* number of words to be completed before level change */
 #define LEVEL_CHANGE 15
+
+/* number of levels between bonus rounds */
+#define LVL_PER_BONUS 3
 
 /*
  * length of pause before reading keyboard again (in usecs).  There has to

@@ -523,7 +523,7 @@ new_level(struct state *S)
 	if(S->delay < PAUSE)
 		S->delay = PAUSE;
 
-	if((levels_played % 3 == 0) && (levels_played != 0)) {
+	if((levels_played % LVL_PER_BONUS == 0) && (levels_played != 0)) {
 		S->bonus = true;
 
 		/*
