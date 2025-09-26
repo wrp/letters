@@ -239,6 +239,23 @@ move_words(struct state *S)
 			putword(w);
 		}
 	}
+
+	if (died > 0) {
+		/*
+		 * subtract lives if a word reaches the
+		 * bottom in a normal round.  If a word reaches
+		 * bottom during bonus play, just end the bonus
+		 * round.
+		 */
+		if (! S->bonus) {
+			S->lives -= died;
+		} else if (died > 0) {
+			new_level(S);
+		}
+		if (S->lives < 0) {
+			S->lives = 0;
+		}
+	}
 	return died;
 }
 
@@ -379,7 +396,6 @@ static void
 game(struct state *S)
 {
 	long  i;
-	int  died;
 
 	S->current = find_match(S);
 	while(S->current->matches < S->current->length) {
@@ -390,23 +406,7 @@ game(struct state *S)
 			usleep(PAUSE);
 		}
 
-		died = move_words(S);  /* NB: may invalidate S->current */
-		if (died > 0)
-		{
-			/*
-			 * we only subtract lives if a word reaches the
-			 * bottom in a normal round.  If a word reaches
-			 * bottom during bonus play, just end the bonus
-			 * round.
-			 */
-			if (! S->bonus) {
-				S->lives -= died;
-			} else if (died > 0) {
-				new_level(S);
-			}
-			if (S->lives < 0) {
-				S->lives = 0;
-			}
+		if (move_words(S)) {
 			status(S);
 			return;
 		}
