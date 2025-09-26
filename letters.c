@@ -225,21 +225,19 @@ exit:
 static int
 move_words(struct state *S)
 {
-	struct s_word  *wordp, *next;
-	int  died;
+	struct s_word  *w, *next;
+	int  died = 0;
 
-	died = 0;
-	for(wordp = S->words; wordp != NULL; wordp = next) {
-		next = wordp->nextword;
-		erase_word(wordp);
-		wordp->posy += wordp->drop;
+	for (w = S->words; w != NULL; w = next) {
+		next = w->nextword;
+		erase_word(w);
+		w->posy += w->drop;
 
-		if(wordp->posy >= LINES) {
-			kill_word(wordp, S);
-			died++;
-		}
-		else {
-			putword(wordp);
+		if (w->posy >= LINES) {
+			kill_word(w, S);
+			died += 1;
+		} else {
+			putword(w);
 		}
 	}
 	return died;
