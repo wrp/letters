@@ -1,3 +1,4 @@
+#include "config.h"
 
 #include <assert.h>
 #include <curses.h>
@@ -34,11 +35,6 @@ struct state {
 	int handicap;
 };
 
-#define DICTIONARY "/usr/share/dict/words"
-
-#ifndef HIGHSCORES
-#define HIGHSCORES "letters.high"
-#endif
 
 /*
  * initial delay in usecs before words move to the next line

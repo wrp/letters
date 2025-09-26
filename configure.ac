@@ -30,8 +30,12 @@ AC_FUNC_MALLOC
 AC_CHECK_FUNCS([strtol])
 
 eval eval eval abs_datadir="$datadir"
-AC_DEFINE_UNQUOTED([DATADIR], ["$abs_datadir"], [Absolute path to data dir])
 AC_SUBST([DATADIR], [$abs_datadir])
+
+AC_DEFINE_UNQUOTED([DICTIONARY], ["$abs_datadir/dict/words"],
+	[Path to dictionary file])
+AC_DEFINE_UNQUOTED([HIGHSCORES], ["$abs_datadir/letters.high"],
+	[Path to high score file])
 
 AC_CONFIG_FILES([Makefile letters.man])
 AC_OUTPUT
