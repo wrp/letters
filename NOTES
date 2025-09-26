@@ -1,0 +1,25 @@
+
+This software dates back to the late 80s.  In late 2025
+it was ported to use the curses library and get away
+from directly interfacing with termcap.
+
+A note on commit "types".  The unfortunately common practice
+of embedding metadata about commits in the subject line of
+a commit message (known as "conventional commits") is currently
+very popular.  Its popularity only increases its ugliness.
+Rather than succumbing to that nonsense (or perhaps this practice
+is caving in), each commit has been given at least one "type"
+trailer to indicate its purpose.  At the moment, these are:
+
+tag:    type of commit:
+----    ---------------
+ini     initial cleanup work
+fmt     code style or refactoring
+ux      user interface
+bld     the build system
+doc     documentation
+bug     trivial bug fix
+ws      whitespace fix
+k&r     fix old style prototype
+
+Perhaps we should change the trailer name to "tag".
