@@ -324,12 +324,12 @@ game(struct state *S)
 {
 	long  i;
 	int  died;
-	struct s_word *temp_word;
 
 	S->current = find_match(S);
 	while(S->current->matches < S->current->length) {
 		for(i = 0; i < S->delay; i += PAUSE) {
 			int  key;
+			struct s_word *temp_word;
 			while(
 				(S->current->matches != S->current->length) &&
 				((key = getch()) != ERR)
