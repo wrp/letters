@@ -334,61 +334,61 @@ find_match(const struct state *S)
 static void
 process_keys(struct state *S)
 {
-			int  key;
-			struct s_word *temp_word;
-			while(
-				(S->current->matches != S->current->length) &&
-				((key = getch()) != ERR)
-			) {
-				if (handle_ctrl_key(S, key)) {
-					continue;
-				}
-				/*
-				 * This stuff deals with collecting letters
-				 * for a word that has already been
-				 * started.  It's kind of clumsy the way
-				 * it's being done now and should be
-				 * cleaned up, but the obvious combination
-				 * of erase() and putword() generate too
-				 * much output to be used at 2400 baud.  (I
-				 * can't play too often at work)
-				 */
-				if(S->current->matches > 0 &&
-					key == S->current->word[S->current->matches])
-				{
-					int x = S->current->posx;
-					int y = S->current->posy;
-					goto_xy(x + S->current->matches, y);
-					highlight(1);
-					printw("%c", key);
-					highlight(0);
-					S->current->matches += 1;
-					continue;
-				} else if ((temp_word = searchstr(
-					key,
-					S->current->word,
-					S->current->matches,
-					S
-				) )) {
-					erase_word(temp_word);
-					temp_word->matches = S->current->matches;
-					S->current->matches = 0;
-					putword(S->current);
-					S->current = temp_word;
-					S->current->matches++;
-				} else if( (temp_word = searchchar(key, S))) {
-					erase_word(temp_word);
-					S->current->matches = 0;
-					putword(S->current);
-					S->current = temp_word;
-					S->current->matches++;
-				} else {
-					ding();
-					S->current->matches = 0;
-				}
-				erase_word(S->current);
-				putword(S->current);
-			}
+	int  key;
+	struct s_word *temp_word;
+	while(
+		(S->current->matches != S->current->length) &&
+		((key = getch()) != ERR)
+	) {
+		if (handle_ctrl_key(S, key)) {
+			continue;
+		}
+		/*
+		 * This stuff deals with collecting letters
+		 * for a word that has already been
+		 * started.  It's kind of clumsy the way
+		 * it's being done now and should be
+		 * cleaned up, but the obvious combination
+		 * of erase() and putword() generate too
+		 * much output to be used at 2400 baud.  (I
+		 * can't play too often at work)
+		 */
+		if(S->current->matches > 0 &&
+			key == S->current->word[S->current->matches])
+		{
+			int x = S->current->posx;
+			int y = S->current->posy;
+			goto_xy(x + S->current->matches, y);
+			highlight(1);
+			printw("%c", key);
+			highlight(0);
+			S->current->matches += 1;
+			continue;
+		} else if ((temp_word = searchstr(
+			key,
+			S->current->word,
+			S->current->matches,
+			S
+		) )) {
+			erase_word(temp_word);
+			temp_word->matches = S->current->matches;
+			S->current->matches = 0;
+			putword(S->current);
+			S->current = temp_word;
+			S->current->matches++;
+		} else if( (temp_word = searchchar(key, S))) {
+			erase_word(temp_word);
+			S->current->matches = 0;
+			putword(S->current);
+			S->current = temp_word;
+			S->current->matches++;
+		} else {
+			ding();
+			S->current->matches = 0;
+		}
+		erase_word(S->current);
+		putword(S->current);
+	}
 }
 
 
