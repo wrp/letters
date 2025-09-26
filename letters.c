@@ -316,18 +316,10 @@ find_match(const struct state *S)
 }
 
 
-/*
- * Here's the main routine of the actual game.
- */
-int
-game(struct state *S)
+/* Process all the user keystrokes that happend during a usleep */
+static void
+process_keys(struct state *S)
 {
-	long  i;
-	int  died;
-
-	S->current = find_match(S);
-	while(S->current->matches < S->current->length) {
-		for(i = 0; i < S->delay; i += PAUSE) {
 			int  key;
 			struct s_word *temp_word;
 			while(
@@ -383,6 +375,22 @@ game(struct state *S)
 				erase_word(S->current);
 				putword(S->current);
 			}
+}
+
+/*
+ * Here's the main routine of the actual game.
+ */
+int
+game(struct state *S)
+{
+	long  i;
+	int  died;
+
+	S->current = find_match(S);
+	while(S->current->matches < S->current->length) {
+		for(i = 0; i < S->delay; i += PAUSE) {
+			process_keys(S);
+
 			/* TODO: use an itimer for more precision */
 			usleep(PAUSE);
 		}
