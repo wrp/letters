@@ -29,8 +29,9 @@ AC_TYPE_SIZE_T
 AC_FUNC_MALLOC
 AC_CHECK_FUNCS([strtol])
 
-eval eval eval datadir_expanded="$datadir"
-AC_DEFINE_UNQUOTED([DATADIR], ["$datadir_expanded"], [Path to installed data dir])
+eval eval eval abs_datadir="$datadir"
+AC_DEFINE_UNQUOTED([DATADIR], ["$abs_datadir"], [Absolute path to data dir])
+AC_SUBST([DATADIR], [$abs_datadir])
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile letters.man])
 AC_OUTPUT

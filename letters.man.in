@@ -24,7 +24,7 @@ actually a non-violent game.  The words "kill" and "life" are only used
 in this context for historical reasons.
 .PP
 If at any point you type a letter incorrectly the entire word is reset.
-The backspace key will not save you if you're a sloppy typist.  
+The backspace key will not save you if you're a sloppy typist.
 It is not necessary to type words in the order they appear on the
 screen.  In fact, that is often not the
 best action to take.  Very short words fall faster than longer ones.
@@ -100,9 +100,9 @@ the end of each round based on 5 letter words.  It's not a particularly
 accurate measure of your typing speed, but I think it's an interesting
 enough statistic to justify filling up the empty space on the status line.
 .SH FILES
-DICTIONARY
+@DATADIR@/dict/words
 .br
-LIBDIR/letters.high
+@DATADIR@/letters.high
 .SH BUGS
 "Transmogrifier" doesn't appear frequently.
 .SH AUTHORS
