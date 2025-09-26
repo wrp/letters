@@ -53,7 +53,6 @@ int (*ding)(void); /* beep, flash, or no-op */
  * a few places
  */
 int levels_played = -1;
-static int lives = 2;
 int bonus = 0; /* to determine if we're in a bonus round */
 int wpm = 0;
 char *dictionary = DICTIONARY;
@@ -188,6 +187,7 @@ init(struct state *S, int argc, char **argv)
 	new_level(S);
 	status(S);
 	S->words = NULL;
+	S->lives = 2;
 }
 
 
@@ -401,15 +401,15 @@ game(struct state *S)
 			 * round.
 			 */
 			if (! bonus) {
-				lives -= died;
+				S->lives -= died;
 			} else if (died > 0) {
 				new_level(S);
 			}
-			if (lives < 0) {
-				lives = 0;
+			if (S->lives < 0) {
+				S->lives = 0;
 			}
 			status(S);
-			return (lives != 0);
+			return (S->lives != 0);
 		}
 		if((random() % ADDWORD) == 0) {
 			S->lastword = newword(S->lastword);
@@ -462,7 +462,7 @@ status(struct state *S)
 	printw("Score: %-7u", S->score.points);
 	printw("Level: %-3u", S->level);
 	printw("Words: %-6u", S->score.words);
-	printw("Lives: %-3d", lives);
+	printw("Lives: %-3d", S->lives);
 	printw("WPM: %-4d", wpm);
 	clrtoeol();
 	highlight(0);
@@ -538,7 +538,7 @@ new_level(struct state *S)
 		}
 
 		banner("Prepare for bonus words", 3);
-		lives++;
+		S->lives += 1;
 	}
 
 	status(S);

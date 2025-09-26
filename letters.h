@@ -28,6 +28,7 @@ struct score {
 };
 struct state {
 	int level;
+	int lives;
 	struct s_word *words, *lastword;
 	struct s_word *current;  /* Word user is currently typing */
 	struct score score;
