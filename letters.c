@@ -325,13 +325,13 @@ game(struct state *S)
 	int  key;
 	long  i;
 	int  died;
-	struct s_word *curr_word, *temp_word;
+	struct s_word *temp_word;
 
-	curr_word = find_match(S);
-	while(curr_word->matches < curr_word->length) {
+	S->current = find_match(S);
+	while(S->current->matches < S->current->length) {
 		for(i = 0; i < S->delay; i += PAUSE) {
 			while(
-				(curr_word->matches != curr_word->length) &&
+				(S->current->matches != S->current->length) &&
 				((key = getch()) != ERR)
 			) {
 				if (handle_ctrl_key(S, key)) {
@@ -347,41 +347,41 @@ game(struct state *S)
 				 * much output to be used at 2400 baud.  (I
 				 * can't play too often at work)
 				 */
-				if(curr_word->matches > 0 &&
-					key == curr_word->word[curr_word->matches])
+				if(S->current->matches > 0 &&
+					key == S->current->word[S->current->matches])
 				{
-					int x = curr_word->posx;
-					int y = curr_word->posy;
-					goto_xy(x + curr_word->matches, y);
+					int x = S->current->posx;
+					int y = S->current->posy;
+					goto_xy(x + S->current->matches, y);
 					highlight(1);
 					printw("%c", key);
 					highlight(0);
-					curr_word->matches += 1;
+					S->current->matches += 1;
 					continue;
 				} else if ((temp_word = searchstr(
 					key,
-					curr_word->word,
-					curr_word->matches,
+					S->current->word,
+					S->current->matches,
 					S
 				) )) {
 					erase_word(temp_word);
-					temp_word->matches = curr_word->matches;
-					curr_word->matches = 0;
-					putword(curr_word);
-					curr_word = temp_word;
-					curr_word->matches++;
+					temp_word->matches = S->current->matches;
+					S->current->matches = 0;
+					putword(S->current);
+					S->current = temp_word;
+					S->current->matches++;
 				} else if( (temp_word = searchchar(key, S))) {
 					erase_word(temp_word);
-					curr_word->matches = 0;
-					putword(curr_word);
-					curr_word = temp_word;
-					curr_word->matches++;
+					S->current->matches = 0;
+					putword(S->current);
+					S->current = temp_word;
+					S->current->matches++;
 				} else {
 					ding();
-					curr_word->matches = 0;
+					S->current->matches = 0;
 				}
-				erase_word(curr_word);
-				putword(curr_word);
+				erase_word(S->current);
+				putword(S->current);
 				goto_xy(COLS, LINES);
 
 			}
@@ -389,7 +389,7 @@ game(struct state *S)
 			usleep(PAUSE);
 		}
 
-		died = move_words(S);  /* NB: may invalidate curr_word */
+		died = move_words(S);  /* NB: may invalidate S->current */
 		if (died > 0)
 		{
 			/*
@@ -422,20 +422,20 @@ game(struct state *S)
 	/*
 	 * erase the word
 	 */
-	if(curr_word->length == curr_word->matches) {
+	if(S->current->length == S->current->matches) {
 		ding(); ding();
-		erase_word(curr_word);
+		erase_word(S->current);
 	}
 
 	/*
 	 * add on an appropriate score.
 	 */
-	S->score.points += curr_word->length + (2 * S->level);
-	S->score.letters += curr_word->length;
+	S->score.points += S->current->length + (2 * S->level);
+	S->score.letters += S->current->length;
 	S->score.words++;
 	status(S);
 
-	kill_word(curr_word, S);
+	kill_word(S->current, S);
 
 	/*
 	 * increment the level if it's time.  If it's a bonus round, reward
