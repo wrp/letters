@@ -322,7 +322,6 @@ find_match(const struct state *S)
 int
 game(struct state *S)
 {
-	int  key;
 	long  i;
 	int  died;
 	struct s_word *temp_word;
@@ -330,6 +329,7 @@ game(struct state *S)
 	S->current = find_match(S);
 	while(S->current->matches < S->current->length) {
 		for(i = 0; i < S->delay; i += PAUSE) {
+			int  key;
 			while(
 				(S->current->matches != S->current->length) &&
 				((key = getch()) != ERR)
