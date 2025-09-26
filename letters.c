@@ -416,21 +416,9 @@ game(struct state *S)
 		}
 	}
 
-	/*
-	 * all letters in the word have been correctly typed.
-	 */
+	assert (S->current->length == S->current->matches);
+	erase_word(S->current);
 
-	/*
-	 * erase the word
-	 */
-	assert (S->current->length == S->current->matches); {
-		ding(); ding();
-		erase_word(S->current);
-	}
-
-	/*
-	 * add on an appropriate score.
-	 */
 	S->score.points += S->current->length + (2 * S->level);
 	S->score.letters += S->current->length;
 	S->score.words++;
