@@ -41,7 +41,7 @@ void erase_word(struct s_word *wordp);
 void status(struct state *);
 void new_level(struct state *);
 int banner(const char *, int);
-struct s_word *newword();
+static struct s_word *newword(struct s_word *, bool);
 struct s_word *searchstr(int key, char *str, int len, struct state *S);
 struct s_word *searchchar(int, struct state *);
 void kill_word(struct s_word *wordp, struct state *S);
@@ -52,7 +52,6 @@ int (*ding)(void); /* beep, flash, or no-op */
  * a few places
  */
 int levels_played = -1;
-int bonus = 0; /* to determine if we're in a bonus round */
 int wpm = 0;
 char *dictionary = DICTIONARY;
 char *choice = NULL;
@@ -202,7 +201,7 @@ main(int argc, char **argv)
 	}
 	do {
 		if (S->words == NULL) {
-			S->lastword = S->words = newword(NULL);
+			S->lastword = S->words = newword(NULL, S->bonus);
 			putword(S->lastword);
 		}
 		game(S);
@@ -400,7 +399,7 @@ game(struct state *S)
 			 * bottom during bonus play, just end the bonus
 			 * round.
 			 */
-			if (! bonus) {
+			if (! S->bonus) {
 				S->lives -= died;
 			} else if (died > 0) {
 				new_level(S);
@@ -412,7 +411,7 @@ game(struct state *S)
 			return;
 		}
 		if((random() % ADDWORD) == 0) {
-			S->lastword = newword(S->lastword);
+			S->lastword = newword(S->lastword, S->bonus);
 			putword(S->lastword);
 		}
 	}
@@ -444,7 +443,7 @@ game(struct state *S)
 	 * the person for finishing it.
 	 */
 	if(S->score.words % LEVEL_CHANGE == 0) {
-		if (bonus)
+		if (S->bonus)
 			S->score.points += 10 * S->level;
 		new_level(S);
 	}
@@ -488,8 +487,8 @@ new_level(struct state *S)
 	 * if we're inside a bonus round we don't need to change anything
 	 * else so just take us out of the bonus round and exit this routine
 	 */
-	if (bonus) {
-		bonus = 0;
+	if (S->bonus) {
+		S->bonus = false;
 		banner("Bonus round finished", 3);
 
 		/*
@@ -525,7 +524,7 @@ new_level(struct state *S)
 		S->delay = PAUSE;
 
 	if((levels_played % 3 == 0) && (levels_played != 0)) {
-		bonus = 1;
+		S->bonus = true;
 
 		/*
 		 * erase all existing words so we can have a bonus round
@@ -544,7 +543,7 @@ new_level(struct state *S)
 
 /* Initialize a new word. */
 struct s_word *
-newword(struct s_word *wordp)
+newword(struct s_word *wordp, bool bonus)
 {
 	struct s_word *nword;
 	int  length;
@@ -553,7 +552,7 @@ newword(struct s_word *wordp)
 	nword = malloc(sizeof *nword);
 	char *word = nword->word;
 
-	length = (bonus) ? bonusword(word, s) : getword(word, s);
+	length = bonus ? bonusword(word, s) : getword(word, s);
 
 	if (nword == NULL) {
 		endwin();

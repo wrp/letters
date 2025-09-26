@@ -35,6 +35,7 @@ struct state {
 	jmp_buf jbuf;
 	long delay;
 	int handicap;
+	bool bonus;   /* true if we're in a bonus round */
 };
 
 
