@@ -382,8 +382,6 @@ game(struct state *S)
 				}
 				erase_word(S->current);
 				putword(S->current);
-				goto_xy(COLS, LINES);
-
 			}
 			/* TODO: use an itimer for more precision */
 			usleep(PAUSE);
