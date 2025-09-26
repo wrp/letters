@@ -37,7 +37,7 @@ int read_scores(char *);
 char * next_score(char *buf, size_t siz);
 void show_scores(struct state *S);
 void putword();
-int  game();
+static void game(struct state *);
 void erase_word(struct s_word *wordp);
 void status(struct state *);
 void new_level(struct state *);
@@ -206,7 +206,8 @@ main(int argc, char **argv)
 			S->lastword = S->words = newword(NULL);
 			putword(S->lastword);
 		}
-	} while (game(S));
+		game(S);
+	} while (S->lives > 0);
 
 exit:
 	read_scores(HIGHSCORES);
@@ -376,7 +377,7 @@ process_keys(struct state *S)
 }
 
 
-int
+static void
 game(struct state *S)
 {
 	long  i;
@@ -409,7 +410,7 @@ game(struct state *S)
 				S->lives = 0;
 			}
 			status(S);
-			return (S->lives != 0);
+			return;
 		}
 		if((random() % ADDWORD) == 0) {
 			S->lastword = newword(S->lastword);
@@ -448,8 +449,6 @@ game(struct state *S)
 			S->score.points += 10 * S->level;
 		new_level(S);
 	}
-
-	return 1;
 }
 
 
