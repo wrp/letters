@@ -392,6 +392,19 @@ process_keys(struct state *S)
 }
 
 
+/* Word has been successfully typed.  Increment score and remove. */
+static void
+finalize_word(struct state *S)
+{
+	assert (S->current->length == S->current->matches);
+	erase_word(S->current);
+	S->score.points += S->current->length + (2 * S->level);
+	S->score.letters += S->current->length;
+	S->score.words += 1;
+	kill_word(S->current, S);
+}
+
+
 static void
 game(struct state *S)
 {
@@ -416,15 +429,8 @@ game(struct state *S)
 		}
 	}
 
-	assert (S->current->length == S->current->matches);
-	erase_word(S->current);
-
-	S->score.points += S->current->length + (2 * S->level);
-	S->score.letters += S->current->length;
-	S->score.words++;
+	finalize_word(S);
 	status(S);
-
-	kill_word(S->current, S);
 
 	/*
 	 * increment the level if it's time.  If it's a bonus round, reward
