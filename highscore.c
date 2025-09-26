@@ -72,10 +72,14 @@ write_scores(char *highscores) {
 		exit(1);
 	}
 
-	for(i = 0; i < 10; i++) {
-		fprintf(fp, "%s %d %d %d\n", high_scores[i].name,
-		       high_scores[i].level, high_scores[i].words,
-		       high_scores[i].score);
+	for (i = 0; i < 10; i += 1) {
+		struct score_rec *h = high_scores + i;
+		fprintf(fp, "%s %d %d %d\n",
+			h->name,
+			h->level,
+			h->words,
+			h->score
+		);
 	}
 
 	return fclose(fp);
