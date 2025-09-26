@@ -170,7 +170,7 @@ show_scores(struct state *S)
 	);
 
 	refresh();
-	sleep(2);
+	sleep(1);
 	mvprintw(21, 19, "Press any key to continue");
 	while (getch() != ERR) {
 		;
