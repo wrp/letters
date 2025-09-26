@@ -423,7 +423,7 @@ game(struct state *S)
 	/*
 	 * erase the word
 	 */
-	if(S->current->length == S->current->matches) {
+	assert (S->current->length == S->current->matches); {
 		ding(); ding();
 		erase_word(S->current);
 	}
