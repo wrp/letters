@@ -377,9 +377,7 @@ process_keys(struct state *S)
 			}
 }
 
-/*
- * Here's the main routine of the actual game.
- */
+
 int
 game(struct state *S)
 {
