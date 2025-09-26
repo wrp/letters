@@ -20,7 +20,7 @@ static time_t readtime;
 int
 read_scores(char *highscores)
 {
-	int		 i;
+	struct score_rec *h = high_scores;
 	FILE		 *fp;
 
 	/*
@@ -38,10 +38,10 @@ read_scores(char *highscores)
 
 	readtime = s_buf.st_mtime;
 
-	for(i = 0; i < 10; i++) {
-		fscanf(fp, "%s %d %d %d", high_scores[i].name,
-		       &high_scores[i].level, &high_scores[i].words,
-		       &high_scores[i].score);
+	while ( h - high_scores < 10 && 4 == fscanf(
+		fp, "%8s %d %d %d", h->name, &h->level, &h->words, &h->score
+	)) {
+		h += 1;
 	}
 
 	fclose(fp);
