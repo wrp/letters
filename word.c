@@ -20,13 +20,15 @@ static size_t
 build_random_string(char *buf, size_t siz, const char *string)
 {
 	char *p = buf;
-	int wlen;
+	size_t wlen;
 	size_t len = strlen(string);
 
-	wlen  = (MINSTRING + (random() % (MAXSTRING - MINSTRING)));
-	wlen %= siz;
-	while(wlen--) {
-		*p++ = string[(random() % len)];
+	wlen = MINSTRING + (random() % (MAXSTRING - MINSTRING));
+	if (wlen > siz - 1) {
+		wlen = siz - 1;
+	}
+	while (wlen--) {
+		*p++ = string[random() % len];
 	}
 	*p = '\0';
 	return p - buf;
@@ -71,6 +73,7 @@ getword(char *buf, size_t bufsiz)
 
 	return strlen(buf);
 }
+
 size_t
 bonusword(char *buf, size_t bufsiz)
 {
