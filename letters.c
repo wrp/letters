@@ -18,6 +18,7 @@
 # define CTRL(c)  (c & 0x1f)
 
 #include "letters.h"
+#include <signal.h>
 #include <sys/time.h>
 
 struct s_word {
@@ -32,6 +33,7 @@ struct s_word {
 
 static int move_words(struct state *);
 static int set_timer(unsigned delay_msec);
+static void set_handlers(void);
 
 void update_scores(char *, struct score *, unsigned);
 int read_scores(char *);
@@ -48,6 +50,10 @@ struct s_word *searchstr(int key, char *str, int len, struct state *S);
 struct s_word *searchchar(int, struct state *);
 void kill_word(struct s_word *wordp, struct state *S);
 int (*ding)(void); /* beep, flash, or no-op */
+
+volatile sig_atomic_t received_signal;
+
+typedef void (*handler)(int, siginfo_t *, void *);
 
 /*
  * There are too many globals for my taste, but I took the easy way out in
@@ -72,6 +78,15 @@ usage(const char *progname)
 }
 
 int no_op(void) { return 0; }  /* Do nothing function */
+
+void
+assign_signal(int s, siginfo_t *i, void *v)
+{
+	(void)i;
+	(void)v;
+	received_signal = s;
+}
+
 /* Ensure the process is running on a tty. */
 static void
 check_tty(void)
@@ -176,6 +191,7 @@ init(struct state *S, int argc, char **argv)
 	S->handicap = 1;
 	parse_cmd_line(argc, argv, S);
 
+	set_handlers();
 	srand48(time(NULL));
 	initscr();
 	raw();
@@ -700,4 +716,18 @@ int
 underline(int on)
 {
 	return on ? attron(A_UNDERLINE) : attroff(A_UNDERLINE);
+}
+
+
+static void
+set_handlers(void)
+{
+	struct sigaction act;
+
+	memset(&act, 0, sizeof act);
+	act.sa_sigaction = assign_signal;
+	if (sigaction(SIGALRM, &act, NULL)) {
+		perror("sigaction");
+		exit(1);
+	}
 }
