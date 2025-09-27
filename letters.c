@@ -32,7 +32,7 @@ struct s_word {
 };
 
 static int move_words(struct state *);
-static int set_timer(unsigned delay_msec);
+static void set_timer(struct state *);
 static void set_handlers(void);
 
 void update_scores(char *, struct score *, unsigned);
@@ -226,7 +226,7 @@ main(int argc, char **argv)
 	} while (S->lives > 0);
 
 exit:
-	set_timer(0);
+	set_timer(NULL);
 	read_scores(HIGHSCORES);
 	if (S->handicap == 1 && newdict == 0 && choice == NULL)
 		update_scores(HIGHSCORES, &S->score, S->level);
@@ -426,9 +426,10 @@ finalize_word(struct state *S)
 
 
 /* Set an interval timer in ms */
-static int
-set_timer(unsigned delay_msec)
+static void
+set_timer(struct state *S)
 {
+	unsigned long delay_msec = S ? S->delay / 1000 : 0;
 	struct timeval tp = {
 		.tv_sec = 0,
 		.tv_usec = delay_msec * 1000
@@ -441,7 +442,13 @@ set_timer(unsigned delay_msec)
 		.it_interval = tp,
 		.it_value = tp
 	};
-	return setitimer(ITIMER_REAL, &t, NULL);
+
+	if (setitimer(ITIMER_REAL, &t, NULL)) {
+		endwin();
+		perror("setitimer");
+		exit(1);
+	}
+	timeout(delay_msec);
 }
 
 
@@ -452,8 +459,7 @@ game(struct state *S)
 
 	S->current = find_match(S);
 	while(S->current->matches < S->current->length) {
-		set_timer((S->delay / 1000));
-		timeout((S->delay / 1000));
+		set_timer(S);
 		process_keys(S);
 		received_signal = 0;
 		refresh();
@@ -694,7 +700,7 @@ banner(const char *text, int delay_sec)
 	if (delay_sec) {
 		sleep(delay_sec);
 	} else {
-		set_timer(0);
+		set_timer(NULL);
 		timeout(-1);
 		c = getch();
 		timeout(0);
