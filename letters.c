@@ -18,6 +18,7 @@
 # define CTRL(c)  (c & 0x1f)
 
 #include "letters.h"
+#include <sys/time.h>
 
 struct s_word {
 	struct s_word *nextword;
@@ -30,6 +31,7 @@ struct s_word {
 };
 
 static int move_words(struct state *);
+static int set_timer(unsigned delay_msec);
 
 void update_scores(char *, struct score *, unsigned);
 int read_scores(char *);
@@ -402,6 +404,26 @@ finalize_word(struct state *S)
 	S->score.letters += S->current->length;
 	S->score.words += 1;
 	kill_word(S->current, S);
+}
+
+
+/* Set an interval timer in ms */
+static int
+set_timer(unsigned delay_msec)
+{
+	struct timeval tp = {
+		.tv_sec = 0,
+		.tv_usec = delay_msec * 1000
+	};
+	while (tp.tv_usec > 999000) {
+		tp.tv_sec += 1;
+		tp.tv_usec -= 1000000;
+	}
+	struct itimerval t = {
+		.it_interval = tp,
+		.it_value = tp
+	};
+	return setitimer(ITIMER_REAL, &t, NULL);
 }
 
 
