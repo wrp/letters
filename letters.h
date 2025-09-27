@@ -54,8 +54,6 @@ struct state {
  */
 #define DELAY_CHANGE  60000
 #define DECEL         1200
-#define DELAY(lev)   ( (((long)(lev))*DECEL > DELAY_CHANGE/2) ? PAUSE :\
-			(START_DELAY-(DELAY_CHANGE-(lev)*DECEL)*(lev)) )
 
 /* number of words to be completed before level change */
 #define LEVEL_CHANGE 15

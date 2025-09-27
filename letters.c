@@ -112,6 +112,16 @@ intrrpt(struct state *S)
 	}
 }
 
+long
+DELAY(int lev)
+{
+	if ( (long)lev * DECEL > DELAY_CHANGE / 2 ) {
+		return PAUSE;
+	} else {
+		return START_DELAY - lev * (DELAY_CHANGE - (lev) * DECEL);
+	}
+}
+
 
 static void
 handle_argument(struct state *S, char **argv)
