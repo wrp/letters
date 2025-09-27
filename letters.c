@@ -104,6 +104,7 @@ intrrpt(struct state *S)
 	switch(banner("Are you sure you want to quit?", 0)) {
 	case 'y':
 	case 'Y':
+	case CTRL('C'):
 		longjmp(S->jbuf, 1);
 	default:
 		erase();
