@@ -34,12 +34,43 @@ build_random_string(char *buf, size_t siz, const char *string)
 	return p - buf;
 }
 
+
+static size_t
+initialize_dictionary(char **dictp)
+{
+	FILE *fp;
+	struct stat s_buf;
+	char *dict;
+	if(
+		(fp = fopen(dictionary, "r")) == NULL ||
+		stat(dictionary, &s_buf) == -1
+	) {
+		perror(dictionary);
+		exit(1);
+	}
+	if ((dict = malloc(s_buf.st_size)) == NULL) {
+		perror("malloc");
+		exit(1);
+	}
+	if (fread(dict, 1, s_buf.st_size, fp) != s_buf.st_size) {
+		if (ferror(fp)) {
+			perror(dictionary);
+		} else {
+			fprintf(stderr, "Unexpected EOF reading %s\n",
+				dictionary
+			);
+		}
+		exit(1);
+	}
+	*dictp = dict;
+	return s_buf.st_size;
+}
+
 size_t
 getword(char *buf, size_t bufsiz)
 {
 	static char *dict = NULL;
-	static struct stat s_buf;
-
+	static size_t len;
 	char fmt[64];
 
 	if (choice) {
@@ -47,35 +78,14 @@ getword(char *buf, size_t bufsiz)
 	}
 
 	if (dict == NULL) {
-		FILE *fp;
-		if(
-			(fp = fopen(dictionary, "r")) == NULL ||
-			stat(dictionary, &s_buf) == -1
-		) {
-			perror(dictionary);
-			exit(1);
-		}
-		if ((dict = malloc(s_buf.st_size)) == NULL) {
-			perror("malloc");
-			exit(1);
-		}
-		if (fread(dict, 1, s_buf.st_size, fp) != s_buf.st_size) {
-			if (ferror(fp)) {
-				perror(dictionary);
-			} else {
-				fprintf(stderr, "Unexpected EOF reading %s\n",
-					dictionary
-				);
-			}
-			exit(1);
-		}
+		len = initialize_dictionary(&dict);
 	}
 
 	if (buf == NULL ){
 		return 0;
 	}
 	sprintf(fmt, "%%*s %%%lus", bufsiz - 1);
-	if( sscanf(dict + random() % s_buf.st_size, fmt, buf) != 1 ){
+	if( sscanf(dict + random() % len, fmt, buf) != 1 ){
 		return getword(buf, bufsiz);
 	}
 
