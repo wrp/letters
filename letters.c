@@ -199,7 +199,6 @@ init(struct state *S, int argc, char **argv)
 	curs_set(0);
 	noecho();
 	keypad(stdscr, 1);
-	nodelay(stdscr, 1);
 	clear();
 	new_level(S);
 	status(S);
@@ -227,6 +226,7 @@ main(int argc, char **argv)
 	} while (S->lives > 0);
 
 exit:
+	set_timer(0);
 	read_scores(HIGHSCORES);
 	if (S->handicap == 1 && newdict == 0 && choice == NULL)
 		update_scores(HIGHSCORES, &S->score, S->level);
@@ -349,7 +349,7 @@ find_match(const struct state *S)
 }
 
 
-/* Process all the user keystrokes that happend during a usleep */
+/* Process the user keystrokes until word matched or signal received */
 static void
 process_keys(struct state *S)
 {
@@ -357,7 +357,8 @@ process_keys(struct state *S)
 	struct s_word *temp_word;
 	while(
 		(S->current->matches != S->current->length) &&
-		((key = getch()) != ERR)
+		((key = getch()) != ERR) &&
+		! received_signal
 	) {
 		if (handle_ctrl_key(S, key)) {
 			continue;
@@ -451,12 +452,11 @@ game(struct state *S)
 
 	S->current = find_match(S);
 	while(S->current->matches < S->current->length) {
-		for(i = 0; i < S->delay; i += PAUSE) {
-			process_keys(S);
-
-			/* TODO: use an itimer for more precision */
-			usleep(PAUSE);
-		}
+		set_timer((S->delay / 1000));
+		timeout((S->delay / 1000));
+		process_keys(S);
+		received_signal = 0;
+		refresh();
 
 		if (move_words(S)) {
 			status(S);
@@ -694,6 +694,7 @@ banner(const char *text, int delay_sec)
 	if (delay_sec) {
 		sleep(delay_sec);
 	} else {
+		set_timer(0);
 		timeout(-1);
 		c = getch();
 		timeout(0);
