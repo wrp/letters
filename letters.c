@@ -138,7 +138,7 @@ handle_argument(struct state *S, char **argv)
 	case 'q': ding = flash; break;
 	case 'H':
 		S->handicap = (int)strtol(arg + 2, &end, 0);
-		if( *end || S->handicap < 1 ){
+		if (*end || S->handicap < 1 || S->handicap > 99) {
 			fprintf(stderr, "Invalid handicap %s\n", arg + 2);
 			exit(1);
 		}
