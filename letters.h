@@ -40,7 +40,8 @@ struct state {
 
 
 /*
- * initial delay in usecs before words move to the next line
+ * Delay (in usecs) between words moving to the next line
+ * in level zero.  Delay decreases at each level.
  */
 #define START_DELAY   750000
 
