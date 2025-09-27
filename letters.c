@@ -152,7 +152,7 @@ handle_argument(struct state *S, char **argv)
 		break;
 	case 'l':
 		S->level = (int)strtol(arg + 2, &end, 0);
-		if( *end || (DELAY(S->level) <= PAUSE) ) {
+		if (*end || S->level < 1) {
 			fprintf(stderr, "Invalid level %s\n", arg + 2);
 			exit(1);
 		}
