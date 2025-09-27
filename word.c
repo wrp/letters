@@ -37,23 +37,17 @@ build_random_string(char *buf, size_t siz, const char *string)
 size_t
 getword(char *buf, size_t bufsiz)
 {
-	static FILE	*fp = NULL;
-	static struct stat	s_buf;
+	static char *dict = NULL;
+	static struct stat s_buf;
 
 	char fmt[64];
 
-	/*
-	 * if there's a 'choice' string set, choose a selection of letters
-	 * from it instead of reading the dictionary.
-	 */
 	if (choice) {
 		return build_random_string(buf, bufsiz, choice);
 	}
 
-	/*
-	 * This is stuff that only needs to get done once.
-	 */
-	if(fp == NULL) {
+	if (dict == NULL) {
+		FILE *fp;
 		if(
 			(fp = fopen(dictionary, "r")) == NULL ||
 			stat(dictionary, &s_buf) == -1
@@ -62,13 +56,27 @@ getword(char *buf, size_t bufsiz)
 			perror(dictionary);
 			exit(1);
 		}
+		if ((dict = malloc(s_buf.st_size)) == NULL) {
+			endwin();
+			perror("malloc");
+			exit(1);
+		}
+		if (fread(dict, 1, s_buf.st_size, fp) != s_buf.st_size) {
+			endwin();
+			if (ferror(fp)) {
+				perror(dictionary);
+			} else {
+				fprintf(stderr, "Unexpected EOF reading %s\n",
+					dictionary
+				);
+			}
+			exit(1);
+		}
 	}
 
-	fseek(fp, random() % s_buf.st_size, 0);
 	sprintf(fmt, "%%*s %%%lus", bufsiz - 1);
-	if( fscanf(fp, fmt, buf) != 1 ){
-		fseek(fp, 0L, 0);
-		fscanf(fp, "%s", buf);
+	if( sscanf(dict + random() % s_buf.st_size, fmt, buf) != 1 ){
+		return getword(buf, bufsiz);
 	}
 
 	return strlen(buf);
