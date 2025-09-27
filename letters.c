@@ -21,8 +21,8 @@
 #include <signal.h>
 #include <sys/time.h>
 
-struct s_word {
-	struct s_word *nextword;
+struct word {
+	struct word *nextword;
 	int posx;
 	int posy;
 	int length;
@@ -41,14 +41,14 @@ char * next_score(char *buf, size_t siz);
 void show_scores(struct state *S);
 void putword();
 static void game(struct state *);
-void erase_word(struct s_word *wordp);
+void erase_word(struct word *wordp);
 void status(struct state *);
 void new_level(struct state *);
 int banner(const char *, int);
-static struct s_word *newword(struct s_word *, bool);
-struct s_word *searchstr(int key, char *str, int len, struct state *S);
-struct s_word *searchchar(int, struct state *);
-void kill_word(struct s_word *wordp, struct state *S);
+static struct word *newword(struct word *, bool);
+struct word *searchstr(int key, char *str, int len, struct state *S);
+struct word *searchchar(int, struct state *);
+void kill_word(struct word *wordp, struct state *S);
 int (*ding)(void); /* beep, flash, or no-op */
 
 volatile sig_atomic_t received_signal;
@@ -243,7 +243,7 @@ exit:
 static int
 move_words(struct state *S)
 {
-	struct s_word  *w, *next;
+	struct word  *w, *next;
 	int  died = 0;
 
 	for (w = S->words; w != NULL; w = next) {
@@ -281,7 +281,7 @@ move_words(struct state *S)
 /*
  * erase a word on the screen by printing the correct number of blanks
  */
-void erase_word(struct s_word *wordp)
+void erase_word(struct word *wordp)
 {
 	int i;
 
@@ -292,7 +292,7 @@ void erase_word(struct s_word *wordp)
 
 /* write the word to the screen with already typed letters highlighted */
 void
-putword(struct s_word *wordp)
+putword(struct word *wordp)
 {
 	int idx = wordp->matches;
 	int c = wordp->word[idx];
@@ -336,10 +336,10 @@ handle_ctrl_key(struct state *S, int key)
 /*
  * Find any word that has a partial match, or return S->words
  */
-static struct s_word *
+static struct word *
 find_match(const struct state *S)
 {
-	struct s_word *this;
+	struct word *this;
 	for (this = S->words; this; this = this->nextword) {
 		if (this->matches > 0) {
 			return this;
@@ -354,7 +354,7 @@ static void
 process_keys(struct state *S)
 {
 	int  key;
-	struct s_word *temp_word;
+	struct word *temp_word;
 	while(
 		(S->current->matches != S->current->length) &&
 		((key = getch()) != ERR) &&
@@ -510,7 +510,7 @@ status(struct state *S)
 void
 new_level(struct state *S)
 {
-	struct s_word *next, *wordp;
+	struct word *next, *wordp;
 	static time_t last_time = 0L;
 	time_t  curr_time;
 
@@ -581,10 +581,10 @@ new_level(struct state *S)
 }
 
 /* Initialize a new word. */
-struct s_word *
-newword(struct s_word *wordp, bool bonus)
+struct word *
+newword(struct word *wordp, bool bonus)
 {
-	struct s_word *nword;
+	struct word *nword;
 	int  length;
 	size_t s = sizeof nword->word;
 
@@ -615,11 +615,11 @@ newword(struct s_word *wordp, bool bonus)
 /*
  * Find the word that matches that has highest posy
  */
-struct s_word *
+struct word *
 searchstr(int key, char *str, int len, struct state *S)
 {
-	struct s_word *wordp = S->words;
-	struct s_word *best = NULL;
+	struct word *wordp = S->words;
+	struct word *best = NULL;
 
 	while (wordp) {
 		if(
@@ -641,10 +641,10 @@ searchstr(int key, char *str, int len, struct state *S)
  * look at the first character in each of the words to see if any match the
  * one that was typed.
  */
-struct s_word *
+struct word *
 searchchar(int key, struct state *S)
 {
-	struct s_word	*wordp, *best;
+	struct word	*wordp, *best;
 
 	for(best = NULL, wordp = S->words;
 		wordp != NULL;
@@ -660,9 +660,9 @@ searchchar(int key, struct state *S)
 
 /* Delete the completed word and revise pointers  */
 void
-kill_word(struct s_word *wordp, struct state *S)
+kill_word(struct word *wordp, struct state *S)
 {
-	struct s_word *temp, *prev = NULL;
+	struct word *temp, *prev = NULL;
 
 	/*
 	 * check to see if the current word is the first one on our list

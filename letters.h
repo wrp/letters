@@ -29,8 +29,8 @@ struct score {
 struct state {
 	int level;
 	int lives;
-	struct s_word *words, *lastword;
-	struct s_word *current;  /* Word user is currently typing */
+	struct word *words, *lastword;
+	struct word *current;  /* Word user is currently typing */
 	struct score score;
 	jmp_buf jbuf;
 	long delay;
