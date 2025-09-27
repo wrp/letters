@@ -27,7 +27,7 @@ struct score {
 	unsigned letters;
 };
 struct state {
-	int level;
+	unsigned level;
 	int lives;
 	struct word *words, *lastword;
 	struct word *current;  /* Word user is currently typing */
@@ -39,22 +39,6 @@ struct state {
 };
 
 
-/*
- * Delay (in usecs) between words moving to the next line
- * in level zero.  Delay decreases at each level.
- */
-#define START_DELAY   750000
-
-/*
- * this implements "graduated" (non-linear) decreasing delay times:
- * each level, delay gets reduced by smaller and smaller amounts
- * (eventually, when delay would get below PAUSE, it is simply set to PAUSE)
- *
- * if you change START_DELAY or DELAY_CHANGE, DECEL must be tuned carefully,
- * otherwise DELAY(lev) will drop suddenly to PAUSE at some point
- */
-#define DELAY_CHANGE  60000
-#define DECEL         1200
 
 /* number of words to be completed before level change */
 #define LEVEL_CHANGE 15

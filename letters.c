@@ -112,14 +112,19 @@ intrrpt(struct state *S)
 	}
 }
 
-long
-DELAY(int lev)
+
+/* milliseconds to pause before moving words down */
+int
+DELAY(unsigned level)
 {
-	if ( (long)lev * DECEL > DELAY_CHANGE / 2 ) {
-		return PAUSE;
-	} else {
-		return START_DELAY - lev * (DELAY_CHANGE - (lev) * DECEL);
-	}
+	/* START_DELAY - level * (DELAY_CHANGE - (level * DECEL)) */
+	long lut[] = {
+		750000, 691200, 634800, 580800, 529200, 480000,
+		433200, 388800, 346800, 307200, 270000, 235200,
+		202800, 172800, 145200, 120000, 97200, 76800,
+		58800, 43200, 30000, 19200, 10800
+	};
+	return level < sizeof lut / sizeof *lut ? lut[level] : 10000;
 }
 
 
