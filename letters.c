@@ -334,8 +334,6 @@ handle_ctrl_key(struct state *S, int key)
 	case CTRL('N'):
 		S->level += 1;
 		S->delay = S->handicap * DELAY(S->level);
-		if(S->delay < PAUSE)
-			S->delay = PAUSE;
 		status(S);
 		break;
 	case CTRL('C'):
