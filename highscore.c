@@ -4,6 +4,18 @@
  * copyright 1991 by Larry Moss (lm03_cif@uhura.cc.rochester.edu)
  */
 
+/*
+ * TODO
+ * SIGWINCH and different sized screens make the high scores irrelevant
+ * A player on a large screen has a huge advantage over a player with
+ * fewer LINES.  Maybe track different high score files for different
+ * screen sizes, and probably invalidate the game if SIGWINCH is ever
+ * received.  Yes, that seems like a good idea.  Track the max value
+ * of LINES over the course of the game and use the high-score list
+ * for that screen size.  It's not clear how COLS impacts things. A tight
+ * screen might be easier, so maybe track both.
+ */
+
 
 #include "letters.h"
 
