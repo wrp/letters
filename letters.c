@@ -202,6 +202,7 @@ init(struct state *S, int argc, char **argv)
 	check_tty();
 	unsetenv("COLUMNS");
 	unsetenv("LINES");
+	getword(NULL, 0);
 
 	ding = no_op;
 	S->handicap = 1;

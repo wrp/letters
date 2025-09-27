@@ -52,17 +52,14 @@ getword(char *buf, size_t bufsiz)
 			(fp = fopen(dictionary, "r")) == NULL ||
 			stat(dictionary, &s_buf) == -1
 		) {
-			endwin();
 			perror(dictionary);
 			exit(1);
 		}
 		if ((dict = malloc(s_buf.st_size)) == NULL) {
-			endwin();
 			perror("malloc");
 			exit(1);
 		}
 		if (fread(dict, 1, s_buf.st_size, fp) != s_buf.st_size) {
-			endwin();
 			if (ferror(fp)) {
 				perror(dictionary);
 			} else {
@@ -74,6 +71,9 @@ getword(char *buf, size_t bufsiz)
 		}
 	}
 
+	if (buf == NULL ){
+		return 0;
+	}
 	sprintf(fmt, "%%*s %%%lus", bufsiz - 1);
 	if( sscanf(dict + random() % s_buf.st_size, fmt, buf) != 1 ){
 		return getword(buf, bufsiz);
