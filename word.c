@@ -14,7 +14,6 @@
 # define random lrand48
 
 extern char *dictionary, *choice;
-extern int choicelen;
 
 static size_t
 build_random_string(char *buf, size_t siz, const char *string)

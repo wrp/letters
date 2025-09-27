@@ -63,7 +63,6 @@ int levels_played = -1;
 int wpm = 0;
 char *dictionary = DICTIONARY;
 char *choice = NULL;
-int   choicelen = 0;
 int newdict = 0;
 
 void
@@ -172,7 +171,6 @@ handle_argument(struct state *S, char **argv)
 			exit(1);
 		}
 		choice = arg + 2;
-		choicelen = strlen(choice);
 		break;
 	default:
 		fprintf(stderr, "Unknown option: -%c\n", arg[1]);
