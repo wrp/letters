@@ -567,13 +567,6 @@ new_level(struct state *S)
 
 	S->delay = S->handicap * DELAY(S->level);
 
-	/*
-	 * no one should ever reach a level where there is no delay, but
-	 * just to be safe ...
-	 */
-	if(S->delay < PAUSE)
-		S->delay = PAUSE;
-
 	if((levels_played % LVL_PER_BONUS == 0) && (levels_played != 0)) {
 		S->bonus = true;
 

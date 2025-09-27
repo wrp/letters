@@ -47,12 +47,6 @@ struct state {
 #define LVL_PER_BONUS 3
 
 /*
- * length of pause before reading keyboard again (in usecs).  There has to
- * be some pause.
- */
-# define PAUSE  10000
-
-/*
  * This is how likely it is that another word will appear on the screen
  * while words are falling.  there isa 1/ADDWORD chance of a new word
  */
