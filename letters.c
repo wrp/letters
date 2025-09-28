@@ -257,6 +257,7 @@ move_words(struct state *S)
 			continue;
 		}
 		next = w->next;
+		prev = &w->next;
 		erase_word(w);
 		w->y += w->drop;
 
@@ -266,7 +267,6 @@ move_words(struct state *S)
 		} else {
 			putword(w);
 		}
-		prev = &w->next;
 		w = next;
 	}
 
