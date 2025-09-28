@@ -70,14 +70,9 @@ usage(const char *progname)
 	exit(0);
 }
 
-int no_op(void) { return 0; }  /* Do nothing function */
-
-void
-assign_signal(int s, siginfo_t *i, void *v)
-{
-	(void)i;
-	(void)v;
-}
+/* Do nothing functions */
+int no_op(void) { return 0; }
+void handle_signal(int s, siginfo_t *i, void *v) { (void)i; (void)v; (void)s; }
 
 /* Ensure the process is running on a tty. */
 /* TODO: perhaps read the dictionary from stdin */
@@ -725,7 +720,7 @@ set_handlers(void)
 	struct sigaction act;
 
 	memset(&act, 0, sizeof act);
-	act.sa_sigaction = assign_signal;
+	act.sa_sigaction = handle_signal;
 	if (sigaction(SIGALRM, &act, NULL)) {
 		perror("sigaction");
 		exit(1);
