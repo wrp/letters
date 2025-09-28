@@ -456,8 +456,7 @@ game(struct state *S)
 }
 
 
-/* Display the status line. */
-
+/* Update the status line. */
 void
 status(struct state *S)
 {
