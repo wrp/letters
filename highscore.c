@@ -159,19 +159,16 @@ void
 show_scores(struct state *S)
 {
 	erase();
-	goto_xy(18, 5);
 	highlight(1);
-	printw("Top Ten Scores for Letter Invaders");
+	mvprintw(5, 18, "Top Ten Scores for Letter Invaders");
 	highlight(0);
-	goto_xy(20, 7);
 	underline(1);
-	printw("  name      level  words  score");
+	mvprintw(7, 20, "  name      level  words  score");
 	underline(0);
 
 	for (char s[64]; next_score(s, sizeof s); ) {
 		int y = getcury(stdscr);
-		goto_xy(18, y + 1);
-		printw("%s", s);
+		mvprintw(y + 1, 18, "%s", s);
 	}
 
 	mvprintw(19, 21, "%-10s" SCORE_FMT,

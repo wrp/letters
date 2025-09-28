@@ -14,7 +14,6 @@
 #include <time.h>
 #include <unistd.h>
 
-#define goto_xy(x, y)   move((y), (x))
 void highlight(int);
 void redraw(void);
 int underline(int on);

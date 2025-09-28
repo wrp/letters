@@ -294,12 +294,12 @@ move_words(struct state *S)
 /*
  * erase a word on the screen by printing the correct number of blanks
  */
-void erase_word(struct word *wordp)
+void erase_word(struct word *w)
 {
 	int i;
 
-	goto_xy(wordp->posx, wordp->posy);
-	for(i = 0; i < wordp->length; i++)
+	move(w->posy, w->posx);
+	for(i = 0; i < w->length; i++)
 		printw("%c", ' ');
 }
 
@@ -311,10 +311,9 @@ putword(struct word *wordp)
 	int c = wordp->word[idx];
 
 	assert(idx <= wordp->length);
-	goto_xy(wordp->posx, wordp->posy);
 	highlight(1);
 	wordp->word[idx] = '\0';
-	printw("%s", wordp->word);
+	mvprintw(wordp->posy, wordp->posx, "%s", wordp->word);
 	wordp->word[idx] = c;
 	highlight(0);
 	printw("%s", wordp->word + wordp->matches);
@@ -389,9 +388,8 @@ process_keys(struct state *S)
 		{
 			int x = S->current->posx;
 			int y = S->current->posy;
-			goto_xy(x + S->current->matches, y);
 			highlight(1);
-			printw("%c", key);
+			mvprintw(y, x + S->current->matches, "%c", key);
 			highlight(0);
 			S->current->matches += 1;
 			continue;
@@ -501,6 +499,7 @@ game(struct state *S)
 
 
 /* Display the status line. */
+
 void
 status(struct state *S)
 {
@@ -706,8 +705,7 @@ banner(const char *text, int delay_sec)
 	int c = ERR;
 
 	erase();
-	goto_xy((COLS - strlen(text))/2, 10);
-	printw("%s", text);
+	mvprintw(10, (COLS - strlen(text)) / 2, "%s", text);
 	refresh();
 	if (delay_sec) {
 		sleep(delay_sec);
