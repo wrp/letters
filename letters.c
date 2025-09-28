@@ -22,8 +22,8 @@
 
 struct word {
 	struct word *nextword;
-	int posx;
-	int posy;
+	int x;
+	int y;
 	int length;
 	int drop;
 	int matches;
@@ -259,9 +259,9 @@ move_words(struct state *S)
 	for (w = S->words; w != NULL; w = next) {
 		next = w->nextword;
 		erase_word(w);
-		w->posy += w->drop;
+		w->y += w->drop;
 
-		if (w->posy >= LINES) {
+		if (w->y >= LINES) {
 			kill_word(w, S);
 			died += 1;
 		} else {
@@ -295,7 +295,7 @@ void erase_word(struct word *w)
 {
 	int i;
 
-	move(w->posy, w->posx);
+	move(w->y, w->x);
 	for(i = 0; i < w->length; i++)
 		printw("%c", ' ');
 }
@@ -308,7 +308,7 @@ putword(struct word *wordp)
 
 	assert(idx <= wordp->length);
 	highlight(1);
-	mvaddnstr(wordp->posy, wordp->posx, wordp->word, idx);
+	mvaddnstr(wordp->y, wordp->x, wordp->word, idx);
 	highlight(0);
 	printw("%s", wordp->word + wordp->matches);
 }
@@ -379,8 +379,8 @@ process_keys(struct state *S)
 		if(S->current->matches > 0 &&
 			key == S->current->word[S->current->matches])
 		{
-			int x = S->current->posx;
-			int y = S->current->posy;
+			int x = S->current->x;
+			int y = S->current->y;
 			highlight(1);
 			mvprintw(y, x + S->current->matches, "%c", key);
 			highlight(0);
@@ -604,8 +604,8 @@ newword(struct word *wordp, bool bonus)
 	nword->length = length;
 	nword->drop = length > 6 ? 1 : length > 3 ? 2 : 3;
 	nword->matches = 0;
-	nword->posx = random() % ((COLS - 1) - nword->length);
-	nword->posy = 1;
+	nword->x = random() % ((COLS - 1) - nword->length);
+	nword->y = 1;
 	nword->nextword = NULL;
 
 	if(wordp != NULL)
@@ -614,9 +614,7 @@ newword(struct word *wordp, bool bonus)
 	return nword;
 }
 
-/*
- * Find the word that matches that has highest posy
- */
+/* Find the word that matches that is lowest */
 struct word *
 searchstr(int key, char *str, int len, struct state *S)
 {
@@ -628,7 +626,7 @@ searchstr(int key, char *str, int len, struct state *S)
 			wordp->length > len
 			&& strncmp(wordp->word, str, len) == 0
 			&& wordp->word[len] == key
-			&& (!best || best->posy < wordp->posy)
+			&& (!best || best->y < wordp->y)
 		) {
 			best = wordp;
 		}
@@ -653,7 +651,7 @@ searchchar(int key, struct state *S)
 		wordp = wordp->nextword
 	) {
 		if(wordp->word[0] == key
- 		&& (!best || best->posy < wordp->posy))
+		&& (!best || best->y < wordp->y))
 			best = wordp;
 	}
 
