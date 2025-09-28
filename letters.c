@@ -45,7 +45,7 @@ int banner(const char *, int);
 static struct word *newword(struct word *, bool);
 struct word *searchstr(int key, char *str, int len, struct state *S);
 struct word *searchchar(int, struct state *);
-void kill_word(struct word *wordp, struct state *S);
+void kill_word(struct word *, struct state *S);
 int (*ding)(void); /* beep, flash, or no-op */
 
 
@@ -517,7 +517,7 @@ status(struct state *S)
 void
 new_level(struct state *S)
 {
-	struct word *next, *wordp;
+	struct word *next;
 	static time_t last_time = 0L;
 	time_t  curr_time;
 
@@ -541,9 +541,9 @@ new_level(struct state *S)
 		 * erase all existing words so we can go back to a normal
 		 * round
 		 */
-		for(wordp = S->words; wordp != NULL; wordp = next) {
-			next = wordp->nextword;
-			kill_word(wordp, S);
+		for(struct word *w = S->words; w != NULL; w = next) {
+			next = w->nextword;
+			kill_word(w, S);
 		}
 
 		status(S);
@@ -568,9 +568,9 @@ new_level(struct state *S)
 		/*
 		 * erase all existing words so we can have a bonus round
 		 */
-		for(wordp = S->words; wordp != NULL; wordp = next) {
-			next = wordp->nextword;
-			kill_word(wordp, S);
+		for(struct word *w = S->words; w != NULL; w = next) {
+			next = w->nextword;
+			kill_word(w, S);
 		}
 
 		banner("Prepare for bonus words", 3);
