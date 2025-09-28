@@ -352,14 +352,14 @@ process_keys(struct state *S)
 			if (key == w->word[w->matches]) {
 				w->matches += 1;
 				if (w->matches == w->length) {
-					S->current = w;
+					S->completed = w;
 				}
 			} else {
 				w->matches = 0;
 			}
 			putword(w);
 		}
-		if (S->current != NULL) {
+		if (S->completed != NULL) {
 			return;
 		}
 	}
@@ -370,7 +370,7 @@ process_keys(struct state *S)
 static void
 finalize_word(struct state *S)
 {
-	struct word *w = S->current;
+	struct word *w = S->completed;
 	assert (w->length == w->matches);
 	erase_word(w);
 	S->score.points += w->length + (2 * S->level);
@@ -427,8 +427,8 @@ game(struct state *S)
 {
 	long  i;
 
-	S->current = NULL;
-	while(S->current == NULL) {
+	S->completed = NULL;
+	while(S->completed == NULL) {
 		if (! S->words || (random() % ADDWORD) == 0) {
 			struct word *w = newword(S->bonus);
 			*lastnext(S) = w;

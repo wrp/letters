@@ -45,7 +45,7 @@ struct state {
 	unsigned level;
 	int lives;
 	struct word *words;
-	struct word *current;  /* Word user is currently typing */
+	struct word *completed;  /* Fully matched word */
 	struct score score;
 	jmp_buf jbuf;
 	long delay;
