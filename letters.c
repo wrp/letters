@@ -701,10 +701,10 @@ banner(const char *text, int delay_sec)
 	erase();
 	mvprintw(10, (COLS - strlen(text)) / 2, "%s", text);
 	refresh();
+	set_timer(NULL);
 	if (delay_sec) {
 		sleep(delay_sec);
 	} else {
-		set_timer(NULL);
 		timeout(-1);
 		c = getch();
 		timeout(0);
