@@ -44,7 +44,7 @@ struct score_rec {
 struct state {
 	unsigned level;
 	int lives;
-	struct word *words, *lastword;
+	struct word *words;
 	struct word *current;  /* Word user is currently typing */
 	struct score score;
 	jmp_buf jbuf;

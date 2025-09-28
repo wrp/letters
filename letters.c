@@ -212,8 +212,8 @@ main(int argc, char **argv)
 	}
 	do {
 		if (S->words == NULL) {
-			S->lastword = S->words = newword(NULL, S->bonus);
-			putword(S->lastword);
+			S->words = newword(NULL, S->bonus);
+			putword(S->words);
 		}
 		game(S);
 	} while (S->lives > 0);
@@ -657,9 +657,6 @@ kill_word(struct word *wordp, struct state *S)
 		prev->nextword = wordp->nextword;
 	} else
 		S->words = wordp->nextword;
-
-	if(wordp == S->lastword)
-		S->lastword = prev;
 
 	free((char *)wordp);
 }
