@@ -578,23 +578,19 @@ newword(bool bonus)
 
 /* Delete the completed word and revise pointers  */
 void
-kill_word(struct word *wordp, struct state *S)
+kill_word(struct word *w, struct state *S)
 {
-	struct word *temp, *prev = NULL;
+	assert(S->words);
 
-	if (wordp != S->words) {
-		for(prev = S->words, temp = S->words->next; temp != wordp;) {
-			prev = temp;
-			temp = temp->next;
-		}
+	struct word **p = &S->words;
+	struct word *n = S->words->next;
+
+	while (*p != w) {
+		p = &((*p)->next);
+		n = n->next;
 	}
-
-	if(prev != NULL) {
-		prev->next = wordp->next;
-	} else
-		S->words = wordp->next;
-
-	free((char *)wordp);
+	*p = w->next;
+	free(w);
 }
 
 
