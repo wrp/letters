@@ -40,7 +40,7 @@ char * next_score(char *buf, size_t siz);
 void show_scores(struct state *S);
 void putword();
 static void game(struct state *);
-void erase_word(struct word *wordp);
+void erase_word(struct word *);
 void status(struct state *);
 void new_level(struct state *);
 int banner(const char *, int);
