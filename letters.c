@@ -304,13 +304,10 @@ void
 putword(struct word *wordp)
 {
 	int idx = wordp->matches;
-	int c = wordp->word[idx];
 
 	assert(idx <= wordp->length);
 	highlight(1);
-	wordp->word[idx] = '\0';
-	mvprintw(wordp->posy, wordp->posx, "%s", wordp->word);
-	wordp->word[idx] = c;
+	mvaddnstr(wordp->posy, wordp->posx, wordp->word, idx);
 	highlight(0);
 	printw("%s", wordp->word + wordp->matches);
 }
