@@ -213,10 +213,6 @@ main(int argc, char **argv)
 		goto exit;
 	}
 	do {
-		if (S->words == NULL) {
-			S->words = newword(S->bonus);
-			putword(S->words);
-		}
 		game(S);
 	} while (S->lives > 0);
 
@@ -433,6 +429,11 @@ game(struct state *S)
 
 	S->current = NULL;
 	while(S->current == NULL) {
+		if (! S->words || (random() % ADDWORD) == 0) {
+			struct word *w = newword(S->bonus);
+			*lastnext(S) = w;
+			putword(w);
+		}
 		set_timer(S);
 		process_keys(S);
 		refresh();
@@ -440,11 +441,6 @@ game(struct state *S)
 		if (move_words(S)) {
 			status(S);
 			return;
-		}
-		if((random() % ADDWORD) == 0) {
-			struct word *w = newword(S->bonus);
-			*lastnext(S) = w;
-			putword(w);
 		}
 	}
 
