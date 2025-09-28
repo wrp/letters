@@ -511,13 +511,25 @@ status(struct state *S)
 	highlight(0);
 }
 
+
+/* erase all existing words */
+static void
+erase_word_list(struct state *S)
+{
+	struct word *next;
+	for (struct word *w = S->words; w != NULL; w = next) {
+		next = w->nextword;
+		kill_word(w, S);
+	}
+}
+
+
 /*
  * do stuff to change levels.  This is where special rounds can be stuck in.
  */
 void
 new_level(struct state *S)
 {
-	struct word *next;
 	static time_t last_time = 0L;
 	time_t  curr_time;
 
@@ -536,16 +548,7 @@ new_level(struct state *S)
 	if (S->bonus) {
 		S->bonus = false;
 		banner("Bonus round finished", 3);
-
-		/*
-		 * erase all existing words so we can go back to a normal
-		 * round
-		 */
-		for(struct word *w = S->words; w != NULL; w = next) {
-			next = w->nextword;
-			kill_word(w, S);
-		}
-
+		erase_word_list(S);
 		status(S);
 		return;
 	}
@@ -564,15 +567,7 @@ new_level(struct state *S)
 
 	if((levels_played % LVL_PER_BONUS == 0) && (levels_played != 0)) {
 		S->bonus = true;
-
-		/*
-		 * erase all existing words so we can have a bonus round
-		 */
-		for(struct word *w = S->words; w != NULL; w = next) {
-			next = w->nextword;
-			kill_word(w, S);
-		}
-
+		erase_word_list(S);
 		banner("Prepare for bonus words", 3);
 		S->lives += 1;
 	}
