@@ -33,7 +33,6 @@ void status(struct state *);
 void new_level(struct state *);
 int banner(const char *, int);
 static struct word *newword(struct word *, bool);
-struct word *searchstr(int key, char *str, int len, struct state *S);
 struct word *searchchar(int, struct state *);
 void kill_word(struct word *, struct state *S);
 int (*ding)(void); /* beep, flash, or no-op */
@@ -545,28 +544,6 @@ newword(struct word *wordp, bool bonus)
 		wordp->nextword = n;
 
 	return n;
-}
-
-/* Find the word that matches that is lowest */
-struct word *
-searchstr(int key, char *str, int len, struct state *S)
-{
-	struct word *wordp = S->words;
-	struct word *best = NULL;
-
-	while (wordp) {
-		if(
-			wordp->length > len
-			&& strncmp(wordp->word, str, len) == 0
-			&& wordp->word[len] == key
-			&& (!best || best->y < wordp->y)
-		) {
-			best = wordp;
-		}
-		wordp = wordp->nextword;
-	}
-
-	return best;
 }
 
 
