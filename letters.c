@@ -50,8 +50,6 @@ struct word *searchchar(int, struct state *);
 void kill_word(struct word *wordp, struct state *S);
 int (*ding)(void); /* beep, flash, or no-op */
 
-volatile sig_atomic_t received_signal;
-
 typedef void (*handler)(int, siginfo_t *, void *);
 
 /*
@@ -82,7 +80,6 @@ assign_signal(int s, siginfo_t *i, void *v)
 {
 	(void)i;
 	(void)v;
-	received_signal = s;
 }
 
 /* Ensure the process is running on a tty. */
@@ -367,8 +364,7 @@ process_keys(struct state *S)
 	struct word *temp_word;
 	while(
 		(S->current->matches != S->current->length) &&
-		((key = getch()) != ERR) &&
-		! received_signal
+		((key = getch()) != ERR)
 	) {
 		if (handle_ctrl_key(S, key)) {
 			continue;
@@ -470,7 +466,6 @@ game(struct state *S)
 	while(S->current->matches < S->current->length) {
 		set_timer(S);
 		process_keys(S);
-		received_signal = 0;
 		refresh();
 
 		if (move_words(S)) {
