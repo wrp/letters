@@ -430,9 +430,7 @@ game(struct state *S)
 	S->completed = NULL;
 	while(S->completed == NULL) {
 		if (! S->words || (random() % ADDWORD) == 0) {
-			struct word *w = newword(S->bonus);
-			*lastnext(S) = w;
-			putword(w);
+			*lastnext(S) = newword(S->bonus);
 		}
 		set_timer(S);
 		process_keys(S);
@@ -571,6 +569,7 @@ newword(bool bonus)
 	n->x = random() % ((COLS - 1) - n->length);
 	n->y = 1;
 	n->next = NULL;
+	putword(n);
 
 	return n;
 }
