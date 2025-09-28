@@ -15,9 +15,6 @@
  * Add lateral movement.  Words could randomly move left or right.
  * perhaps give each word a consistent direction when created and
  * bounce off the sides.
- *
- * occlusion is bad for faster words.  Probably want to sort the
- * list as we move.
  */
 
 # define CTRL(c)  (c & 0x1f)
@@ -234,6 +231,17 @@ exit:
 	return 0;
 }
 
+
+/* Exchange w and w->next in the list */
+static struct word *
+swap(struct word **p, struct word *w)
+{
+	*p = w->next;
+	w->next = w->next->next;
+	(*p)->next = w;
+	return *p;
+}
+
 /*
  * move all words down 1 or more lines.
  * return the number of words that have fallen off the bottom of the screen
@@ -241,10 +249,16 @@ exit:
 static int
 move_words(struct state *S)
 {
-	struct word  *w, *next;
+	struct word *w = S->words;
+	struct word **prev = w ? &S->words : NULL;
+	struct word *next;
 	int  died = 0;
 
-	for (w = S->words; w != NULL; w = next) {
+	while (w != NULL) {
+		if (w->next && w->y < w->next->y) {
+			w = swap(prev, w);
+			continue;
+		}
 		next = w->next;
 		erase_word(w);
 		w->y += w->drop;
@@ -255,6 +269,8 @@ move_words(struct state *S)
 		} else {
 			putword(w);
 		}
+		prev = &w->next;
+		w = next;
 	}
 
 	if (died > 0) {
