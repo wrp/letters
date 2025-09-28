@@ -33,7 +33,6 @@ void status(struct state *);
 void new_level(struct state *);
 int banner(const char *, int);
 static struct word *newword(struct word *, bool);
-struct word *searchchar(int, struct state *);
 void kill_word(struct word *, struct state *S);
 int (*ding)(void); /* beep, flash, or no-op */
 
@@ -546,27 +545,6 @@ newword(struct word *wordp, bool bonus)
 	return n;
 }
 
-
-/*
- * look at the first character in each of the words to see if any match the
- * one that was typed.
- */
-struct word *
-searchchar(int key, struct state *S)
-{
-	struct word	*wordp, *best;
-
-	for(best = NULL, wordp = S->words;
-		wordp != NULL;
-		wordp = wordp->nextword
-	) {
-		if(wordp->word[0] == key
-		&& (!best || best->y < wordp->y))
-			best = wordp;
-	}
-
-	return best;
-}
 
 /* Delete the completed word and revise pointers  */
 void
