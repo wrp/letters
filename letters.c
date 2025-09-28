@@ -11,6 +11,13 @@
  * Test suite
  * Refactor!
  * "Explode" words -- display with "----" or "****" before killing
+
+ * Add lateral movement.  Words could randomly move left or right.
+ * perhaps give each word a consistent direction when created and
+ * bounce off the sides.
+ *
+ * occlusion is bad for faster words.  Probably want to sort the
+ * list as we move.
  */
 
 # define CTRL(c)  (c & 0x1f)
