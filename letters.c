@@ -504,8 +504,16 @@ game(struct state *S)
 void
 status(struct state *S)
 {
-	goto_xy(COLS / 2 - 28, 0);
 	highlight(1);
+#define STATUS_WIDTH ( 0\
+	+ sizeof "Score:" + 7 \
+	+ sizeof "Level:" + 3 \
+	+ sizeof "Words:" + 6 \
+	+ sizeof "Lives:" + 3 \
+	+ sizeof "WPM:" + 4 \
+	)
+	move(0, COLS / 2 - (STATUS_WIDTH / 2));
+#undef STATUS_WIDTH
 	printw("Score: %-7u", S->score.points);
 	printw("Level: %-3u", S->level);
 	printw("Words: %-6u", S->score.words);
