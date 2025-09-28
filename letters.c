@@ -36,7 +36,7 @@ void erase_word(struct word *);
 void status(struct state *);
 void new_level(struct state *);
 int banner(const char *, int);
-static struct word *newword(bool);
+static void maybe_add_word(struct state *);
 void kill_word(struct word *, struct state *S);
 int (*ding)(void); /* beep, flash, or no-op */
 
@@ -430,9 +430,8 @@ game(struct state *S)
 
 	S->completed = NULL;
 	while(S->completed == NULL) {
-		if (! S->words || (random() % ADDWORD) == 0) {
-			*lastnext(S) = newword(S->bonus);
-		}
+		maybe_add_word(S);
+
 		set_timer(S);
 		process_keys(S);
 		refresh();
@@ -545,10 +544,14 @@ new_level(struct state *S)
 	status(S);
 }
 
-/* Initialize a new word. */
-struct word *
-newword(bool bonus)
+/* If appropriate, create a new word and put in in play. */
+static void
+maybe_add_word(struct state *S)
 {
+	if (S->words && (random() % ADDWORD) != 0) {
+		return;
+	}
+	int bonus = S->bonus;
 	struct word *n;
 	int  len;
 	size_t s = sizeof n->word;
@@ -572,7 +575,7 @@ newword(bool bonus)
 	n->next = NULL;
 	putword(n);
 
-	return n;
+	*lastnext(S) = n;
 }
 
 
