@@ -243,7 +243,7 @@ move_words(struct state *S)
 	int  died = 0;
 
 	for (w = S->words; w != NULL; w = next) {
-		next = w->nextword;
+		next = w->next;
 		erase_word(w);
 		w->y += w->drop;
 
@@ -334,7 +334,7 @@ process_keys(struct state *S)
 		if (handle_ctrl_key(S, key)) {
 			continue;
 		}
-		for (struct word *w = S->words; w != NULL; w = w->nextword) {
+		for (struct word *w = S->words; w != NULL; w = w->next) {
 			if (key == w->word[w->matches]) {
 				w->matches += 1;
 				if (w->matches == w->length) {
@@ -410,14 +410,14 @@ game(struct state *S)
 		}
 		if((random() % ADDWORD) == 0) {
 			struct word *w = newword(NULL, S->bonus);
-			w->nextword = S->words;
+			w->next = S->words;
 			S->words = w;
 			putword(w);
 		}
 	}
 
 	finalize_word(S);
-	for (struct word *w = S->words; w != NULL; w = w->nextword) {
+	for (struct word *w = S->words; w != NULL; w = w->next) {
 		w->matches = 0;
 	}
 	status(S);
@@ -461,7 +461,7 @@ erase_word_list(struct state *S)
 {
 	struct word *next;
 	for (struct word *w = S->words; w != NULL; w = next) {
-		next = w->nextword;
+		next = w->next;
 		kill_word(w, S);
 	}
 }
@@ -542,10 +542,10 @@ newword(struct word *wordp, bool bonus)
 	n->matches = 0;
 	n->x = random() % ((COLS - 1) - n->length);
 	n->y = 1;
-	n->nextword = NULL;
+	n->next = NULL;
 
 	if(wordp != NULL)
-		wordp->nextword = n;
+		wordp->next = n;
 
 	return n;
 }
@@ -561,15 +561,15 @@ kill_word(struct word *wordp, struct state *S)
 	 * check to see if the current word is the first one on our list
 	 */
 	if(wordp != S->words)
-		for(prev = S->words, temp = S->words->nextword; temp != wordp;) {
+		for(prev = S->words, temp = S->words->next; temp != wordp;) {
 			prev = temp;
-			temp = temp->nextword;
+			temp = temp->next;
 		}
 
 	if(prev != NULL) {
-		prev->nextword = wordp->nextword;
+		prev->next = wordp->next;
 	} else
-		S->words = wordp->nextword;
+		S->words = wordp->next;
 
 	free((char *)wordp);
 }

@@ -23,7 +23,7 @@ struct score_rec;
 struct score_rec *next_score(char *buf, size_t siz);
 
 struct word {
-	struct word *nextword;
+	struct word *next;
 	int x;
 	int y;
 	int length;
