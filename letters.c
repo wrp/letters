@@ -11,11 +11,6 @@
  * Test suite
  * Refactor!
  * "Explode" words -- display with "----" or "****" before killing
- *
- * Currently, words overwrite eachother.  If we continue removing a word
- * by overwriting it with spaces, it can put spaces over an existing
- * word.  If we iterate through the string from bottom up, that won't
- * happen.  Need to sort the words by position.
  */
 
 # define CTRL(c)  (c & 0x1f)
@@ -393,6 +388,21 @@ set_timer(struct state *S)
 }
 
 
+static struct word **
+lastnext(struct state *S)
+{
+	if (S->words == NULL) {
+		return &S->words;
+	} else {
+		struct word *w;
+		for (w = S->words; w->next; w = w->next) {
+			;
+		}
+		return &w->next;
+	}
+}
+
+
 static void
 game(struct state *S)
 {
@@ -410,8 +420,7 @@ game(struct state *S)
 		}
 		if((random() % ADDWORD) == 0) {
 			struct word *w = newword(NULL, S->bonus);
-			w->next = S->words;
-			S->words = w;
+			*lastnext(S) = w;
 			putword(w);
 		}
 	}
