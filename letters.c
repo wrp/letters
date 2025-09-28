@@ -279,8 +279,6 @@ move_words(struct state *S)
 		 */
 		if (! S->bonus) {
 			S->lives -= died;
-		} else if (died > 0) {
-			new_level(S);
 		}
 		if (S->lives < 0) {
 			S->lives = 0;
@@ -437,6 +435,9 @@ game(struct state *S)
 		refresh();
 
 		if (move_words(S)) {
+			if (S->bonus) {
+				new_level(S);
+			}
 			status(S);
 			return;
 		}
