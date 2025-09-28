@@ -452,8 +452,10 @@ game(struct state *S)
 			return;
 		}
 		if((random() % ADDWORD) == 0) {
-			S->lastword = newword(S->lastword, S->bonus);
-			putword(S->lastword);
+			struct word *w = newword(NULL, S->bonus);
+			w->nextword = S->words;
+			S->words = w;
+			putword(w);
 		}
 	}
 
