@@ -104,13 +104,8 @@ update_scores(char *name, struct score *score, unsigned level)
 	for (i = 0; i < 10; i += 1) {
 		struct score_rec *h = high_scores + i;
 		if (score->points > h->score) {
-			for (j = 9; j > i; j--) {
-				struct score_rec *this = high_scores + j;
-				struct score_rec *prev = high_scores + j - 1;
-				strcpy(this->name, prev->name);
-				this->words = prev->words;
-				this->score = prev->score;
-				this->level = prev->level;
+			if (i < 9) {
+				memmove(h + 1, h, (9 - i) * sizeof *h);
 			}
 			if((p = getpwuid(getuid())) == NULL)
 				strcpy(h->name, "nobody");
