@@ -356,12 +356,13 @@ process_keys(struct state *S)
 static void
 finalize_word(struct state *S)
 {
-	assert (S->current->length == S->current->matches);
-	erase_word(S->current);
-	S->score.points += S->current->length + (2 * S->level);
-	S->score.letters += S->current->length;
+	struct word *w = S->current;
+	assert (w->length == w->matches);
+	erase_word(w);
+	S->score.points += w->length + (2 * S->level);
+	S->score.letters += w->length;
 	S->score.words += 1;
-	kill_word(S->current, S);
+	kill_word(w, S);
 }
 
 
