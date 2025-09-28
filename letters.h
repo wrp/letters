@@ -26,11 +26,11 @@ struct score_rec *next_score(char *buf, size_t siz);
 
 struct word {
 	struct word *next;
-	int x;
-	int y;
-	int length;
-	int drop;
-	int matches;  /* Length of matching prefix */
+	int x;       /* horizontal coordinate of position */
+	int y;       /* vertical coordinate of position */
+	int length;  /* strlen of word */
+	int drop;    /* number of lines to move per turn */
+	int matches; /* Length of matching prefix */
 	char word[32];
 };
 struct score {
