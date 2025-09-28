@@ -582,14 +582,12 @@ kill_word(struct word *wordp, struct state *S)
 {
 	struct word *temp, *prev = NULL;
 
-	/*
-	 * check to see if the current word is the first one on our list
-	 */
-	if(wordp != S->words)
+	if (wordp != S->words) {
 		for(prev = S->words, temp = S->words->next; temp != wordp;) {
 			prev = temp;
 			temp = temp->next;
 		}
+	}
 
 	if(prev != NULL) {
 		prev->next = wordp->next;
