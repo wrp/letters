@@ -410,7 +410,6 @@ process_keys(struct state *S)
 			ding();
 			S->current->matches = 0;
 		}
-		erase_word(S->current);
 		putword(S->current);
 	}
 }
