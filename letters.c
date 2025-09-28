@@ -574,32 +574,32 @@ new_level(struct state *S)
 struct word *
 newword(struct word *wordp, bool bonus)
 {
-	struct word *nword;
-	int  length;
-	size_t s = sizeof nword->word;
+	struct word *n;
+	int  len;
+	size_t s = sizeof n->word;
 
-	nword = malloc(sizeof *nword);
-	char *word = nword->word;
+	/* TODO: stop allocating memory after initialization
+	 * build a pool of words and use them.
+	 */
+	n = malloc(sizeof *n);
 
-	length = bonus ? bonusword(word, s) : getword(word, s);
-
-	if (nword == NULL) {
+	if (n == NULL) {
 		endwin();
 		perror("malloc");
 		exit(1);
 	}
 
-	nword->length = length;
-	nword->drop = length > 6 ? 1 : length > 3 ? 2 : 3;
-	nword->matches = 0;
-	nword->x = random() % ((COLS - 1) - nword->length);
-	nword->y = 1;
-	nword->nextword = NULL;
+	n->length = len = bonus ? bonusword(n->word, s) : getword(n->word, s);
+	n->drop = len > 6 ? 1 : len > 3 ? 2 : 3;
+	n->matches = 0;
+	n->x = random() % ((COLS - 1) - n->length);
+	n->y = 1;
+	n->nextword = NULL;
 
 	if(wordp != NULL)
-		wordp->nextword = nword;
+		wordp->nextword = n;
 
-	return nword;
+	return n;
 }
 
 /* Find the word that matches that is lowest */
