@@ -28,7 +28,7 @@ struct word {
 	int y;
 	int length;
 	int drop;
-	int matches;
+	int matches;  /* Length of matching prefix */
 	char word[32];
 };
 struct score {

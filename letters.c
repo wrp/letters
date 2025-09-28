@@ -342,32 +342,23 @@ process_keys(struct state *S)
 {
 	int  key;
 	struct word *temp_word;
-	while(
-		(S->current->matches != S->current->length) &&
-		((key = getch()) != ERR)
-	) {
+	while( ((key = getch()) != ERR)) {
 		if (handle_ctrl_key(S, key)) {
 			continue;
 		}
-		/*
-		 * This stuff deals with collecting letters
-		 * for a word that has already been
-		 * started.  It's kind of clumsy the way
-		 * it's being done now and should be
-		 * cleaned up, but the obvious combination
-		 * of erase() and putword() generate too
-		 * much output to be used at 2400 baud.  (I
-		 * can't play too often at work)
-		 */
 		if(S->current->matches > 0 &&
 			key == S->current->word[S->current->matches])
 		{
-			int x = S->current->x;
-			int y = S->current->y;
+			struct word *w = S->current;
+			int x = w->x;
+			int y = w->y;
 			highlight(1);
-			mvaddch(y, x + S->current->matches, key);
+			mvaddch(y, x + w->matches, key);
 			highlight(0);
-			S->current->matches += 1;
+			w->matches += 1;
+			if (w->matches == w->length) {
+				return;
+			}
 			continue;
 		} else if ((temp_word = searchstr(
 			key,
