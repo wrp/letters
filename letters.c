@@ -38,7 +38,7 @@ void update_scores(char *, struct score *, unsigned);
 int read_scores(char *);
 char * next_score(char *buf, size_t siz);
 void show_scores(struct state *S);
-void putword();
+void putword(struct word *);
 static void game(struct state *);
 void erase_word(struct word *);
 void status(struct state *);
@@ -302,15 +302,15 @@ void erase_word(struct word *w)
 
 /* write the word to the screen with already typed letters highlighted */
 void
-putword(struct word *wordp)
+putword(struct word *w)
 {
-	int idx = wordp->matches;
+	int idx = w->matches;
 
-	assert(idx <= wordp->length);
+	assert(idx <= w->length);
 	highlight(1);
-	mvaddnstr(wordp->y, wordp->x, wordp->word, idx);
+	mvaddnstr(w->y, w->x, w->word, idx);
 	highlight(0);
-	printw("%s", wordp->word + wordp->matches);
+	printw("%s", w->word + w->matches);
 }
 
 
