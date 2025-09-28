@@ -101,27 +101,31 @@ update_scores(char *name, struct score *score, unsigned level)
 	int i, j;
 	struct passwd *p;
 
-	for(i = 0; i < 10; i++)
-		if(score->points > high_scores[i].score) {
-			for(j = 9; j > i; j--) {
-				strcpy(high_scores[j].name, high_scores[j-1].name);
-				high_scores[j].words = high_scores[j-1].words;
-				high_scores[j].score = high_scores[j-1].score;
-				high_scores[j].level = high_scores[j-1].level;
+	for (i = 0; i < 10; i += 1) {
+		struct score_rec *h = high_scores + i;
+		if (score->points > h->score) {
+			for (j = 9; j > i; j--) {
+				struct score_rec *this = high_scores + j;
+				struct score_rec *prev = high_scores + j - 1;
+				strcpy(this->name, prev->name);
+				this->words = prev->words;
+				this->score = prev->score;
+				this->level = prev->level;
 			}
 			if((p = getpwuid(getuid())) == NULL)
-                                strcpy(high_scores[i].name, "nobody");
+				strcpy(h->name, "nobody");
 			else
-				strcpy(high_scores[i].name, p->pw_name);
-			high_scores[i].score = score->points;
-			high_scores[i].words = score->words;
-			high_scores[i].level = level;
+				strcpy(h->name, p->pw_name);
+			h->score = score->points;
+			h->words = score->words;
+			h->level = level;
 			if (write_scores(name) == -1) {
 				read_scores(name);
 				update_scores(name, score, level);
 			}
 			break;
 		}
+	}
 }
 
 
