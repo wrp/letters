@@ -50,7 +50,6 @@ struct word *searchchar(int, struct state *);
 void kill_word(struct word *wordp, struct state *S);
 int (*ding)(void); /* beep, flash, or no-op */
 
-typedef void (*handler)(int, siginfo_t *, void *);
 
 /*
  * There are too many globals for my taste, but I took the easy way out in
