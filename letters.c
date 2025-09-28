@@ -417,6 +417,9 @@ game(struct state *S)
 	}
 
 	finalize_word(S);
+	for (struct word *w = S->words; w != NULL; w = w->nextword) {
+		w->matches = 0;
+	}
 	status(S);
 	if (S->score.words % LEVEL_CHANGE == 0) {
 		if (S->bonus) {
