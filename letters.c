@@ -11,6 +11,11 @@
  * Test suite
  * Refactor!
  * "Explode" words -- display with "----" or "****" before killing
+ *
+ * Currently, words overwrite eachother.  If we continue removing a word
+ * by overwriting it with spaces, it can put spaces over an existing
+ * word.  If we iterate through the string from bottom up, that won't
+ * happen.  Need to sort the words by position.
  */
 
 # define CTRL(c)  (c & 0x1f)
