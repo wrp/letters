@@ -418,14 +418,10 @@ game(struct state *S)
 
 	finalize_word(S);
 	status(S);
-
-	/*
-	 * increment the level if it's time.  If it's a bonus round, reward
-	 * the person for finishing it.
-	 */
-	if(S->score.words % LEVEL_CHANGE == 0) {
-		if (S->bonus)
+	if (S->score.words % LEVEL_CHANGE == 0) {
+		if (S->bonus) {
 			S->score.points += 10 * S->level;
+		}
 		new_level(S);
 	}
 }
