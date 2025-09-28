@@ -14,6 +14,8 @@
 #include <time.h>
 #include <unistd.h>
 
+extern char *score_header;
+
 void highlight(int);
 void redraw(void);
 int underline(int on);

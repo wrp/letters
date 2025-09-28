@@ -25,6 +25,8 @@ static struct score_rec high_scores[10];
 static struct stat	s_buf;
 static time_t readtime;
 
+char *score_header = "    name      level  words  score";
+
 int
 read_scores(char *highscores)
 {
@@ -159,7 +161,7 @@ show_scores(struct state *S)
 	mvaddstr(5, 18, "Top Ten Scores for Letter Invaders");
 	highlight(0);
 	underline(1);
-	mvaddstr(7, 20, "  name      level  words  score");
+	mvaddstr(7, 18, score_header);
 	underline(0);
 
 	for (char s[64]; NULL != (h = next_score(s, sizeof s)); ) {

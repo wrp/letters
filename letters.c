@@ -126,6 +126,7 @@ handle_argument(struct state *S, char **argv)
 		break;
 	case 'h':
 		read_scores(HIGHSCORES);
+		puts(score_header);
 		for (char s[64]; next_score(s, sizeof s); ) {
 			printf("%s\n", s);
 		}
