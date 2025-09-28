@@ -579,7 +579,7 @@ maybe_add_word(struct state *S)
 }
 
 
-/* Delete the completed word and revise pointers  */
+/* Delete the word and revise pointers  */
 void
 kill_word(struct word *w, struct state *S)
 {
