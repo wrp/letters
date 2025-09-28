@@ -19,16 +19,6 @@
 #include <signal.h>
 #include <sys/time.h>
 
-struct word {
-	struct word *nextword;
-	int x;
-	int y;
-	int length;
-	int drop;
-	int matches;
-	char word[32];
-};
-
 static int move_words(struct state *);
 static void set_timer(struct state *);
 static void set_handlers(void);

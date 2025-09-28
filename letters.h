@@ -22,6 +22,15 @@ size_t bonusword(char *buf, size_t bufsiz);
 struct score_rec;
 struct score_rec *next_score(char *buf, size_t siz);
 
+struct word {
+	struct word *nextword;
+	int x;
+	int y;
+	int length;
+	int drop;
+	int matches;
+	char word[32];
+};
 struct score {
 	unsigned points;
 	unsigned words;
