@@ -160,15 +160,15 @@ show_scores(struct state *S)
 {
 	erase();
 	highlight(1);
-	mvprintw(5, 18, "Top Ten Scores for Letter Invaders");
+	mvaddstr(5, 18, "Top Ten Scores for Letter Invaders");
 	highlight(0);
 	underline(1);
-	mvprintw(7, 20, "  name      level  words  score");
+	mvaddstr(7, 20, "  name      level  words  score");
 	underline(0);
 
 	for (char s[64]; next_score(s, sizeof s); ) {
 		int y = getcury(stdscr);
-		mvprintw(y + 1, 18, "%s", s);
+		mvaddstr(y + 1, 18, s);
 	}
 
 	mvprintw(19, 21, "%-10s" SCORE_FMT,
@@ -180,7 +180,7 @@ show_scores(struct state *S)
 
 	refresh();
 	sleep(1);
-	mvprintw(21, 19, "Press any key to continue");
+	mvaddstr(21, 19, "Press any key to continue");
 	while (getch() != ERR) {
 		;
 	}

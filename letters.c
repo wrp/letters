@@ -297,7 +297,7 @@ void erase_word(struct word *w)
 
 	move(w->y, w->x);
 	for(i = 0; i < w->length; i++)
-		printw("%c", ' ');
+		addch(' ');
 }
 
 /* write the word to the screen with already typed letters highlighted */
@@ -310,7 +310,7 @@ putword(struct word *w)
 	highlight(1);
 	mvaddnstr(w->y, w->x, w->word, idx);
 	highlight(0);
-	printw("%s", w->word + w->matches);
+	addstr(w->word + w->matches);
 }
 
 
@@ -382,7 +382,7 @@ process_keys(struct state *S)
 			int x = S->current->x;
 			int y = S->current->y;
 			highlight(1);
-			mvprintw(y, x + S->current->matches, "%c", key);
+			mvaddch(y, x + S->current->matches, key);
 			highlight(0);
 			S->current->matches += 1;
 			continue;
@@ -694,7 +694,7 @@ banner(const char *text, int delay_sec)
 	int c = ERR;
 
 	erase();
-	mvprintw(10, (COLS - strlen(text)) / 2, "%s", text);
+	mvaddstr(10, (COLS - strlen(text)) / 2, text);
 	refresh();
 	set_timer(NULL);
 	if (delay_sec) {
