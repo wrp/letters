@@ -20,10 +20,6 @@
 #include "letters.h"
 
 #define SCORE_FMT "%5d %6d %6d"
-struct score_rec {
-	char	name[9];
-	int	level, words, score;
-};
 
 static struct score_rec high_scores[10];
 static struct stat	s_buf;
@@ -130,7 +126,7 @@ update_scores(char *name, struct score *score, unsigned level)
 
 
 /* Iterate through the high scores, writing a printable string to buf */
-char *
+struct score_rec *
 next_score(char *buf, size_t siz)
 {
 	static int idx = 0;
@@ -151,13 +147,14 @@ next_score(char *buf, size_t siz)
 
 	idx += 1;
 
-	return buf;
+	return h;
 }
 
 
 void
 show_scores(struct state *S)
 {
+	struct score_rec *h;
 	erase();
 	highlight(1);
 	mvaddstr(5, 18, "Top Ten Scores for Letter Invaders");
@@ -166,9 +163,13 @@ show_scores(struct state *S)
 	mvaddstr(7, 20, "  name      level  words  score");
 	underline(0);
 
-	for (char s[64]; next_score(s, sizeof s); ) {
-		int y = getcury(stdscr);
-		mvaddstr(y + 1, 18, s);
+	for (char s[64]; NULL != (h = next_score(s, sizeof s)); ) {
+		int y = getcury(stdscr) + 1;
+		mvaddstr(y, 18, s);
+		if (h->score == S->score.points) {
+			mvaddstr(y, 12, "---->");
+			mvaddstr(y, 54, "<----");
+		}
 	}
 
 	mvprintw(19, 21, "%-10s" SCORE_FMT,

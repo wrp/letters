@@ -19,12 +19,19 @@ void redraw(void);
 int underline(int on);
 size_t getword(char *buf, size_t bufsiz);
 size_t bonusword(char *buf, size_t bufsiz);
+struct score_rec;
+struct score_rec *next_score(char *buf, size_t siz);
 
 struct score {
 	unsigned points;
 	unsigned words;
 	unsigned letters;
 };
+struct score_rec {
+	char	name[9];
+	int	level, words, score;
+};
+
 struct state {
 	unsigned level;
 	int lives;

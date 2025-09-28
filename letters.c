@@ -11,7 +11,6 @@
  * Test suite
  * Refactor!
  * "Explode" words -- display with "----" or "****" before killing
- * When getting a top 10 score, highlight the current score in the display
  */
 
 # define CTRL(c)  (c & 0x1f)
@@ -36,7 +35,6 @@ static void set_handlers(void);
 
 void update_scores(char *, struct score *, unsigned);
 int read_scores(char *);
-char * next_score(char *buf, size_t siz);
 void show_scores(struct state *S);
 void putword(struct word *);
 static void game(struct state *);
