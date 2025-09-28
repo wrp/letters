@@ -320,21 +320,6 @@ handle_ctrl_key(struct state *S, int key)
 	return 1;
 }
 
-/*
- * Find any word that has a partial match, or return S->words
- */
-static struct word *
-find_match(const struct state *S)
-{
-	struct word *this;
-	for (this = S->words; this; this = this->nextword) {
-		if (this->matches > 0) {
-			return this;
-		}
-	}
-	return S->words;
-}
-
 
 /* Process the user keystrokes until word matched or signal received */
 static void
