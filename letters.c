@@ -346,43 +346,20 @@ process_keys(struct state *S)
 		if (handle_ctrl_key(S, key)) {
 			continue;
 		}
-		if(S->current->matches > 0 &&
-			key == S->current->word[S->current->matches])
-		{
-			struct word *w = S->current;
-			int x = w->x;
-			int y = w->y;
-			highlight(1);
-			mvaddch(y, x + w->matches, key);
-			highlight(0);
-			w->matches += 1;
-			if (w->matches == w->length) {
-				return;
+		for (struct word *w = S->words; w != NULL; w = w->nextword) {
+			if (key == w->word[w->matches]) {
+				w->matches += 1;
+				if (w->matches == w->length) {
+					S->current = w;
+				}
+			} else {
+				w->matches = 0;
 			}
-			continue;
-		} else if ((temp_word = searchstr(
-			key,
-			S->current->word,
-			S->current->matches,
-			S
-		) )) {
-			erase_word(temp_word);
-			temp_word->matches = S->current->matches;
-			S->current->matches = 0;
-			putword(S->current);
-			S->current = temp_word;
-			S->current->matches++;
-		} else if( (temp_word = searchchar(key, S))) {
-			erase_word(temp_word);
-			S->current->matches = 0;
-			putword(S->current);
-			S->current = temp_word;
-			S->current->matches++;
-		} else {
-			ding();
-			S->current->matches = 0;
+			putword(w);
 		}
-		putword(S->current);
+		if (S->current != NULL) {
+			return;
+		}
 	}
 }
 
@@ -432,8 +409,8 @@ game(struct state *S)
 {
 	long  i;
 
-	S->current = find_match(S);
-	while(S->current->matches < S->current->length) {
+	S->current = NULL;
+	while(S->current == NULL) {
 		set_timer(S);
 		process_keys(S);
 		refresh();
