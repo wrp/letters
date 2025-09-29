@@ -35,7 +35,7 @@ static void game(struct state *);
 void erase_word(struct word *);
 void status(struct state *);
 void new_level(struct state *);
-int banner(const char *, int);
+int banner(struct state *, const char *, int);
 static void maybe_add_word(struct state *);
 void kill_word(struct word *, struct state *S);
 int (*ding)(void); /* beep, flash, or no-op */
@@ -81,7 +81,7 @@ check_tty(void)
 static void
 intrrpt(struct state *S)
 {
-	switch(banner("Are you sure you want to quit?", 0)) {
+	switch(banner(S, "Are you sure you want to quit?", 0)) {
 	case 'y':
 	case 'Y':
 	case CTRL('C'):
@@ -525,7 +525,7 @@ new_level(struct state *S)
 	 */
 	if (S->bonus) {
 		S->bonus = false;
-		banner("Bonus round finished", 3);
+		banner(S, "Bonus round finished", 3);
 		erase_word_list(S);
 		status(S);
 		return;
@@ -546,7 +546,7 @@ new_level(struct state *S)
 	if((levels_played % LVL_PER_BONUS == 0) && (levels_played != 0)) {
 		S->bonus = true;
 		erase_word_list(S);
-		banner("Prepare for bonus words", 3);
+		banner(S, "Prepare for bonus words", 3);
 		S->lives += 1;
 	}
 
@@ -610,7 +610,7 @@ kill_word(struct word *w, struct state *S)
  * momentarily display a banner message across the screen
  */
 int
-banner(const char *text, int delay_sec)
+banner(struct state *S, const char *text, int delay_sec)
 {
 	int c = ERR;
 
