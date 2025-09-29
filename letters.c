@@ -219,6 +219,7 @@ main(int argc, char **argv)
 
 exit:
 	set_timer(0);
+	timeout(0);
 	read_scores(HIGHSCORES);
 	if (S->handicap == 1 && newdict == 0 && choice == NULL)
 		update_scores(HIGHSCORES, &S->score, S->level);
@@ -409,7 +410,6 @@ set_timer(unsigned long delay_msec)
 		perror("setitimer");
 		exit(1);
 	}
-	timeout(delay_msec);
 }
 
 
@@ -438,6 +438,7 @@ game(struct state *S)
 		maybe_add_word(S);
 
 		set_timer(S->delay / 1000);
+		timeout(S->delay / 1000);
 		process_keys(S);
 		refresh();
 
@@ -617,6 +618,7 @@ banner(struct state *S, const char *text, int delay_sec)
 	mvaddstr(10, (COLS - strlen(text)) / 2, text);
 	refresh();
 	set_timer(0);
+	timeout(0);
 	if (delay_sec) {
 		sleep(delay_sec);
 	} else {
