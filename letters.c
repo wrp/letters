@@ -342,7 +342,6 @@ static void
 process_keys(struct state *S)
 {
 	int  key;
-	struct word *temp_word;
 	while( ((key = getch()) != ERR)) {
 		if (handle_ctrl_key(S, key)) {
 			continue;
