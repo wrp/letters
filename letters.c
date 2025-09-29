@@ -503,8 +503,9 @@ game(struct state *S)
 	if (S->score.words % LEVEL_CHANGE == 0) {
 		if (S->bonus) {
 			S->score.points += 10 * S->level;
+		} else {
+			new_level(S);
 		}
-		new_level(S);
 	}
 	garbage_collect(S);
 }
