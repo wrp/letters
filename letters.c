@@ -200,6 +200,7 @@ init(struct state *S, int argc, char **argv)
 	status(S);
 	S->words = NULL;
 	S->lives = 2;
+	timeout(1000);
 }
 
 
@@ -542,7 +543,6 @@ new_level(struct state *S)
 
 	S->delay = S->handicap * DELAY(S->level);
 	set_timer(S->delay / 1000);
-	timeout(S->delay / 1000);
 
 	if((levels_played % LVL_PER_BONUS == 0) && (levels_played != 0)) {
 		S->bonus = true;
@@ -619,14 +619,13 @@ banner(struct state *S, const char *text, int delay_sec)
 	mvaddstr(10, (COLS - strlen(text)) / 2, text);
 	refresh();
 	set_timer(0);
-	timeout(0);
 	if (delay_sec) {
 		sleep(delay_sec);
 	} else {
 		timeout(-1);
 		c = getch();
 		set_timer(S->delay / 1000);
-		timeout(S->delay / 1000);
+		timeout(1000);
 	}
 	erase();
 	return c;
