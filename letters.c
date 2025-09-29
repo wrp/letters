@@ -40,6 +40,8 @@ static void maybe_add_word(struct state *);
 void kill_word(struct word *, struct state *S);
 int (*ding)(void); /* beep, flash, or no-op */
 
+static void display_words(struct state *);
+
 
 /*
  * There are too many globals for my taste, but I took the easy way out in
@@ -88,7 +90,7 @@ intrrpt(struct state *S)
 		longjmp(S->jbuf, 1);
 	default:
 		erase();
-		status(S);
+		display_words(S);
 	}
 }
 
