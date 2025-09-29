@@ -313,8 +313,9 @@ putword(struct word *w)
 }
 
 
-static int
-handle_ctrl_key(struct state *S, int key)
+/* Process a CTRL key. */
+static void
+process_ctrl_key(struct state *S, int key)
 {
 	switch(key) {
 	case CTRL('L'):
@@ -330,10 +331,7 @@ handle_ctrl_key(struct state *S, int key)
 	case CTRL('C'):
 		intrrpt(S);
 		break;
-	default:
-		return 0;
 	}
-	return 1;
 }
 
 
@@ -343,7 +341,8 @@ process_keys(struct state *S)
 {
 	int  key;
 	while( ((key = getch()) != ERR)) {
-		if (handle_ctrl_key(S, key)) {
+		if (key == CTRL(key)) {
+			process_ctrl_key(S, key);
 			continue;
 		}
 		for (struct word *w = S->words; w != NULL; w = w->next) {
