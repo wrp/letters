@@ -10,7 +10,6 @@
  * Build system (meson?)
  * Test suite
  * Refactor!
- * "Explode" words -- display with "----" or "****" before killing
 
  * Add lateral movement.  Words could randomly move left or right.
  * perhaps give each word a consistent direction when created and
@@ -36,10 +35,10 @@ void status(struct state *);
 void new_level(struct state *);
 int banner(struct state *, const char *, int);
 static void maybe_add_word(struct state *);
-void kill_word(struct word *, struct state *S);
 int (*ding)(void); /* beep, flash, or no-op */
 
 static void display_words(struct state *);
+static void kill_word(struct word *, int);
 
 
 /*
@@ -218,6 +217,9 @@ main(int argc, char **argv)
 	do {
 		game(S);
 	} while (S->lives > 0);
+	display_words(S);
+	set_timer(0);
+	sleep(1);
 
 exit:
 	set_timer(0);
@@ -273,11 +275,15 @@ move_words(struct state *S)
 		}
 		next = w->next;
 		prev = &w->next;
+
 		w->y += w->drop;
 
-		if (w->y >= LINES) {
-			kill_word(w, S);
-			died += 1;
+		if (w->y > LINES - 1) {
+			if (!w->killed) {
+				kill_word(w, 0);
+				died += 1;
+			}
+			w->y = LINES - 1;
 		}
 		w = next;
 	}
@@ -306,11 +312,18 @@ putword(struct word *w)
 {
 	int idx = w->matches;
 
-	assert(idx <= w->length);
-	highlight(1);
-	mvaddnstr(w->y, w->x, w->word, idx);
-	highlight(0);
-	addstr(w->word + w->matches);
+	move(w->y, w->x);
+	if (! w->killed ){
+		assert(idx <= w->length);
+		highlight(1);
+		addnstr(w->word, idx);
+		highlight(0);
+		addstr(w->word + w->matches);
+	} else {
+		for (int i = 0; i < w->length; i += 1) {
+			addch(w->killed < 0 ? '*' : '-');
+		}
+	}
 }
 
 
@@ -344,6 +357,9 @@ check_matches(struct state *S, int key)
 {
 	int match_count = 0;
 	for (struct word *w = S->words; w != NULL; w = w->next) {
+		if (w->killed) {
+			continue;
+		}
 		if (key == w->word[w->matches]) {
 			w->matches += 1;
 			if (w->matches == w->length) {
@@ -383,7 +399,7 @@ finalize_word(struct state *S)
 	S->score.points += w->length + (2 * S->level);
 	S->score.letters += w->length;
 	S->score.words += 1;
-	kill_word(w, S);
+	kill_word(w, 1);
 }
 
 
@@ -427,6 +443,34 @@ lastnext(struct state *S)
 }
 
 
+/* Walk the word list, decrementing killed or freeing dead words */
+static void
+garbage_collect(struct state *S)
+{
+	assert(S->words);
+
+	struct word *w = S->words;
+	struct word **p = &S->words;
+	struct word *next;
+
+	for (; w; w = next) {
+		next = w->next;
+		if (! w->killed) {
+			p = &(*p)->next;
+			continue;
+		}
+
+
+		assert(w->killed != 0);
+		w->killed += (w->killed < 0) ? +1 : -1;
+		if (w->killed == 0) {
+			*p = next;
+			free(w);
+		}
+	}
+}
+
+
 static void
 game(struct state *S)
 {
@@ -447,6 +491,7 @@ game(struct state *S)
 			return;
 		}
 		display_words(S);
+		garbage_collect(S);
 	}
 
 	finalize_word(S);
@@ -460,6 +505,7 @@ game(struct state *S)
 		}
 		new_level(S);
 	}
+	garbage_collect(S);
 }
 
 
@@ -587,21 +633,11 @@ maybe_add_word(struct state *S)
 }
 
 
-/* Delete the word and revise pointers  */
+/* Mark a word for deletion */
 void
-kill_word(struct word *w, struct state *S)
+kill_word(struct word *w, int success)
 {
-	assert(S->words);
-
-	struct word **p = &S->words;
-	struct word *n = S->words->next;
-
-	while (*p != w) {
-		p = &((*p)->next);
-		n = n->next;
-	}
-	*p = w->next;
-	free(w);
+	w->killed = 3 * (success ? +1 : -1);
 }
 
 

@@ -31,6 +31,7 @@ struct word {
 	int length;  /* strlen of word */
 	int drop;    /* number of lines to move per turn */
 	int matches; /* Length of matching prefix */
+	int killed;  /* word has been marked for deletion */
 	char word[32];
 };
 struct score {
