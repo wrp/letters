@@ -14,6 +14,10 @@
  * Add lateral movement.  Words could randomly move left or right.
  * perhaps give each word a consistent direction when created and
  * bounce off the sides.  Maybe play on a cylinder.
+ *
+ * Clear out the longjmp.  That was necessary when the code was
+ * so convoluted that a clean return was impossible, but things are
+ * clean enough now that we could easily exit without the longjmp.
  */
 
 # define CTRL(c)  (c & 0x1f)
