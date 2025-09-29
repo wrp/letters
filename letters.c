@@ -321,8 +321,7 @@ process_ctrl_key(struct state *S, int key)
 	switch(key) {
 	case CTRL('L'):
 	case KEY_RESIZE:
-		erase();
-		status(S);
+		display_words(S);
 		break;
 	case CTRL('N'):
 		S->level += 1;
