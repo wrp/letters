@@ -37,7 +37,6 @@ struct word {
 struct score {
 	unsigned points;
 	unsigned words;
-	unsigned letters;
 };
 struct score_rec {
 	char	name[9];
@@ -53,6 +52,9 @@ struct state {
 	jmp_buf jbuf;
 	long delay;
 	int handicap;
+	time_t start_time; /* time the current level started */
+	unsigned letters; /* number of keys correctly typed thislevel */
+	int wpm;
 	bool bonus;   /* true if we're in a bonus round */
 };
 

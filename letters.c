@@ -29,6 +29,7 @@
 static int move_words(struct state *);
 static void set_timer(unsigned long);
 static void set_handlers(void);
+static void update_wpm(struct state *);
 
 void update_scores(char *, struct score *, unsigned);
 int read_scores(char *);
@@ -50,7 +51,6 @@ static void kill_word(struct word *, int);
  * a few places
  */
 int levels_played = -1;
-int wpm = 0;
 char *dictionary = DICTIONARY;
 char *choice = NULL;
 int newdict = 0;
@@ -401,8 +401,8 @@ finalize_word(struct state *S)
 	struct word *w = S->completed;
 	assert (w->length == w->matches);
 	S->score.points += w->length + (2 * S->level);
-	S->score.letters += w->length;
 	S->score.words += 1;
+	S->letters += w->length;
 	kill_word(w, 1);
 }
 
@@ -517,6 +517,7 @@ void
 status(struct state *S)
 {
 	highlight(1);
+	update_wpm(S);
 #define STATUS_WIDTH ( 0\
 	+ sizeof "Score:" + 7 \
 	+ sizeof "Level:" + 3 \
@@ -530,7 +531,7 @@ status(struct state *S)
 	printw("Level: %-3u", S->level);
 	printw("Words: %-6u", S->score.words);
 	printw("Lives: %-3d", S->lives);
-	printw("WPM: %-4d", wpm);
+	printw("WPM: %-4d", S->wpm);
 	clrtoeol();
 	highlight(0);
 }
@@ -549,22 +550,29 @@ erase_word_list(struct state *S)
 }
 
 
+/* compute words per minute for the given level */
+static void
+update_wpm(struct state *S)
+{
+	time_t curr_time;
+
+	time(&curr_time);
+	if (curr_time - S->start_time < 5) {
+		return;
+	}
+	S->wpm = (S->letters / 5) / ((curr_time - S->start_time) / 60.0);
+}
+
+
 /*
  * do stuff to change levels.  This is where special rounds can be stuck in.
  */
 void
 new_level(struct state *S)
 {
-	static time_t last_time = 0L;
-	time_t  curr_time;
-
-	/*
-	 * update the words per minute
-	 */
-	time(&curr_time);
-	wpm = (S->score.letters / 5) / ((curr_time - last_time) / 60.0);
-	last_time = curr_time;
-	S->score.letters  = 0;
+	update_wpm(S);
+	time(&S->start_time);
+	S->letters = 0;
 
 	/*
 	 * if we're inside a bonus round we don't need to change anything
