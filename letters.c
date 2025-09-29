@@ -32,7 +32,6 @@ int read_scores(char *);
 void show_scores(struct state *S);
 void putword(struct word *);
 static void game(struct state *);
-void erase_word(struct word *);
 void status(struct state *);
 void new_level(struct state *);
 int banner(struct state *, const char *, int);
@@ -274,7 +273,6 @@ move_words(struct state *S)
 		}
 		next = w->next;
 		prev = &w->next;
-		erase_word(w);
 		w->y += w->drop;
 
 		if (w->y >= LINES) {
@@ -301,17 +299,6 @@ move_words(struct state *S)
 	return died;
 }
 
-/*
- * erase a word on the screen by printing the correct number of blanks
- */
-void erase_word(struct word *w)
-{
-	int i;
-
-	move(w->y, w->x);
-	for(i = 0; i < w->length; i++)
-		addch(' ');
-}
 
 /* write the word to the screen with already typed letters highlighted */
 void
@@ -394,7 +381,6 @@ finalize_word(struct state *S)
 {
 	struct word *w = S->completed;
 	assert (w->length == w->matches);
-	erase_word(w);
 	S->score.points += w->length + (2 * S->level);
 	S->score.letters += w->length;
 	S->score.words += 1;
@@ -468,7 +454,7 @@ game(struct state *S)
 	for (struct word *w = S->words; w != NULL; w = w->next) {
 		w->matches = 0;
 	}
-	status(S);
+	display_words(S);
 	if (S->score.words % LEVEL_CHANGE == 0) {
 		if (S->bonus) {
 			S->score.points += 10 * S->level;
