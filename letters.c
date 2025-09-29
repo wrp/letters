@@ -222,7 +222,7 @@ main(int argc, char **argv)
 	} while (S->lives > 0);
 	display_words(S);
 	set_timer(0);
-	sleep(1);
+	banner(S, "Game Over", 3);
 
 exit:
 	set_timer(0);
