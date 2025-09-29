@@ -241,6 +241,18 @@ swap(struct word **p, struct word *w)
 	return *p;
 }
 
+
+static void
+display_words(struct state *S)
+{
+	clear();
+	status(S);
+	for (struct word *w = S->words; w; w = w->next) {
+		putword(w);
+	}
+	refresh();
+}
+
 /*
  * move all words down 1 or more lines.
  * return the number of words that have fallen off the bottom of the screen
@@ -266,8 +278,6 @@ move_words(struct state *S)
 		if (w->y >= LINES) {
 			kill_word(w, S);
 			died += 1;
-		} else {
-			putword(w);
 		}
 		w = next;
 	}
@@ -446,9 +456,10 @@ game(struct state *S)
 			if (S->bonus) {
 				new_level(S);
 			}
-			status(S);
+			display_words(S);
 			return;
 		}
+		display_words(S);
 	}
 
 	finalize_word(S);
