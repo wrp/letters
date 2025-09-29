@@ -219,7 +219,7 @@ main(int argc, char **argv)
 
 exit:
 	set_timer(0);
-	timeout(0);
+	timeout(-1);
 	read_scores(HIGHSCORES);
 	if (S->handicap == 1 && newdict == 0 && choice == NULL)
 		update_scores(HIGHSCORES, &S->score, S->level);

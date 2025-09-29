@@ -183,9 +183,5 @@ show_scores(struct state *S)
 	refresh();
 	sleep(1);
 	mvaddstr(21, 19, "Press any key to continue");
-	while (getch() != ERR) {
-		;
-	}
-	timeout(-1);
 	getch();
 }
