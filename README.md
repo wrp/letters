@@ -5,28 +5,3 @@ A game to help improve typing skills.
 
 This is a classic space-invaders style game that requires the user
 to type words as they fall down the screen.
-
-authors
--------
-- Larry Moss (lm03_cif@uhura.cc.rochester.edu)
-- Brent J. Nordquist (brent@limabean.veggard.mn.org)
-- Chris Uppal (chrisu@sco.com)
-- Brad Keister (keister@poincare.phys.cmu.edu)
-- Adrian Godwin (agodwin@acorn.co.uk)
-- Mark Levinson (mrle_cif@uhura.cc.rochester.edu)
-- David C Sterratt (david.c.sterratt@ed.ac.uk)
-- William R. Pursell (william.r.pursell@gmail.com)
-
-Thanks to (those not in man page):
-----------------------------------
-
-D. A. Gwyn.  I have used his code for usleep() to get it to compile on
-machines that don't have it.  Since the code is included in the FAQ
-posted to comp.unix.questions I assume this is ok.  If someone knows
-otherwise please let me know.
-
-Kim Storm.  I used his nn code as a reference when trying to figure out
-how to use the termcap library.
-
-Wim van Dorst (baron@wiesje.hobby.nl).  Creator of the minix version of
-the game.
