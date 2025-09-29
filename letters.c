@@ -334,6 +334,29 @@ process_ctrl_key(struct state *S, int key)
 	}
 }
 
+/*
+ * Check the key against each word and upate the "matches" member.
+ * Update the curses window.  Return the number of words that match.
+ */
+static int
+check_matches(struct state *S, int key)
+{
+	int match_count = 0;
+	for (struct word *w = S->words; w != NULL; w = w->next) {
+		if (key == w->word[w->matches]) {
+			w->matches += 1;
+			if (w->matches == w->length) {
+				match_count += 1;
+				S->completed = w;
+			}
+		} else {
+			w->matches = 0;
+		}
+		putword(w);
+	}
+	return match_count;
+}
+
 
 /* Process the user keystrokes until word matched or signal received */
 static void
@@ -345,18 +368,7 @@ process_keys(struct state *S)
 			process_ctrl_key(S, key);
 			continue;
 		}
-		for (struct word *w = S->words; w != NULL; w = w->next) {
-			if (key == w->word[w->matches]) {
-				w->matches += 1;
-				if (w->matches == w->length) {
-					S->completed = w;
-				}
-			} else {
-				w->matches = 0;
-			}
-			putword(w);
-		}
-		if (S->completed != NULL) {
+		if (check_matches(S, key)) {
 			return;
 		}
 	}
