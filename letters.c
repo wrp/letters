@@ -567,6 +567,8 @@ new_level(struct state *S)
 	 */
 	if (S->bonus) {
 		S->bonus = false;
+		set_timer(0);
+		sleep(2);
 		banner(S, "Bonus round finished", 3);
 		erase_word_list(S);
 		status(S);
@@ -589,6 +591,8 @@ new_level(struct state *S)
 	if((levels_played % LVL_PER_BONUS == 0) && (levels_played != 0)) {
 		S->bonus = true;
 		erase_word_list(S);
+		set_timer(0);
+		sleep(2);
 		banner(S, "Prepare for bonus words", 3);
 		S->lives += 1;
 	}
