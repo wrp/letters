@@ -572,6 +572,7 @@ new_level(struct state *S)
 		banner(S, "Bonus round finished", 3);
 		erase_word_list(S);
 		status(S);
+		set_timer(S->delay / 1000);
 		return;
 	}
 
@@ -594,6 +595,7 @@ new_level(struct state *S)
 		set_timer(0);
 		sleep(2);
 		banner(S, "Prepare for bonus words", 3);
+		set_timer(850);
 		S->lives += 1;
 	}
 
