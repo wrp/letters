@@ -247,7 +247,7 @@ swap(struct word **p, struct word *w)
 static void
 display_words(struct state *S)
 {
-	clear();
+	erase();
 	status(S);
 	for (struct word *w = S->words; w; w = w->next) {
 		putword(w);
