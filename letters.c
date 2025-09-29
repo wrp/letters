@@ -500,7 +500,6 @@ game(struct state *S)
 	for (struct word *w = S->words; w != NULL; w = w->next) {
 		w->matches = 0;
 	}
-	display_words(S);
 	if (S->score.words % LEVEL_CHANGE == 0) {
 		if (S->bonus) {
 			S->score.points += 10 * S->level;
@@ -508,7 +507,6 @@ game(struct state *S)
 			new_level(S);
 		}
 	}
-	garbage_collect(S);
 }
 
 
