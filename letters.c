@@ -447,8 +447,6 @@ lastnext(struct state *S)
 static void
 garbage_collect(struct state *S)
 {
-	assert(S->words);
-
 	struct word *w = S->words;
 	struct word **p = &S->words;
 	struct word *next;
