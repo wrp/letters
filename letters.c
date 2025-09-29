@@ -635,6 +635,7 @@ maybe_add_word(struct state *S)
 	n->x = random() % ((COLS - 1) - n->length);
 	n->y = 1;
 	n->next = NULL;
+	n->killed = 0;
 	putword(n);
 
 	*lastnext(S) = n;
