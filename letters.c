@@ -366,9 +366,7 @@ process_keys(struct state *S)
 	while( ((key = getch()) != ERR)) {
 		if (key == CTRL(key)) {
 			process_ctrl_key(S, key);
-			continue;
-		}
-		if (check_matches(S, key)) {
+		} else if (check_matches(S, key)) {
 			return;
 		}
 	}
