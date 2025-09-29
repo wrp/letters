@@ -24,7 +24,7 @@
 #include <sys/time.h>
 
 static int move_words(struct state *);
-static void set_timer(struct state *);
+static void set_timer(unsigned long);
 static void set_handlers(void);
 
 void update_scores(char *, struct score *, unsigned);
@@ -218,7 +218,7 @@ main(int argc, char **argv)
 	} while (S->lives > 0);
 
 exit:
-	set_timer(NULL);
+	set_timer(0);
 	read_scores(HIGHSCORES);
 	if (S->handicap == 1 && newdict == 0 && choice == NULL)
 		update_scores(HIGHSCORES, &S->score, S->level);
@@ -389,9 +389,8 @@ finalize_word(struct state *S)
 
 /* Set an interval timer in ms */
 static void
-set_timer(struct state *S)
+set_timer(unsigned long delay_msec)
 {
-	unsigned long delay_msec = S ? S->delay / 1000 : 0;
 	struct timeval tp = {
 		.tv_sec = 0,
 		.tv_usec = delay_msec * 1000
@@ -438,7 +437,7 @@ game(struct state *S)
 	while(S->completed == NULL) {
 		maybe_add_word(S);
 
-		set_timer(S);
+		set_timer(S->delay / 1000);
 		process_keys(S);
 		refresh();
 
@@ -617,7 +616,7 @@ banner(struct state *S, const char *text, int delay_sec)
 	erase();
 	mvaddstr(10, (COLS - strlen(text)) / 2, text);
 	refresh();
-	set_timer(NULL);
+	set_timer(0);
 	if (delay_sec) {
 		sleep(delay_sec);
 	} else {
