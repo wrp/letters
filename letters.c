@@ -14,9 +14,6 @@
  * Add lateral movement.  Words could randomly move left or right.
  * perhaps give each word a consistent direction when created and
  * bounce off the sides.  Maybe play on a cylinder.
- *
- * Put the banners in a text box and leave the state of the screen
- * visible behind it.
  */
 
 # define CTRL(c)  (c & 0x1f)
