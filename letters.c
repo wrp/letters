@@ -659,7 +659,7 @@ banner(struct state *S, const char *text, int delay_sec)
 		set_timer(S->delay / 1000);
 		timeout(1000);
 	}
-	erase();
+	display_words(S);
 	return c;
 }
 
