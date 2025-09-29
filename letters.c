@@ -327,6 +327,7 @@ process_ctrl_key(struct state *S, int key)
 	case CTRL('N'):
 		S->level += 1;
 		S->delay = S->handicap * DELAY(S->level);
+		set_timer(S->delay / 1000);
 		status(S);
 		break;
 	case CTRL('C'):
@@ -437,8 +438,6 @@ game(struct state *S)
 	while(S->completed == NULL) {
 		maybe_add_word(S);
 
-		set_timer(S->delay / 1000);
-		timeout(S->delay / 1000);
 		process_keys(S);
 		refresh();
 
@@ -542,6 +541,8 @@ new_level(struct state *S)
 		S->level += 1;
 
 	S->delay = S->handicap * DELAY(S->level);
+	set_timer(S->delay / 1000);
+	timeout(S->delay / 1000);
 
 	if((levels_played % LVL_PER_BONUS == 0) && (levels_played != 0)) {
 		S->bonus = true;
@@ -624,7 +625,8 @@ banner(struct state *S, const char *text, int delay_sec)
 	} else {
 		timeout(-1);
 		c = getch();
-		timeout(0);
+		set_timer(S->delay / 1000);
+		timeout(S->delay / 1000);
 	}
 	erase();
 	return c;
