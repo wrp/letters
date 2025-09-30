@@ -27,6 +27,12 @@ typedef void *(*reallocator)(void *, size_t);
 
 static int push_char(struct string *, int, reallocator);
 
+/* TODO: currently, any random string will never be freed.
+ * we need to construct a proper dictionary.  (Currently,
+ * the dictionary built from a words file is also never
+ * freed, but it does not grow during play.  This is really
+ * a purely academic concern.  The memory leak is irrelevant.)
+ */
 static struct string
 build_random_string(const char *string)
 {
