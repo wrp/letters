@@ -3,6 +3,7 @@
  *
  * copyright 1991 Larry Moss (lm03_cif@uhura.cc.rochester.edu)
  * copyright 2018 David C Sterratt (david.c.sterratt@ed.ac.uk)
+ * copyright 2025 William Pursell (william.r.pursell@gmail.com)
  */
 
 /*

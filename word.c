@@ -2,6 +2,7 @@
  * find a random word in a dictionary file as part of letters.
  *
  * copyright 1991 Larry Moss (lm03_cif@uhura.cc.rochester.edu)
+ * copyright 2025 William Pursell (william.r.pursell@gmail.com)
  */
 
 #include <ctype.h>

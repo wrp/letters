@@ -2,6 +2,7 @@
  * read and update high score file for Letter Invaders
  *
  * copyright 1991 by Larry Moss (lm03_cif@uhura.cc.rochester.edu)
+ * copyright 2025 William Pursell (william.r.pursell@gmail.com)
  */
 
 /*
