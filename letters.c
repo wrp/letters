@@ -541,9 +541,8 @@ erase_word_list(struct state *S)
 	struct word *next;
 	for (struct word *w = S->words; w != NULL; w = next) {
 		next = w->next;
-		free(w);
+		w->killed = 1;
 	}
-	S->words = NULL;
 }
 
 
