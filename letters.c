@@ -187,12 +187,29 @@ parse_cmd_line(int argc, char **argv, struct state *S)
 
 
 static void
+allocate_words(struct state *S)
+{
+	S->free = NULL;
+	for (int i = 0; i < 256; i += 1) {
+		struct word *w = malloc(sizeof *w);
+		if (w == NULL) {
+			perror("malloc");
+			exit(1);
+		}
+		w->next = S->free;
+		S->free = w;
+	}
+}
+
+
+static void
 init(struct state *S, int argc, char **argv)
 {
 	check_tty();
 	unsetenv("COLUMNS");
 	unsetenv("LINES");
 	getword(); /* Prime the dictionary */
+	allocate_words(S);
 
 	ding = no_op;
 	parse_cmd_line(argc, argv, S);
@@ -479,12 +496,12 @@ garbage_collect(struct state *S)
 			continue;
 		}
 
-
 		assert(w->killed != 0);
 		w->killed += (w->killed < 0) ? +1 : -1;
 		if (w->killed == 0) {
 			*p = next;
-			free(w);
+			w->next = S->free;
+			S->free = w;
 		}
 	}
 }
@@ -632,20 +649,13 @@ maybe_add_word(struct state *S)
 	if (word_in_play(S) && (random() % ADDWORD) != 0) {
 		return;
 	}
-	int bonus = S->bonus;
-	struct word *n;
-	int  len;
-
-	/* TODO: stop allocating memory after initialization
-	 * build a pool of words and use them.
-	 */
-	n = malloc(sizeof *n);
-
-	if (n == NULL) {
-		endwin();
-		perror("malloc");
-		exit(1);
+	if (! S->free) {
+		return;
 	}
+	int bonus = S->bonus;
+	struct word *n = S->free;
+	S->free = n->next;
+	int  len;
 
 	n->word = bonus ? bonusword() : getword();
 	n->length = len = n->word.len - 1;
