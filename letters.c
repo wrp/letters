@@ -30,6 +30,7 @@ static int move_words(struct state *);
 static void set_timer(unsigned long);
 static void set_handlers(void);
 static void update_wpm(struct state *);
+static void finalize_word(struct state *S, struct word *w);
 
 void update_scores(char *, struct score *, unsigned);
 int read_scores(char *);
@@ -218,9 +219,9 @@ main(int argc, char **argv)
 	if (setjmp(S->jbuf)) {
 		goto exit;
 	}
-	do {
-		game(S);
-	} while (S->lives > 0);
+
+	game(S);
+
 	display_words(S);
 	set_timer(0);
 	banner(S, "Game Over", 3);
@@ -356,10 +357,9 @@ process_ctrl_key(struct state *S, int key)
  * Check the key against each word and upate the "matches" member.
  * Update the curses window.  Return the number of words that match.
  */
-static int
+static void
 check_matches(struct state *S, int key)
 {
-	int match_count = 0;
 	for (struct word *w = S->words; w != NULL; w = w->next) {
 		if (w->killed) {
 			continue;
@@ -367,15 +367,13 @@ check_matches(struct state *S, int key)
 		if (key == w->word[w->matches]) {
 			w->matches += 1;
 			if (w->matches == w->length) {
-				match_count += 1;
-				S->completed = w;
+				finalize_word(S, w);
 			}
 		} else {
 			w->matches = 0;
 		}
 		putword(w);
 	}
-	return match_count;
 }
 
 
@@ -387,23 +385,35 @@ process_keys(struct state *S)
 	while( ((key = getch()) != ERR)) {
 		if (key == CTRL(key)) {
 			process_ctrl_key(S, key);
-		} else if (check_matches(S, key)) {
-			return;
+		} else {
+			check_matches(S, key);
 		}
+		status(S);
+		refresh();
 	}
 }
 
 
-/* Word has been successfully typed.  Increment score and remove. */
+/* Word has been successfully typed.  Increment score and mark killed. */
 static void
-finalize_word(struct state *S)
+finalize_word(struct state *S, struct word *w)
 {
-	struct word *w = S->completed;
 	assert (w->length == w->matches);
 	S->score.points += w->length + (2 * S->level);
 	S->score.words += 1;
 	S->letters += w->length;
 	kill_word(w, 1);
+
+	for (struct word *w = S->words; w != NULL; w = w->next) {
+		w->matches = 0;
+	}
+	if (S->score.words % LEVEL_CHANGE == 0) {
+		if (S->bonus) {
+			S->score.points += 10 * S->level;
+		} else {
+			new_level(S);
+		}
+	}
 }
 
 
@@ -478,34 +488,18 @@ game(struct state *S)
 {
 	long  i;
 
-	S->completed = NULL;
-	while(S->completed == NULL) {
+	while(S->lives >0) {
 		maybe_add_word(S);
 
 		process_keys(S);
-		refresh();
 
 		if (move_words(S)) {
 			if (S->bonus) {
 				new_level(S);
 			}
-			display_words(S);
-			return;
 		}
 		display_words(S);
 		garbage_collect(S);
-	}
-
-	finalize_word(S);
-	for (struct word *w = S->words; w != NULL; w = w->next) {
-		w->matches = 0;
-	}
-	if (S->score.words % LEVEL_CHANGE == 0) {
-		if (S->bonus) {
-			S->score.points += 10 * S->level;
-		} else {
-			new_level(S);
-		}
 	}
 }
 
