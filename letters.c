@@ -50,7 +50,6 @@ static void maybe_add_word(struct state *);
 int (*ding)(void); /* beep, flash, or no-op */
 
 static void display_words(struct state *);
-static void kill_word(struct word *, int);
 
 
 /*
@@ -309,7 +308,7 @@ move_words(struct state *S)
 
 		if (w->y > LINES - 1) {
 			if (!w->killed) {
-				kill_word(w, 0);
+				w->killed = -3;
 				died += 1;
 			}
 			w->y = LINES - 1;
@@ -427,7 +426,7 @@ finalize_word(struct state *S, struct word *w)
 	S->score.points += w->length + (2 * S->level);
 	S->score.words += 1;
 	S->letters += w->length;
-	kill_word(w, 1);
+	w->killed = 3;
 
 	for (struct word *w = S->words; w != NULL; w = w->next) {
 		w->matches = 0;
@@ -669,14 +668,6 @@ maybe_add_word(struct state *S)
 	putword(n);
 
 	*lastnext(S) = n;
-}
-
-
-/* Mark a word for deletion */
-void
-kill_word(struct word *w, int success)
-{
-	w->killed = 3 * (success ? +1 : -1);
 }
 
 
