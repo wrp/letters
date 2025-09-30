@@ -17,14 +17,8 @@
 
 extern char *choice;
 
-struct dictionary {
-	struct string *index;
-	size_t cap;
-	size_t len;
-};
-
 static struct dictionary word_dict = {NULL, 0, 0};
-static struct dictionary *default_dict;
+extern struct dictionary default_dict[];
 static struct dictionary *dict = &word_dict;
 
 static int push_char(struct string *, int, reallocator);

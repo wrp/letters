@@ -22,6 +22,12 @@ struct string {
 	size_t len;  /* Includes '0'.  eg strlen() - 1 */
 };
 
+struct dictionary {
+	struct string *index;
+	size_t cap; /* Set to 0 if index not allocated (eg string constant) */
+	size_t len;
+};
+
 void highlight(int);
 void redraw(void);
 int underline(int on);
