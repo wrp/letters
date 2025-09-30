@@ -605,11 +605,25 @@ new_level(struct state *S)
 	status(S);
 }
 
+
+/* Return true if at least one word is currently active */
+static int
+word_in_play(struct state *S)
+{
+	for (struct word *w = S->words; w; w = w->next) {
+		if (! w->killed) {
+			return 1;
+		}
+	}
+	return 0;
+}
+
+
 /* If appropriate, create a new word and put in in play. */
 static void
 maybe_add_word(struct state *S)
 {
-	if (S->words && (random() % ADDWORD) != 0) {
+	if (word_in_play(S) && (random() % ADDWORD) != 0) {
 		return;
 	}
 	int bonus = S->bonus;
