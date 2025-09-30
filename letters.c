@@ -293,7 +293,6 @@ move_words(struct state *S)
 {
 	struct word *w = S->words;
 	struct word **prev = w ? &S->words : NULL;
-	struct word *next;
 	int  died = 0;
 
 	while (w != NULL) {
@@ -301,11 +300,7 @@ move_words(struct state *S)
 			w = swap(prev, w);
 			continue;
 		}
-		next = w->next;
-		prev = &w->next;
-
 		w->y += w->drop;
-
 		if (w->y > LINES - 1) {
 			if (!w->killed) {
 				w->killed = -3;
@@ -313,7 +308,8 @@ move_words(struct state *S)
 			}
 			w->y = LINES - 1;
 		}
-		w = next;
+		prev = &w->next;
+		w = w->next;
 	}
 
 	if (died > 0) {
