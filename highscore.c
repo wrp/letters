@@ -66,6 +66,8 @@ write_scores(char *highscores) {
 	/*
 	 * check to make sure the high score list has not been modified
 	 * since we read it.
+	 *
+	 * TODO Fix race with file locking
 	 */
 	if( stat(highscores, &s_buf) == -1 ) {
 		endwin();
