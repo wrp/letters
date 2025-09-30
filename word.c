@@ -26,6 +26,7 @@ struct dictionary {
 static struct dictionary word_dict = {NULL, 0, 0};
 static struct dictionary random_dict = {NULL, 0, 0};
 static struct dictionary choice_dict = {NULL, 0, 0};
+static struct dictionary *dict = &word_dict;
 
 static int push_char(struct string *, int, reallocator);
 
@@ -87,7 +88,6 @@ push_char(struct string *s, int c, reallocator r)
 void
 initialize_dictionary(char *path, reallocator r)
 {
-	struct dictionary *dict = &word_dict;
 	FILE *fp;
 	struct stat s_buf;
 	int c;
@@ -123,7 +123,7 @@ getword(void)
 		return build_random_string(choice);
 	}
 
-	return word_dict.index[random() % word_dict.len];
+	return dict->index[random() % dict->len];
 }
 
 struct string
