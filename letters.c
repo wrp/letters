@@ -56,7 +56,7 @@ static void display_words(struct state *);
  * There are too many globals for my taste, but I took the easy way out in
  * a few places
  */
-int levels_played = -1;
+int levels_played = 0;
 char *choice = NULL;
 int newdict = 0;
 
@@ -599,14 +599,12 @@ new_level(struct state *S)
 		return;
 	}
 
-	levels_played++;
-
 	/*
 	 * If you start at a level other than 1, the level does not
 	 * actually change until you've completed a number of levels equal
 	 * to the starting level.
 	 */
-	if(S->level <= levels_played)
+	if(S->level <= levels_played++)
 		S->level += 1;
 
 	S->delay = S->handicap * DELAY(S->level);
