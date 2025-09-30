@@ -493,7 +493,7 @@ game(struct state *S)
 {
 	long  i;
 
-	while(S->lives >0) {
+	while (S->lives > 0) {
 		maybe_add_word(S);
 
 		process_keys(S);
