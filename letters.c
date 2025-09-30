@@ -377,7 +377,7 @@ check_matches(struct state *S, int key)
 }
 
 
-/* Process the user keystrokes until word matched or signal received */
+/* Process the user keystrokes until signal is received */
 static void
 process_keys(struct state *S)
 {
