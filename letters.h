@@ -52,7 +52,8 @@ struct score_rec {
 struct state {
 	unsigned level;
 	int lives;
-	struct word *words;
+	struct word *words; /* list of words in play */
+	struct word *free; /* list of unused words */
 	struct score score;
 	jmp_buf jbuf;
 	long delay;

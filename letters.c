@@ -192,10 +192,9 @@ init(struct state *S, int argc, char **argv)
 	check_tty();
 	unsetenv("COLUMNS");
 	unsetenv("LINES");
-	getword();
+	getword(); /* Prime the dictionary */
 
 	ding = no_op;
-	S->handicap = 1;
 	parse_cmd_line(argc, argv, S);
 
 	set_handlers();
@@ -206,10 +205,12 @@ init(struct state *S, int argc, char **argv)
 	noecho();
 	keypad(stdscr, 1);
 	clear();
-	new_level(S);
-	status(S);
+
+	S->handicap = 1;
 	S->words = NULL;
 	S->lives = 2;
+	new_level(S);
+	status(S);
 	timeout(1000);
 }
 
