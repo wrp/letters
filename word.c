@@ -4,6 +4,7 @@
  * copyright 1991 Larry Moss (lm03_cif@uhura.cc.rochester.edu)
  */
 
+#include <ctype.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -14,6 +15,21 @@
 # define random lrand48
 
 extern char *dictionary, *choice;
+
+struct string {
+	char *data;
+	size_t cap;
+	size_t len;  /* Includes '0'.  eg strlen() - 1 */
+};
+
+struct dictionary {
+	struct string *index;
+	size_t cap;
+	size_t len;
+};
+
+typedef void *(*allocator)(size_t);
+typedef void *(*reallocator)(void *, size_t);
 
 static size_t
 build_random_string(char *buf, size_t siz, const char *string)
@@ -33,13 +49,47 @@ build_random_string(char *buf, size_t siz, const char *string)
 	return p - buf;
 }
 
+static int
+push_string(struct dictionary *d, struct string s, reallocator r)
+{
+	if (d->len >= d->cap) {
+		void *tmp = r(d->index, (d->cap + 1024) * sizeof *d->index);
+		if (tmp == NULL) {
+			perror("out of memory");
+			exit(1);
+			return -1;
+		}
+		d->index = tmp;
+		d->cap += 1024;
+	}
+	d->index[d->len++] = s;
+	return 0;
+}
 
-static size_t
-initialize_dictionary(char **dictp)
+static int
+push_char(struct string *s, int c, reallocator r)
+{
+	if (s->len >= s->cap) {
+		void *tmp = r(s->data, (s->cap + 32) * sizeof *s->data);
+		if (tmp == NULL) {
+			perror("out of memory");
+			exit(1);
+			return -1;
+		}
+		s->data = tmp;
+		s->cap += 32;
+	}
+	s->data[s->len++] = c;
+	return 0;
+}
+
+static void
+initialize_dictionary(struct dictionary *dict, reallocator r)
 {
 	FILE *fp;
 	struct stat s_buf;
-	char *dict;
+	int c;
+	struct string s = {NULL, 0, 0};
 	if(
 		(fp = fopen(dictionary, "r")) == NULL ||
 		stat(dictionary, &s_buf) == -1
@@ -47,48 +97,43 @@ initialize_dictionary(char **dictp)
 		perror(dictionary);
 		exit(1);
 	}
-	if ((dict = malloc(s_buf.st_size)) == NULL) {
-		perror("malloc");
-		exit(1);
-	}
-	if (fread(dict, 1, s_buf.st_size, fp) != s_buf.st_size) {
-		if (ferror(fp)) {
-			perror(dictionary);
+	while( (c = fgetc(fp)) != EOF ){
+		if (isspace(c)) {
+			if (s.data != NULL) {
+				push_char(&s, 0, r);
+				push_string(dict, s, r);
+				s.data = NULL;
+				s.cap = s.len = 0;
+			}
 		} else {
-			fprintf(stderr, "Unexpected EOF reading %s\n",
-				dictionary
-			);
+			push_char(&s, c, r);
 		}
-		exit(1);
 	}
-	*dictp = dict;
-	return s_buf.st_size;
 }
 
 size_t
 getword(char *buf, size_t bufsiz)
 {
-	static char *dict = NULL;
+	static struct dictionary dict = {NULL, 0, 0};
 	static size_t len;
-	char fmt[64];
+	struct string src;
 
 	if (choice) {
 		return build_random_string(buf, bufsiz, choice);
 	}
 
-	if (dict == NULL) {
-		len = initialize_dictionary(&dict);
+	if (dict.index == NULL) {
+		initialize_dictionary(&dict, realloc);
 	}
 
-	if (buf == NULL ){
+	if (buf == NULL) {
 		return 0;
 	}
-	sprintf(fmt, "%%*s %%%lus", bufsiz - 1);
-	if( sscanf(dict + random() % len, fmt, buf) != 1 ){
-		return getword(buf, bufsiz);
-	}
 
-	return strlen(buf);
+	src = dict.index[random() % dict.len];
+	strncpy(buf, src.data, bufsiz);
+
+	return src.len - 1;
 }
 
 size_t
