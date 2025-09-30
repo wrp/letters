@@ -16,11 +16,17 @@
 
 extern char *score_header;
 
+struct string {
+	char *data;
+	size_t cap;
+	size_t len;  /* Includes '0'.  eg strlen() - 1 */
+};
+
 void highlight(int);
 void redraw(void);
 int underline(int on);
-size_t getword(char *buf, size_t bufsiz);
-size_t bonusword(char *buf, size_t bufsiz);
+struct string getword(void);
+struct string bonusword(void);
 struct score_rec;
 struct score_rec *next_score(char *buf, size_t siz);
 
@@ -32,7 +38,7 @@ struct word {
 	int drop;    /* number of lines to move per turn */
 	int matches; /* Length of matching prefix */
 	int killed;  /* word has been marked for deletion */
-	char word[32];
+	struct string word;
 };
 struct score {
 	unsigned points;

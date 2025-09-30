@@ -192,7 +192,7 @@ init(struct state *S, int argc, char **argv)
 	check_tty();
 	unsetenv("COLUMNS");
 	unsetenv("LINES");
-	getword(NULL, 0);
+	getword();
 
 	ding = no_op;
 	S->handicap = 1;
@@ -326,9 +326,9 @@ putword(struct word *w)
 	if (! w->killed ){
 		assert(idx <= w->length);
 		highlight(1);
-		addnstr(w->word, idx);
+		addnstr(w->word.data, idx);
 		highlight(0);
-		addstr(w->word + w->matches);
+		addstr(w->word.data + w->matches);
 	} else {
 		for (int i = 0; i < w->length; i += 1) {
 			char t[] = "*#+  --";
@@ -370,7 +370,7 @@ check_matches(struct state *S, int key)
 		if (w->killed) {
 			continue;
 		}
-		if (key == w->word[w->matches]) {
+		if (key == w->word.data[w->matches]) {
 			w->matches += 1;
 			if (w->matches == w->length) {
 				finalize_word(S, w);
@@ -634,7 +634,6 @@ maybe_add_word(struct state *S)
 	int bonus = S->bonus;
 	struct word *n;
 	int  len;
-	size_t s = sizeof n->word;
 
 	/* TODO: stop allocating memory after initialization
 	 * build a pool of words and use them.
@@ -647,7 +646,8 @@ maybe_add_word(struct state *S)
 		exit(1);
 	}
 
-	n->length = len = bonus ? bonusword(n->word, s) : getword(n->word, s);
+	n->word = bonus ? bonusword() : getword();
+	n->length = len = n->word.len - 1;
 	n->drop = len > 6 ? 1 : len > 3 ? 2 : 3;
 	n->matches = 0;
 	n->x = random() % ((COLS - 1) - n->length);

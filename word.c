@@ -16,12 +16,6 @@
 
 extern char *dictionary, *choice;
 
-struct string {
-	char *data;
-	size_t cap;
-	size_t len;  /* Includes '0'.  eg strlen() - 1 */
-};
-
 struct dictionary {
 	struct string *index;
 	size_t cap;
@@ -31,22 +25,21 @@ struct dictionary {
 typedef void *(*allocator)(size_t);
 typedef void *(*reallocator)(void *, size_t);
 
-static size_t
-build_random_string(char *buf, size_t siz, const char *string)
+static int push_char(struct string *, int, reallocator);
+
+static struct string
+build_random_string(const char *string)
 {
-	char *p = buf;
+	struct string p = {NULL, 0, 0};
 	size_t wlen;
 	size_t len = strlen(string);
 
 	wlen = MINSTRING + (random() % (MAXSTRING - MINSTRING));
-	if (wlen > siz - 1) {
-		wlen = siz - 1;
-	}
 	while (wlen--) {
-		*p++ = string[random() % len];
+		push_char(&p, string[random() % len], realloc);
 	}
-	*p = '\0';
-	return p - buf;
+	push_char(&p, '\0', realloc);
+	return p;
 }
 
 static int
@@ -111,33 +104,26 @@ initialize_dictionary(struct dictionary *dict, reallocator r)
 	}
 }
 
-size_t
-getword(char *buf, size_t bufsiz)
+struct string
+getword(void)
 {
 	static struct dictionary dict = {NULL, 0, 0};
 	static size_t len;
 	struct string src;
 
 	if (choice) {
-		return build_random_string(buf, bufsiz, choice);
+		return build_random_string(choice);
 	}
 
 	if (dict.index == NULL) {
 		initialize_dictionary(&dict, realloc);
 	}
 
-	if (buf == NULL) {
-		return 0;
-	}
-
-	src = dict.index[random() % dict.len];
-	strncpy(buf, src.data, bufsiz);
-
-	return src.len - 1;
+	return dict.index[random() % dict.len];
 }
 
-size_t
-bonusword(char *buf, size_t bufsiz)
+struct string
+bonusword(void)
 {
 	char *values =
 		"abcdefghijklmnopqrstuvwxyz"
@@ -145,5 +131,5 @@ bonusword(char *buf, size_t bufsiz)
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 		"0123456789"
 		"+!?.,@#$%^&*()-_[]{}~|\\";
-	return build_random_string(buf, bufsiz, values);
+	return build_random_string(values);
 }
