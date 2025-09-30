@@ -24,8 +24,7 @@ struct dictionary {
 };
 
 static struct dictionary word_dict = {NULL, 0, 0};
-static struct dictionary random_dict = {NULL, 0, 0};
-static struct dictionary choice_dict = {NULL, 0, 0};
+static struct dictionary *default_dict;
 static struct dictionary *dict = &word_dict;
 
 static int push_char(struct string *, int, reallocator);
@@ -85,8 +84,8 @@ push_char(struct string *s, int c, reallocator r)
 	return 0;
 }
 
-void
-initialize_dictionary(char *path, reallocator r)
+static void
+initialize_dict_from_path(char *path, reallocator r)
 {
 	FILE *fp;
 	struct stat s_buf;
@@ -99,6 +98,8 @@ initialize_dictionary(char *path, reallocator r)
 		perror(path);
 		exit(1);
 	}
+
+	dict = &word_dict;
 	while( (c = fgetc(fp)) != EOF ){
 		if (isspace(c)) {
 			if (s.data != NULL) {
@@ -110,6 +111,16 @@ initialize_dictionary(char *path, reallocator r)
 		} else {
 			push_char(&s, c, r);
 		}
+	}
+}
+
+void
+initialize_dictionary(char *path, reallocator r)
+{
+	if (path) {
+		initialize_dict_from_path(path, r);
+	} else {
+		dict = default_dict;
 	}
 }
 
