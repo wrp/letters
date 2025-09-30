@@ -18,6 +18,11 @@
  * Clear out the longjmp.  That was necessary when the code was
  * so convoluted that a clean return was impossible, but things are
  * clean enough now that we could easily exit without the longjmp.
+ *
+ * Make the bonus round get faster.  The bonus round used to end
+ * if you succesfully entered enough words, but that no longer happens.
+ * We should decrement the itimer a little bit each time a word is
+ * completed.  (Or something!)
  */
 
 # define CTRL(c)  (c & 0x1f)
