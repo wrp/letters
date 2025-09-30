@@ -331,7 +331,8 @@ putword(struct word *w)
 		addstr(w->word + w->matches);
 	} else {
 		for (int i = 0; i < w->length; i += 1) {
-			addch(w->killed < 0 ? '*' : '-');
+			char t[] = "*#+  --";
+			addch(t[3 + w->killed]);
 		}
 	}
 }
