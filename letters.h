@@ -70,10 +70,10 @@ struct state {
 
 
 /* number of words to be completed before level change */
-#define LEVEL_CHANGE 5
+#define LEVEL_CHANGE 15
 
 /* number of levels between bonus rounds */
-#define LVL_PER_BONUS 1
+#define LVL_PER_BONUS 3
 
 /*
  * This is how likely it is that another word will appear on the screen
