@@ -29,6 +29,8 @@ struct string getword(void);
 struct string bonusword(void);
 struct score_rec;
 struct score_rec *next_score(char *buf, size_t siz);
+typedef void *(*reallocator)(void *, size_t);
+void initialize_dictionary(char *path, reallocator r);
 
 struct word {
 	struct word *next;
@@ -62,15 +64,16 @@ struct state {
 	unsigned letters; /* number of keys correctly typed thislevel */
 	int wpm;
 	bool bonus;   /* true if we're in a bonus round */
+	char *dictionary; /* Path to dictionary file */
 };
 
 
 
 /* number of words to be completed before level change */
-#define LEVEL_CHANGE 15
+#define LEVEL_CHANGE 5
 
 /* number of levels between bonus rounds */
-#define LVL_PER_BONUS 3
+#define LVL_PER_BONUS 1
 
 /*
  * This is how likely it is that another word will appear on the screen

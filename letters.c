@@ -57,7 +57,6 @@ static void kill_word(struct word *, int);
  * a few places
  */
 int levels_played = -1;
-char *dictionary = DICTIONARY;
 char *choice = NULL;
 int newdict = 0;
 
@@ -150,7 +149,7 @@ handle_argument(struct state *S, char **argv)
 		}
 		break;
 	case 'd':
-		dictionary = arg + 2;
+		S->dictionary = arg + 2;
 		newdict = 1;
 		if (! arg[2]) {
 			fprintf(stderr, "-d option requires an argument\n");
@@ -208,11 +207,15 @@ init(struct state *S, int argc, char **argv)
 	check_tty();
 	unsetenv("COLUMNS");
 	unsetenv("LINES");
-	getword(); /* Prime the dictionary */
 	allocate_words(S);
 
 	ding = no_op;
+	S->handicap = 1;
+	S->words = NULL;
+	S->lives = 2;
+	S->dictionary = DICTIONARY;
 	parse_cmd_line(argc, argv, S);
+	initialize_dictionary(S->dictionary, realloc);
 
 	set_handlers();
 	srand48(time(NULL));
@@ -223,9 +226,6 @@ init(struct state *S, int argc, char **argv)
 	keypad(stdscr, 1);
 	clear();
 
-	S->handicap = 1;
-	S->words = NULL;
-	S->lives = 2;
 	new_level(S);
 	status(S);
 	timeout(1000);

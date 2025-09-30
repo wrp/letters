@@ -14,7 +14,7 @@
 
 # define random lrand48
 
-extern char *dictionary, *choice;
+extern char *choice;
 
 struct dictionary {
 	struct string *index;
@@ -22,8 +22,9 @@ struct dictionary {
 	size_t len;
 };
 
-typedef void *(*allocator)(size_t);
-typedef void *(*reallocator)(void *, size_t);
+static struct dictionary word_dict = {NULL, 0, 0};
+static struct dictionary random_dict = {NULL, 0, 0};
+static struct dictionary choice_dict = {NULL, 0, 0};
 
 static int push_char(struct string *, int, reallocator);
 
@@ -82,18 +83,19 @@ push_char(struct string *s, int c, reallocator r)
 	return 0;
 }
 
-static void
-initialize_dictionary(struct dictionary *dict, reallocator r)
+void
+initialize_dictionary(char *path, reallocator r)
 {
+	struct dictionary *dict = &word_dict;
 	FILE *fp;
 	struct stat s_buf;
 	int c;
 	struct string s = {NULL, 0, 0};
 	if(
-		(fp = fopen(dictionary, "r")) == NULL ||
-		stat(dictionary, &s_buf) == -1
+		(fp = fopen(path, "r")) == NULL ||
+		stat(path, &s_buf) == -1
 	) {
-		perror(dictionary);
+		perror(path);
 		exit(1);
 	}
 	while( (c = fgetc(fp)) != EOF ){
@@ -113,7 +115,6 @@ initialize_dictionary(struct dictionary *dict, reallocator r)
 struct string
 getword(void)
 {
-	static struct dictionary dict = {NULL, 0, 0};
 	static size_t len;
 	struct string src;
 
@@ -121,11 +122,7 @@ getword(void)
 		return build_random_string(choice);
 	}
 
-	if (dict.index == NULL) {
-		initialize_dictionary(&dict, realloc);
-	}
-
-	return dict.index[random() % dict.len];
+	return word_dict.index[random() % word_dict.len];
 }
 
 struct string
