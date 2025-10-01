@@ -172,11 +172,8 @@ show_scores(struct state *S)
 	underline(0);
 
 	for (char s[64]; NULL != (h = next_score(s, sizeof s)); ) {
+		highlight(h->score == S->score.points);
 		mvaddstr(++y, x, s);
-		if (h->score == S->score.points) {
-			mvaddstr(y, 12, "---->");
-			mvaddstr(y, 54, "<----");
-		}
 	}
 
 	mvprintw(y += 2, x + 4, "%-10s" SCORE_FMT,
