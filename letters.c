@@ -650,12 +650,11 @@ maybe_add_word(struct state *S)
 	if (! S->free) {
 		return;
 	}
-	int bonus = S->bonus;
 	struct word *n = S->free;
 	S->free = n->next;
 	int  len;
 
-	n->word = bonus ? bonusword() : getword();
+	n->word = S->bonus ? bonusword() : getword();
 	len = n->word.len - 1;
 	n->drop = len > 6 ? 1 : len > 3 ? 2 : 3;
 	n->matches = 0;
