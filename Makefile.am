@@ -5,6 +5,7 @@ noinst_HEADERS = letters.h
 man6_MANS = letters.man
 nodist_letters_SOURCES = dict.c
 BUILT_SOURCES = dict.c
+EXTRA_DIST = dict.c.in
 CLEANFILES = dict.c
 
 dict.c: $(srcdir)/dict.c.in
