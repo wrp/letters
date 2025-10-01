@@ -606,7 +606,7 @@ new_level(struct state *S)
 	S->delay = S->handicap * DELAY(S->level);
 	set_timer(S->delay / 1000);
 
-	if (S->level > 1 && ((S->levels_completed - 1) % LVL_PER_BONUS == 0)) {
+	if (S->score.words && ! ((S->levels_completed - 1) % LVL_PER_BONUS )) {
 		S->bonus = true;
 		erase_word_list(S);
 		set_timer(0);
