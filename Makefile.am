@@ -1,6 +1,7 @@
 
 bin_PROGRAMS = letters
 letters_SOURCES = letters.c word.c highscore.c
+noinst_HEADERS = letters.h
 man6_MANS = letters.man
 nodist_letters_SOURCES = dict.c
 BUILT_SOURCES = dict.c
