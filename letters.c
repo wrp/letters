@@ -215,6 +215,7 @@ init(struct state *S, int argc, char **argv)
 
 	set_handlers();
 	srand48(time(NULL));
+	srandom(time(NULL));
 	initscr();
 	raw();
 	curs_set(0);
