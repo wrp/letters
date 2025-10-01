@@ -538,6 +538,7 @@ game(struct state *S)
 
 		if (move_words(S)) {
 			if (S->bonus) {
+				display_words(S);
 				new_level(S);
 			}
 		}
