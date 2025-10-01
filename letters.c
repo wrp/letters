@@ -43,7 +43,6 @@ void status(struct state *);
 void new_level(struct state *);
 int banner(struct state *, const char *, int);
 static void maybe_add_word(struct state *);
-int (*ding)(void); /* beep, flash, or no-op */
 
 static void display_words(struct state *);
 
@@ -59,7 +58,7 @@ void
 usage(const char *progname)
 {
 	printf(
-		"Usage: %s [-q|-b] [-h] [-H#] [-l#] [-ddictionary] "
+		"Usage: %s [-h] [-H#] [-l#] [-ddictionary] "
 		"[-sstring]\n",
 		progname
 	);
@@ -67,7 +66,6 @@ usage(const char *progname)
 }
 
 /* Do nothing functions */
-int no_op(void) { return 0; }
 void handle_signal(int s, siginfo_t *i, void *v) { (void)i; (void)v; (void)s; }
 
 /* Ensure the process is running on a tty. */
@@ -119,8 +117,6 @@ handle_argument(struct state *S, char **argv)
 	char *arg = *argv;
 
 	switch(arg[1]) {
-	case 'b': ding = beep; break;
-	case 'q': ding = flash; break;
 	case 'H':
 		S->handicap = (int)strtol(arg + 2, &end, 0);
 		if (*end || S->handicap < 1 || S->handicap > 99) {
@@ -201,7 +197,6 @@ init(struct state *S, int argc, char **argv)
 	unsetenv("LINES");
 	allocate_words(S);
 
-	ding = no_op;
 	S->handicap = 1;
 	S->words = NULL;
 	S->lives = 2;
