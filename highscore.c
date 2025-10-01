@@ -26,7 +26,7 @@ static struct score_rec high_scores[10];
 static struct stat	s_buf;
 static time_t readtime;
 
-char *score_header = "    name      level  words  score";
+char *score_header = "    name       level  words  score";
 
 int
 read_scores(char *highscores)
@@ -141,7 +141,7 @@ next_score(char *buf, size_t siz)
 	}
 
 	struct score_rec *h = high_scores + idx;
-	snprintf(buf, siz, "%3d %-10s" SCORE_FMT,
+	snprintf(buf, siz, "%3d %-11s" SCORE_FMT,
 		idx + 1,
 		h->name,
 		h->level,
