@@ -159,24 +159,27 @@ void
 show_scores(struct state *S)
 {
 	struct score_rec *h;
+	char *header = "Top Ten Scores for Letter Invaders";
+	int x = (COLS - strlen(header)) / 2;
+	int y = (LINES - 12) / 3;
+
 	erase();
 	highlight(1);
-	mvaddstr(5, 18, "Top Ten Scores for Letter Invaders");
+	mvaddstr(y, x, header);
 	highlight(0);
 	underline(1);
-	mvaddstr(7, 18, score_header);
+	mvaddstr(y += 2, x, score_header);
 	underline(0);
 
 	for (char s[64]; NULL != (h = next_score(s, sizeof s)); ) {
-		int y = getcury(stdscr) + 1;
-		mvaddstr(y, 18, s);
+		mvaddstr(++y, x, s);
 		if (h->score == S->score.points) {
 			mvaddstr(y, 12, "---->");
 			mvaddstr(y, 54, "<----");
 		}
 	}
 
-	mvprintw(19, 21, "%-10s" SCORE_FMT,
+	mvprintw(y += 2, x + 4, "%-10s" SCORE_FMT,
 		"Your score:",
 		S->level,
 		S->score.words,
@@ -185,6 +188,6 @@ show_scores(struct state *S)
 
 	refresh();
 	sleep(1);
-	mvaddstr(21, 19, "Press any key to continue");
+	mvaddstr(y += 2, x + 2, "Press any key to continue");
 	getch();
 }
