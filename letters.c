@@ -632,14 +632,13 @@ new_level(struct state *S)
 	S->delay = S->handicap * DELAY(S->level);
 	set_timer(S->delay / 1000);
 
+	display_words(S);
 	if (S->score.words && ! ((S->levels_completed - 1) % LVL_PER_BONUS )) {
 		S->bonus = true;
 		erase_word_list(S);
 		banner(S, "Prepare for bonus words", 3);
 		S->lives += 1;
 	}
-
-	status(S);
 }
 
 
