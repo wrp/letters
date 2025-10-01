@@ -242,7 +242,6 @@ main(int argc, char **argv)
 	game(S);
 
 	display_words(S);
-	set_timer(0);
 	banner(S, "Game Over", 3);
 
 exit:
@@ -599,11 +598,9 @@ new_level(struct state *S)
 	 */
 	if (S->bonus) {
 		S->bonus = false;
-		set_timer(0);
 		banner(S, "Bonus round finished", 3);
 		erase_word_list(S);
 		status(S);
-		set_timer(S->delay / 1000);
 		return;
 	}
 
@@ -621,9 +618,7 @@ new_level(struct state *S)
 	if (S->score.words && ! ((S->levels_completed - 1) % LVL_PER_BONUS )) {
 		S->bonus = true;
 		erase_word_list(S);
-		set_timer(0);
 		banner(S, "Prepare for bonus words", 3);
-		set_timer(850);
 		S->lives += 1;
 	}
 
@@ -679,6 +674,8 @@ banner(struct state *S, const char *text, int delay_sec)
 {
 	int c = ERR;
 	int len = strlen(text);
+
+	set_timer(0);
 #define HEIGHT 3
 	WINDOW *boxw = newwin(HEIGHT, 6 + len, LINES / 3, (COLS - len) / 2 );
 #undef HEIGHT
@@ -688,15 +685,14 @@ banner(struct state *S, const char *text, int delay_sec)
 	mvwaddstr(boxw, 1, 3, text);
 	wrefresh(boxw);
 	refresh();
-	set_timer(0);
 	if (delay_sec) {
 		sleep(delay_sec);
 	} else {
 		timeout(-1);
 		c = wgetch(boxw);
-		set_timer(S->delay / 1000);
 		timeout(1000);
 	}
+	set_timer(S->delay / 1000);
 	delwin(boxw);
 	display_words(S);
 	return c;
