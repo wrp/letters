@@ -11,10 +11,6 @@
  * Build system (meson?)
  * Test suite
  * Refactor!
-
- * Add lateral movement.  Words could randomly move left or right.
- * perhaps give each word a consistent direction when created and
- * bounce off the sides.  Maybe play on a cylinder.
  *
  * Clear out the longjmp.  That was necessary when the code was
  * so convoluted that a clean return was impossible, but things are
@@ -269,6 +265,39 @@ display_words(struct state *S)
 	refresh();
 }
 
+
+static void
+move_word(struct word *w)
+{
+	w->base += 1;
+	switch (w->lateral) {
+	case +9: w->x += 3; break;
+	case +8: w->x += 2; break;
+	case +7: w->x += 1; break;
+	case +6: w->x += !(w->base % 2); break;
+	case +5: w->x += !(w->base % 3); break;
+	case +4: w->x += !(w->base % 4); break;
+	case +3: w->x += !(w->base % 5); break;
+	case -3: w->x -= !(w->base % 5); break;
+	case -4: w->x -= !(w->base % 4); break;
+	case -5: w->x -= !(w->base % 3); break;
+	case -6: w->x -= !(w->base % 2); break;
+	case -7: w->x -= 1; break;
+	case -8: w->x -= 2; break;
+	case -9: w->x -= 3; break;
+	}
+	if (w->x < 0) {
+		w->x = 0;
+		w->lateral *= -1;
+	}
+	if (w->x > COLS - w->word.len) {
+		w->x = COLS - w->word.len;
+		w->lateral *= -1;
+	}
+	w->y += w->drop;
+}
+
+
 /*
  * move all words down 1 or more lines.
  * return the number of words that have fallen off the bottom of the screen
@@ -280,7 +309,7 @@ move_words(struct state *S)
 	int  died = 0;
 
 	while (w != NULL) {
-		w->y += w->drop;
+		move_word(w);
 		if (w->y > LINES - 1) {
 			if (!w->killed) {
 				w->killed = -3;
@@ -643,6 +672,8 @@ maybe_add_word(struct state *S)
 	n->matches = 0;
 	n->x = random() % ((COLS - 1) - (n->word.len - 1));
 	n->y = 1;
+	n->lateral = random() % 19 - 9;
+	n->base = random() % 10;
 	n->next = NULL;
 	n->killed = 0;
 	putword(n);
