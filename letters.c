@@ -184,18 +184,15 @@ parse_cmd_line(int argc, char **argv, struct state *S)
 }
 
 
+struct word word_store[256];
 static void
 allocate_words(struct state *S)
 {
-	S->free = NULL;
-	for (int i = 0; i < 256; i += 1) {
-		struct word *w = malloc(sizeof *w);
-		if (w == NULL) {
-			perror("malloc");
-			exit(1);
-		}
-		w->next = S->free;
-		S->free = w;
+	struct word *e = word_store + sizeof word_store / sizeof *word_store;
+
+	S->free = word_store;
+	for (struct word *w = word_store; w < e; w += 1) {
+		w->next = w + 1;
 	}
 }
 

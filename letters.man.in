@@ -100,11 +100,7 @@ the end of each round based on 5 letter words.  It's not a particularly
 accurate measure of your typing speed, but I think it's an interesting
 enough statistic to justify filling up the empty space on the status line.
 .SH FILES
-@DATADIR@/dict/words
-.br
 @DATADIR@/letters.high
-.SH BUGS
-"Transmogrifier" doesn't appear frequently.
 .SH AUTHORS
 Larry Moss (lm03_cif@uhura.cc.rochester.edu) - original game, UNIX version
 .br
@@ -121,8 +117,8 @@ added the -H option.
 Adrian Godwin (agodwin@acorn.co.uk).  Ported it to system Vr2.  Added the
 -s and -d options.
 .sp
-Mark Levinson (mrle_cif@uhura.cc.rochester.edu) for pointing out the bug
-listed above.
+Mark Levinson (mrle_cif@uhura.cc.rochester.edu) for pointing out that
+"Transmogrifier" doesn't appear frequently.
 .sp
 Thanks also to everyone else that's sent me mail with comments and/or
 suggestions.
