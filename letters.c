@@ -437,6 +437,7 @@ finalize_word(struct state *S, struct word *w)
 static void
 set_timer(unsigned long delay_msec)
 {
+	char *msg;
 	struct timeval tp = {
 		.tv_sec = 0,
 		.tv_usec = delay_msec * 1000
@@ -445,16 +446,27 @@ set_timer(unsigned long delay_msec)
 		tp.tv_sec += 1;
 		tp.tv_usec -= 1000000;
 	}
+	struct itimerval old;
 	struct itimerval t = {
 		.it_interval = tp,
 		.it_value = tp
 	};
-
-	if (setitimer(ITIMER_REAL, &t, NULL)) {
-		endwin();
-		perror("setitimer");
-		exit(1);
+	if (getitimer(ITIMER_REAL, &old)) {
+		msg = "getitimer";
+		goto fail;
 	}
+	if (timerisset(&old.it_value) && timercmp(&old.it_value, &tp, <)) {
+		t.it_value = old.it_value;
+	}
+	if (setitimer(ITIMER_REAL, &t, NULL)) {
+		msg = "setitimer";
+		goto fail;
+	}
+	return;
+fail:
+	endwin();
+	perror(msg);
+	exit(1);
 }
 
 
