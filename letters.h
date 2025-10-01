@@ -33,7 +33,6 @@ void redraw(void);
 int underline(int on);
 struct string getword(void);
 struct string bonusword(void);
-struct score_rec;
 struct score_rec *next_score(char *buf, size_t siz);
 typedef void *(*reallocator)(void *, size_t);
 void initialize_dictionary(char *path, reallocator r);
