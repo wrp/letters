@@ -10,6 +10,11 @@ AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_CONFIG_SRCDIR([letters.c])
 AC_CONFIG_HEADERS([config.h])
 
+AC_ARG_VAR([DICTIONARY], [Define word dir (default: /usr/share/dict/words)])
+: "${DICTIONARY:=/usr/share/dict/words}"
+AS_IF([! test -f "$DICTIONARY"],
+	[AC_MSG_ERROR([word list file $DICTIONARY does not exit])])
+
 # Checks for programs.
 AC_PROG_AWK
 AC_PROG_CC
@@ -32,8 +37,8 @@ AC_CHECK_FUNCS([strtol])
 eval eval eval abs_datadir="$datadir"
 AC_SUBST([DATADIR], [$abs_datadir])
 
-AC_DEFINE_UNQUOTED([DICTIONARY], ["$abs_datadir/dict/words"],
-	[Path to dictionary file])
+AC_SUBST([DICTIONARY])
+
 AC_DEFINE_UNQUOTED([HIGHSCORES], ["$abs_datadir/letters.high"],
 	[Path to high score file])
 

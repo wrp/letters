@@ -1,13 +1,11 @@
 #include "letters.h"
 
 static struct string words[] = {
-	{ "foo", 0, 4 },
-	{ "bar", 0, 4 },
-	{ "banana", 0, 7 },
+	/* This line is replaced at build time by the words in DICTIONARY */
 };
 
 struct dictionary default_dict = {
 	.index = words,
 	.cap = 0,
-	.len = sizeof words /sizeof *words
+	.len = sizeof words / sizeof *words
 };

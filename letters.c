@@ -212,7 +212,7 @@ init(struct state *S, int argc, char **argv)
 	S->handicap = 1;
 	S->words = NULL;
 	S->lives = 2;
-	S->dictionary = DICTIONARY;
+	S->dictionary = NULL;
 	parse_cmd_line(argc, argv, S);
 	initialize_dictionary(S->dictionary, realloc);
 
