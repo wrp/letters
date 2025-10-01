@@ -269,6 +269,9 @@ display_words(struct state *S)
 static void
 move_word(struct word *w)
 {
+	if (w->killed) {
+		return;
+	}
 	w->base += 1;
 	switch (w->lateral) {
 	case +9: w->x += 3; break;
