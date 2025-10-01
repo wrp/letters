@@ -38,7 +38,7 @@ void initialize_dictionary(char *path, reallocator r);
 
 struct word {
 	struct word *next;
-	int x;       /* horizontal coordinate of position */
+	float x;     /* horizontal coordinate of position */
 	int y;       /* vertical coordinate of position */
 	int drop;    /* number of lines to move per turn */
 	int matches; /* Length of matching prefix */

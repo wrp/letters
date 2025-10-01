@@ -265,28 +265,13 @@ move_word(struct word *w)
 		return;
 	}
 	w->base += 1;
-	switch (w->lateral) {
-	case +9: w->x += 3; break;
-	case +8: w->x += 2; break;
-	case +7: w->x += 1; break;
-	case +6: w->x += !(w->base % 2); break;
-	case +5: w->x += !(w->base % 3); break;
-	case +4: w->x += !(w->base % 4); break;
-	case +3: w->x += !(w->base % 5); break;
-	case -3: w->x -= !(w->base % 5); break;
-	case -4: w->x -= !(w->base % 4); break;
-	case -5: w->x -= !(w->base % 3); break;
-	case -6: w->x -= !(w->base % 2); break;
-	case -7: w->x -= 1; break;
-	case -8: w->x -= 2; break;
-	case -9: w->x -= 3; break;
-	}
-	if (w->x < 0) {
-		w->x = 0;
+	w->x +=  w->lateral / 3.0;
+	if (w->x < 0.0) {
+		w->x = 0.0;
 		w->lateral *= -1;
 	}
-	if (w->x > COLS - w->word.len) {
-		w->x = COLS - w->word.len;
+	if ((int)w->x > (COLS - w->word.len) + 1) {
+		w->x = (float)(COLS - w->word.len);
 		w->lateral *= -1;
 	}
 	w->y += w->drop;
@@ -339,7 +324,7 @@ putword(struct word *w)
 {
 	int idx = w->matches;
 
-	move(w->y, w->x);
+	move(w->y, (int)w->x);
 	if (! w->killed ){
 		assert(idx < w->word.len);
 		highlight(1);
@@ -665,7 +650,7 @@ maybe_add_word(struct state *S)
 	len = n->word.len - 1;
 	n->drop = len > 6 ? 1 : len > 3 ? 2 : 3;
 	n->matches = 0;
-	n->x = random() % ((COLS - 1) - (n->word.len - 1));
+	n->x = (float)(random() % ((COLS - 1) - (n->word.len - 1)));
 	n->y = 1;
 	n->lateral = random() % 19 - 9;
 	n->base = random() % 10;
