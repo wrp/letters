@@ -258,17 +258,6 @@ exit:
 }
 
 
-/* Exchange w and w->next in the list */
-static struct word *
-swap(struct word **p, struct word *w)
-{
-	*p = w->next;
-	w->next = w->next->next;
-	(*p)->next = w;
-	return *p;
-}
-
-
 static void
 display_words(struct state *S)
 {
@@ -288,14 +277,9 @@ static int
 move_words(struct state *S)
 {
 	struct word *w = S->words;
-	struct word **prev = w ? &S->words : NULL;
 	int  died = 0;
 
 	while (w != NULL) {
-		if (w->next && w->y < w->next->y) {
-			w = swap(prev, w);
-			continue;
-		}
 		w->y += w->drop;
 		if (w->y > LINES - 1) {
 			if (!w->killed) {
@@ -304,7 +288,6 @@ move_words(struct state *S)
 			}
 			w->y = LINES - 1;
 		}
-		prev = &w->next;
 		w = w->next;
 	}
 
