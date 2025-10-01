@@ -334,13 +334,13 @@ putword(struct word *w)
 
 	move(w->y, w->x);
 	if (! w->killed ){
-		assert(idx <= w->length);
+		assert(idx < w->word.len);
 		highlight(1);
 		addnstr(w->word.data, idx);
 		highlight(0);
 		addstr(w->word.data + w->matches);
 	} else {
-		for (int i = 0; i < w->length; i += 1) {
+		for (int i = 0; i < w->word.len - 1; i += 1) {
 			char t[] = "*#+  --";
 			addch(t[3 + w->killed]);
 		}
@@ -382,7 +382,7 @@ check_matches(struct state *S, int key)
 		}
 		if (key == w->word.data[w->matches]) {
 			w->matches += 1;
-			if (w->matches == w->length) {
+			if (w->matches == w->word.len - 1) {
 				finalize_word(S, w);
 			}
 		} else {
@@ -414,10 +414,10 @@ process_keys(struct state *S)
 static void
 finalize_word(struct state *S, struct word *w)
 {
-	assert (w->length == w->matches);
-	S->score.points += w->length + (2 * S->level);
+	assert (w->word.data[w->matches] == '\0');
+	S->score.points += w->word.len - 1 + (2 * S->level);
 	S->score.words += 1;
-	S->letters += w->length;
+	S->letters += w->word.len - 1;
 	w->killed = 3;
 
 	for (struct word *w = S->words; w != NULL; w = w->next) {
@@ -648,10 +648,10 @@ maybe_add_word(struct state *S)
 	int  len;
 
 	n->word = bonus ? bonusword() : getword();
-	n->length = len = n->word.len - 1;
+	len = n->word.len - 1;
 	n->drop = len > 6 ? 1 : len > 3 ? 2 : 3;
 	n->matches = 0;
-	n->x = random() % ((COLS - 1) - n->length);
+	n->x = random() % ((COLS - 1) - (n->word.len - 1));
 	n->y = 1;
 	n->next = NULL;
 	n->killed = 0;

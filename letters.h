@@ -41,7 +41,6 @@ struct word {
 	struct word *next;
 	int x;       /* horizontal coordinate of position */
 	int y;       /* vertical coordinate of position */
-	int length;  /* strlen of word */
 	int drop;    /* number of lines to move per turn */
 	int matches; /* Length of matching prefix */
 	int killed;  /* word has been marked for deletion */
