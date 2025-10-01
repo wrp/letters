@@ -29,8 +29,9 @@ static time_t readtime;
 char *score_header = "    name       level  words  score";
 
 int
-read_scores(char *highscores)
+read_scores(void)
 {
+	char *highscores = HIGHSCORES;
 	struct score_rec *h = high_scores;
 	FILE		 *fp;
 
@@ -60,9 +61,10 @@ read_scores(char *highscores)
 }
 
 int
-write_scores(char *highscores) {
+write_scores() {
 	int	i;
 	FILE	*fp;
+	char *highscores = HIGHSCORES;
 
 	/*
 	 * check to make sure the high score list has not been modified
@@ -101,11 +103,12 @@ write_scores(char *highscores) {
 
 
 void
-update_scores(char *name, struct score *score, unsigned level)
+update_scores(struct score *score, unsigned level)
 {
 	int i, j;
 	struct passwd *p;
 
+	read_scores();
 	for (i = 0; i < 10; i += 1) {
 		struct score_rec *h = high_scores + i;
 		if (score->points > h->score) {
@@ -119,9 +122,9 @@ update_scores(char *name, struct score *score, unsigned level)
 			h->score = score->points;
 			h->words = score->words;
 			h->level = level;
-			if (write_scores(name) == -1) {
-				read_scores(name);
-				update_scores(name, score, level);
+			if (write_scores() == -1) {
+				read_scores();
+				update_scores(score, level);
 			}
 			break;
 		}
@@ -138,6 +141,10 @@ next_score(char *buf, size_t siz)
 	if (idx == sizeof high_scores / sizeof *high_scores) {
 		idx = 0;
 		return NULL;
+	}
+
+	if (idx == 0) {
+		read_scores();
 	}
 
 	struct score_rec *h = high_scores + idx;
@@ -162,6 +169,8 @@ show_scores(struct state *S)
 	char *header = "Top Ten Scores for Letter Invaders";
 	int x = (COLS - strlen(header)) / 2;
 	int y = (LINES - 12) / 3;
+
+	read_scores();
 
 	erase();
 	highlight(1);

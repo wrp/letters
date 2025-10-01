@@ -34,8 +34,7 @@ static void set_handlers(void);
 static void update_wpm(struct state *);
 static void finalize_word(struct state *S, struct word *w);
 
-void update_scores(char *, struct score *, unsigned);
-int read_scores(char *);
+void update_scores(struct score *, unsigned);
 void show_scores(struct state *S);
 void putword(struct word *);
 static void game(struct state *);
@@ -125,7 +124,6 @@ handle_argument(struct state *S, char **argv)
 		}
 		break;
 	case 'h':
-		read_scores(HIGHSCORES);
 		puts(score_header);
 		for (char s[64]; next_score(s, sizeof s); ) {
 			printf("%s\n", s);
@@ -239,9 +237,8 @@ main(int argc, char **argv)
 exit:
 	set_timer(0);
 	timeout(-1);
-	read_scores(HIGHSCORES);
 	if (S->handicap == 1 && newdict == 0 && choice == NULL)
-		update_scores(HIGHSCORES, &S->score, S->level);
+		update_scores(&S->score, S->level);
 	show_scores(S);
 	endwin();
 
