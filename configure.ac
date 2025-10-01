@@ -1,7 +1,7 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.72])
+AC_PREREQ([2.71])
 AC_INIT([letters],
 	m4_esyscmd([{ git describe --tags --dirty || echo unknown; } | tr -d \\n]),
 	[william.r.pursell@gmail.com])
