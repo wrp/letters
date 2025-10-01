@@ -18,8 +18,8 @@ extern char *score_header;
 
 struct string {
 	char *data;
-	size_t cap;
-	size_t len;  /* Includes '0'.  eg strlen() - 1 */
+	unsigned char cap;
+	unsigned char len;  /* Includes '0'.  eg strlen() - 1 */
 };
 
 struct dictionary {

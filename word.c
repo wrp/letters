@@ -66,6 +66,11 @@ push_char(struct string *s, int c, reallocator r)
 {
 	if (s->len >= s->cap) {
 		void *tmp = r(s->data, (s->cap + 32) * sizeof *s->data);
+		if (s->cap >= 224) {
+			perror("strings cannot exceed 224 characters");
+			exit(1);
+			return -1;
+		}
 		if (tmp == NULL) {
 			perror("out of memory");
 			exit(1);
