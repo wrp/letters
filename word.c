@@ -32,7 +32,7 @@ static int push_char(struct string *, int, reallocator);
 static struct string
 build_random_string(const char *string)
 {
-	struct string p = {NULL, 0, 0};
+	struct string p = {NULL, 0};
 	size_t wlen;
 	size_t len = strlen(string);
 
@@ -64,20 +64,18 @@ push_string(struct dictionary *d, struct string s, reallocator r)
 static int
 push_char(struct string *s, int c, reallocator r)
 {
-	if (s->len >= s->cap) {
-		void *tmp = r(s->data, (s->cap + 32) * sizeof *s->data);
-		if (s->cap >= 224) {
-			perror("strings cannot exceed 224 characters");
+	if (s->len % 32 == 0) {
+		if (s->len >= 224) {
+			perror("strings cannot exceed 223 characters");
 			exit(1);
-			return -1;
 		}
+		void *tmp = r(s->data, (s->len + 32) * sizeof *s->data);
 		if (tmp == NULL) {
 			perror("out of memory");
 			exit(1);
 			return -1;
 		}
 		s->data = tmp;
-		s->cap += 32;
 	}
 	s->data[s->len++] = c;
 	return 0;
@@ -89,7 +87,7 @@ initialize_dict_from_path(char *path, reallocator r)
 	FILE *fp;
 	struct stat s_buf;
 	int c;
-	struct string s = {NULL, 0, 0};
+	struct string s = {NULL, 0};
 	if(
 		(fp = fopen(path, "r")) == NULL ||
 		stat(path, &s_buf) == -1
@@ -105,7 +103,7 @@ initialize_dict_from_path(char *path, reallocator r)
 				push_char(&s, 0, r);
 				push_string(dict, s, r);
 				s.data = NULL;
-				s.cap = s.len = 0;
+				s.len = 0;
 			}
 		} else {
 			push_char(&s, c, r);

@@ -13,7 +13,7 @@ dict.c: $(srcdir)/dict.c.in
 	$(AM_V_GEN)$(AWK)  'k { \
 		while (getline < "$(DICTIONARY)") { \
 			if (length > 3 ) { \
-				printf "\t{ \"%s\", 0, %d },\n", $$0, length + 1 \
+				printf "\t{ \"%s\", %d },\n", $$0, length + 1 \
 			} \
 		} \
 		k=0; next } 1; \

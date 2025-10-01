@@ -18,7 +18,6 @@ extern char *score_header;
 
 struct string {
 	char *data;
-	unsigned char cap;
 	unsigned char len;  /* Includes '0'.  eg strlen() - 1 */
 };
 
