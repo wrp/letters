@@ -34,7 +34,7 @@ struct string getword(void);
 struct string bonusword(void);
 struct score_rec *next_score(char *buf, size_t siz);
 typedef void *(*reallocator)(void *, size_t);
-void initialize_dictionary(char *path, reallocator r);
+void initialize_dictionary(char *path, char *, reallocator);
 
 struct word {
 	struct word *next;
@@ -71,6 +71,7 @@ struct state {
 	int wpm;
 	bool bonus;   /* true if we're in a bonus round */
 	char *dictionary; /* Path to dictionary file */
+	char *choice; /* String from which to construct random strings */
 };
 
 

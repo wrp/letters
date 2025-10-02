@@ -21,7 +21,7 @@ static struct dictionary word_dict = {NULL, 0, 0};
 extern struct dictionary default_dict[];
 static struct dictionary *dict = &word_dict;
 
-static int push_char(struct string *, int, reallocator);
+static void push_char(struct string *, int, reallocator);
 
 /* TODO: currently, any random string will never be freed.
  * we need to construct a proper dictionary.  (Currently,
@@ -61,25 +61,55 @@ push_string(struct dictionary *d, struct string s, reallocator r)
 	return 0;
 }
 
-static int
+static void
 push_char(struct string *s, int c, reallocator r)
 {
 	if (s->len % 32 == 0) {
 		if (s->len >= 224) {
-			perror("strings cannot exceed 223 characters");
+			fprintf(stderr, "strings cannot exceed length 223");
 			exit(1);
 		}
 		void *tmp = r(s->data, (s->len + 32) * sizeof *s->data);
 		if (tmp == NULL) {
 			perror("out of memory");
 			exit(1);
-			return -1;
 		}
 		s->data = tmp;
 	}
 	s->data[s->len++] = c;
-	return 0;
 }
+
+static void
+make_perm(struct string base, const char *w, size_t len, reallocator r)
+{
+	const char *c = w;
+
+	if (base.len > 3) {
+		push_string(dict, base, r);
+	}
+	if (len == 0) {
+		return;
+	}
+	while (*c) {
+		struct string s = { NULL, 0 };
+		for (int i = 0; i < base.len - 1; i += 1) {
+			push_char(&s, base.data[i], r);
+		}
+		push_char(&s, *c++, r);
+		push_char(&s, '\0', r);
+		make_perm(s, w, len - 1, r);
+	}
+}
+
+static void
+initialize_dict_from_string(char *choice, reallocator r)
+{
+	struct string s = { NULL, 0 };
+
+	push_char(&s, 0, r);
+	make_perm(s, choice, MAXSTRING, r);
+}
+
 
 static void
 initialize_dict_from_path(char *path, reallocator r)
@@ -112,9 +142,11 @@ initialize_dict_from_path(char *path, reallocator r)
 }
 
 void
-initialize_dictionary(char *path, reallocator r)
+initialize_dictionary(char *path, char *dict_string, reallocator r)
 {
-	if (path) {
+	if (dict_string) {
+		initialize_dict_from_string(dict_string, r);
+	} else if (path) {
 		initialize_dict_from_path(path, r);
 	} else {
 		dict = default_dict;
@@ -124,13 +156,6 @@ initialize_dictionary(char *path, reallocator r)
 struct string
 getword(void)
 {
-	static size_t len;
-	struct string src;
-
-	if (choice) {
-		return build_random_string(choice);
-	}
-
 	return dict->index[random() % dict->len];
 }
 

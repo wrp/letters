@@ -50,7 +50,6 @@ static void display_words(struct state *);
  * There are too many globals for my taste, but I took the easy way out in
  * a few places
  */
-char *choice = NULL;
 int newdict = 0;
 
 void
@@ -147,7 +146,7 @@ handle_argument(struct state *S, char **argv)
 			fprintf(stderr, "-s option requires an argument\n");
 			exit(1);
 		}
-		choice = arg + 2;
+		S->choice = arg + 2;
 		break;
 	default:
 		fprintf(stderr, "Unknown option: -%c\n", arg[1]);
@@ -196,8 +195,8 @@ init(struct state *S, int argc, char **argv)
 	S->lives = 2;
 	S->dictionary = NULL;
 	parse_cmd_line(argc, argv, S);
+	initialize_dictionary(S->dictionary, S->choice, realloc);
 	check_tty();
-	initialize_dictionary(S->dictionary, realloc);
 
 	set_handlers();
 	srand48(time(NULL));
@@ -234,8 +233,9 @@ main(int argc, char **argv)
 exit:
 	set_timer(0);
 	timeout(-1);
-	if (S->handicap == 1 && newdict == 0 && choice == NULL)
+	if (S->handicap == 1 && newdict == 0 && S->choice == NULL) {
 		update_scores(&S->score, S->level);
+	}
 	show_scores(S);
 	endwin();
 
