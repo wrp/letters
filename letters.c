@@ -20,6 +20,10 @@
  * if you succesfully entered enough words, but that no longer happens.
  * We should decrement the itimer a little bit each time a word is
  * completed.  (Or something!)
+ *
+ * Enable reading the dictionary from the input stream and just get
+ * rid of the -d and -s arguments.  It is more flexible to be able
+ * to provide the dictionary on a stream.
  */
 
 # define CTRL(c)  (c & 0x1f)
