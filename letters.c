@@ -28,6 +28,8 @@
 #include <signal.h>
 #include <sys/time.h>
 
+static volatile sig_atomic_t tick; /* total number of SIGALRM received */
+
 static int move_words(struct state *);
 static void set_timer(unsigned long);
 static void set_handlers(void);
@@ -62,7 +64,12 @@ usage(const char *progname)
 	exit(0);
 }
 
-void handle_signal(int s, siginfo_t *i, void *v) { (void)i; (void)v; (void)s; }
+static void
+handle_signal(int s, siginfo_t *i, void *v)
+{
+	(void)i; (void)v; (void)s;
+	tick += 1;
+}
 
 /* Ensure the process is running on a tty. */
 static void
