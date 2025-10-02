@@ -45,7 +45,6 @@ struct word {
 	int matches; /* Length of matching prefix */
 	int killed;  /* word has been marked for deletion */
 	int lateral; /* control lateral motion */
-	int base;
 	struct string word;
 };
 struct score {

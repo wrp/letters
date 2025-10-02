@@ -262,7 +262,6 @@ move_word(struct word *w)
 	if (w->killed) {
 		return;
 	}
-	w->base += 1;
 	w->x +=  w->lateral / 3.0;
 	if (w->x < 0.0) {
 		w->x = 0.0;
@@ -651,7 +650,6 @@ maybe_add_word(struct state *S)
 	n->x = (float)(random() % ((COLS - 1) - (n->word.len - 1)));
 	n->y = 1;
 	n->lateral = random() % 19 - 9;
-	n->base = random() % 10;
 	n->next = NULL;
 	n->killed = 0;
 	putword(n);
