@@ -73,6 +73,7 @@ struct state {
 	bool bonus;   /* true if we're in a bonus round */
 	char *dictionary; /* Path to dictionary file */
 	char *choice; /* String from which to construct random strings */
+	float addword; /* Chance of getting a new word each tick */
 };
 
 
@@ -82,12 +83,6 @@ struct state {
 
 /* number of levels between bonus rounds */
 #define LVL_PER_BONUS 3
-
-/*
- * This is how likely it is that another word will appear on the screen
- * while words are falling.  there isa 1/ADDWORD chance of a new word
- */
-#define ADDWORD 18
 
 /*
  * minimum and maximum length of character strings chosen from

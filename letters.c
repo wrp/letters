@@ -201,6 +201,7 @@ init(struct state *S, int argc, char **argv)
 	S->words = NULL;
 	S->lives = 2;
 	S->dictionary = NULL;
+	S->addword = 1.0/18.0;
 	parse_cmd_line(argc, argv, S);
 	initialize_dictionary(S->dictionary, S->choice, realloc);
 	check_tty();
@@ -640,7 +641,8 @@ word_in_play(struct state *S)
 static void
 maybe_add_word(struct state *S)
 {
-	if (word_in_play(S) && (random() % ADDWORD) != 0) {
+	double random_value = (double)random() / RAND_MAX;
+	if (word_in_play(S) && (random_value > S->addword)) {
 		return;
 	}
 	if (! S->free) {
