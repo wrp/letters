@@ -64,11 +64,9 @@ usage(const char *progname)
 	exit(0);
 }
 
-/* Do nothing functions */
 void handle_signal(int s, siginfo_t *i, void *v) { (void)i; (void)v; (void)s; }
 
 /* Ensure the process is running on a tty. */
-/* TODO: perhaps read the dictionary from stdin */
 static void
 check_tty(void)
 {
