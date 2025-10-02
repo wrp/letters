@@ -184,6 +184,7 @@ show_scores(struct state *S)
 		highlight(h->score == S->score.points);
 		mvaddstr(++y, x, s);
 	}
+	highlight(0);
 
 	mvprintw(y += 2, x + 4, "%-10s" SCORE_FMT,
 		"Your score:",
