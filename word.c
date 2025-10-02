@@ -18,6 +18,7 @@
 extern char *choice;
 
 static struct dictionary word_dict = {NULL, 0, 0};
+static struct dictionary bonus_dict = {NULL, 0, 0};
 extern struct dictionary default_dict[];
 static struct dictionary *dict = &word_dict;
 
@@ -141,6 +142,9 @@ initialize_dict_from_path(char *path, reallocator r)
 	}
 }
 
+
+static void init_bonus_words(void);
+
 void
 initialize_dictionary(char *path, char *dict_string, reallocator r)
 {
@@ -151,6 +155,8 @@ initialize_dictionary(char *path, char *dict_string, reallocator r)
 	} else {
 		dict = default_dict;
 	}
+
+	init_bonus_words();
 }
 
 struct string
@@ -159,8 +165,8 @@ getword(void)
 	return dict->index[random() % dict->len];
 }
 
-struct string
-bonusword(void)
+static void
+init_bonus_words(void)
 {
 	char *values =
 		"abcdefghijklmnopqrstuvwxyz"
@@ -168,5 +174,14 @@ bonusword(void)
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 		"0123456789"
 		"+!?.,@#$%^&*()-_[]{}~|\\";
-	return build_random_string(values);
+	for (int i = 0; i < 1024; i += 1) {
+		push_string(&bonus_dict, build_random_string(values), realloc);
+	}
+}
+
+
+struct string
+bonusword(void)
+{
+	return bonus_dict.index[random() % bonus_dict.len];
 }
