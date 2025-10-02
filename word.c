@@ -31,7 +31,7 @@ static void push_char(struct string *, int, reallocator);
  * a purely academic concern.  The memory leak is irrelevant.)
  */
 static struct string
-build_random_string(const char *string)
+build_random_string(const char *string, reallocator r)
 {
 	struct string p = {NULL, 0};
 	size_t wlen;
@@ -39,9 +39,9 @@ build_random_string(const char *string)
 
 	wlen = MINSTRING + (random() % (MAXSTRING - MINSTRING));
 	while (wlen--) {
-		push_char(&p, string[random() % len], realloc);
+		push_char(&p, string[random() % len], r);
 	}
-	push_char(&p, '\0', realloc);
+	push_char(&p, '\0', r);
 	return p;
 }
 
@@ -85,7 +85,7 @@ static void
 initialize_dict_from_string(char *choice, reallocator r)
 {
 	for (int i = 0; i < 1024; i += 1) {
-		push_string(&word_dict, build_random_string(choice), realloc);
+		push_string(&word_dict, build_random_string(choice, r), r);
 	}
 }
 
@@ -121,7 +121,7 @@ initialize_dict_from_path(char *path, reallocator r)
 }
 
 
-static void init_bonus_words(void);
+static void init_bonus_words(reallocator r);
 
 void
 initialize_dictionary(char *path, char *dict_string, reallocator r)
@@ -134,7 +134,7 @@ initialize_dictionary(char *path, char *dict_string, reallocator r)
 		dict = default_dict;
 	}
 
-	init_bonus_words();
+	init_bonus_words(r);
 }
 
 struct string
@@ -144,7 +144,7 @@ getword(void)
 }
 
 static void
-init_bonus_words(void)
+init_bonus_words(reallocator r)
 {
 	char *values =
 		"abcdefghijklmnopqrstuvwxyz"
@@ -153,7 +153,7 @@ init_bonus_words(void)
 		"0123456789"
 		"+!?.,@#$%^&*()-_[]{}~|\\";
 	for (int i = 0; i < 1024; i += 1) {
-		push_string(&bonus_dict, build_random_string(values), realloc);
+		push_string(&bonus_dict, build_random_string(values, r), r);
 	}
 }
 
