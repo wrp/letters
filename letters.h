@@ -41,7 +41,8 @@ struct word {
 	struct word *next;
 	float x;     /* horizontal coordinate of position */
 	int y;       /* vertical coordinate of position */
-	int drop;    /* number of lines to move per turn */
+	int speed;   /* number of ticks per move */
+	int offset;  /* Added to ticks to control timing */
 	int matches; /* Length of matching prefix */
 	int killed;  /* word has been marked for deletion */
 	int lateral; /* control lateral motion */
@@ -86,7 +87,7 @@ struct state {
  * This is how likely it is that another word will appear on the screen
  * while words are falling.  there isa 1/ADDWORD chance of a new word
  */
-#define ADDWORD  6
+#define ADDWORD 18
 
 /*
  * minimum and maximum length of character strings chosen from

@@ -97,16 +97,16 @@ intrrpt(struct state *S)
 }
 
 
-/* milliseconds to pause before moving words down */
+/* milliseconds between ticks */
 int
 DELAY(unsigned level)
 {
 	/* START_DELAY - level * (DELAY_CHANGE - (level * DECEL)) */
 	long lut[] = {
-		750000, 691200, 634800, 580800, 529200, 480000,
-		433200, 388800, 346800, 307200, 270000, 235200,
-		202800, 172800, 145200, 120000, 97200, 76800,
-		58800, 43200, 30000, 19200, 10800
+		250000, 230400, 211600, 193600, 176400, 160000,
+		144400, 129600, 115600, 102400, 90000, 78400,
+		67600, 57600, 48400, 40000, 32400, 25600,
+		19600, 14400, 10000, 6400, 3600
 	};
 	return level < sizeof lut / sizeof *lut ? lut[level] : 10000;
 }
@@ -266,7 +266,7 @@ display_words(struct state *S)
 static void
 move_word(struct word *w)
 {
-	if (w->killed) {
+	if ( ((tick % w->speed) != w->offset) || w->killed) {
 		return;
 	}
 	w->x +=  w->lateral / 3.0;
@@ -278,7 +278,7 @@ move_word(struct word *w)
 		w->x = (float)(COLS - w->word.len);
 		w->lateral *= -1;
 	}
-	w->y += w->drop;
+	w->y += 1;
 }
 
 
@@ -652,7 +652,8 @@ maybe_add_word(struct state *S)
 
 	n->word = S->bonus ? bonusword() : getword();
 	len = n->word.len - 1;
-	n->drop = len > 6 ? 1 : len > 3 ? 2 : 3;
+	n->speed = len > 6 ? 3 : len > 3 ? 2 : 1;
+	n->offset = tick % n->speed;
 	n->matches = 0;
 	n->x = (float)(random() % ((COLS - 1) - (n->word.len - 1)));
 	n->y = 1;
