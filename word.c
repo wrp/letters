@@ -24,12 +24,6 @@ static struct dictionary *dict = &word_dict;
 
 static void push_char(struct string *, int, reallocator);
 
-/* TODO: currently, any random string will never be freed.
- * we need to construct a proper dictionary.  (Currently,
- * the dictionary built from a words file is also never
- * freed, but it does not grow during play.  This is really
- * a purely academic concern.  The memory leak is irrelevant.)
- */
 static struct string
 build_random_string(const char *string, reallocator r)
 {
@@ -141,6 +135,28 @@ struct string
 getword(void)
 {
 	return dict->index[random() % dict->len];
+}
+
+
+static void
+free_dict(struct dictionary *d)
+{
+	struct string *s = d->index;
+	struct string *e = d->index + d->len;
+	while ( s < e ){
+		free(s++ -> data);
+	}
+	free(d->index);
+	d->index = NULL;
+	d->cap = d->len = 0;
+}
+
+
+void
+free_dictionaries(void)
+{
+	free_dict(&word_dict);
+	free_dict(&bonus_dict);
 }
 
 static void

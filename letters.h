@@ -35,6 +35,7 @@ struct string bonusword(void);
 struct score_rec *next_score(char *buf, size_t siz);
 typedef void *(*reallocator)(void *, size_t);
 void initialize_dictionary(char *path, char *, reallocator);
+void free_dictionaries(void);
 
 struct word {
 	struct word *next;

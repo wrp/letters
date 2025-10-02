@@ -231,6 +231,7 @@ main(int argc, char **argv)
 	banner(S, "Game Over", 3);
 
 exit:
+	free_dictionaries();
 	set_timer(0);
 	timeout(-1);
 	if (S->handicap == 1 && newdict == 0 && S->choice == NULL) {
