@@ -80,35 +80,13 @@ push_char(struct string *s, int c, reallocator r)
 	s->data[s->len++] = c;
 }
 
-static void
-make_perm(struct string base, const char *w, size_t len, reallocator r)
-{
-	const char *c = w;
-
-	if (base.len > 3) {
-		push_string(dict, base, r);
-	}
-	if (len == 0) {
-		return;
-	}
-	while (*c) {
-		struct string s = { NULL, 0 };
-		for (int i = 0; i < base.len - 1; i += 1) {
-			push_char(&s, base.data[i], r);
-		}
-		push_char(&s, *c++, r);
-		push_char(&s, '\0', r);
-		make_perm(s, w, len - 1, r);
-	}
-}
 
 static void
 initialize_dict_from_string(char *choice, reallocator r)
 {
-	struct string s = { NULL, 0 };
-
-	push_char(&s, 0, r);
-	make_perm(s, choice, MAXSTRING, r);
+	for (int i = 0; i < 1024; i += 1) {
+		push_string(&word_dict, build_random_string(choice), realloc);
+	}
 }
 
 
