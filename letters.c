@@ -57,8 +57,7 @@ void
 usage(const char *progname)
 {
 	printf(
-		"Usage: %s [-h] [-H#] [-l#] [-ddictionary] "
-		"[-sstring]\n",
+		"usage: %s [-h] [-H#] [-l#] [-ddictionary] [-sstring]\n",
 		progname
 	);
 	exit(0);
