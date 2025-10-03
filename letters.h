@@ -18,12 +18,12 @@ extern char *score_header;
 
 struct string {
 	char *data;
-	unsigned char len;  /* Includes '0'.  eg strlen() - 1 */
+	unsigned char len;  /* .len == strlen(.data) - 1 */
 };
 
 struct dictionary {
 	struct string *index;
-	size_t cap; /* Set to 0 if index not allocated (eg string constant) */
+	size_t cap;
 	size_t len;
 };
 
