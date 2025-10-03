@@ -67,7 +67,6 @@ struct state {
 };
 
 void redraw(void);
-int underline(int);
 struct string getword(void);
 struct string bonusword(void);
 struct score_rec *next_score(char *, size_t);

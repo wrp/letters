@@ -184,9 +184,9 @@ show_scores(struct state *S)
 	attron(A_STANDOUT);
 	mvaddstr(y, x, header);
 	attroff(A_STANDOUT);
-	underline(1);
+	attron(A_UNDERLINE);
 	mvaddstr(y += 2, x, score_header);
-	underline(0);
+	attroff(A_UNDERLINE);
 
 	for (char s[64]; NULL != (h = next_score(s, sizeof s)); ) {
 		if (

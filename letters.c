@@ -712,13 +712,6 @@ banner(struct state *S, const char *text, int delay_sec)
 }
 
 
-int
-underline(int on)
-{
-	return on ? attron(A_UNDERLINE) : attroff(A_UNDERLINE);
-}
-
-
 static void
 set_handlers(void)
 {
