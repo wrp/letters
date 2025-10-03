@@ -43,8 +43,8 @@ static void game(struct state *);
 void status(struct state *);
 void new_level(struct state *);
 int banner(struct state *, const char *, int);
-static void maybe_add_word(struct state *);
-static void add_word(struct state *);
+static struct word * maybe_add_word(struct state *);
+static struct word * add_word(struct state *);
 
 static void display_words(struct state *);
 
@@ -639,21 +639,21 @@ word_in_play(struct state *S)
 
 
 /* If appropriate, create a new word and put in in play. */
-static void
+static struct word *
 maybe_add_word(struct state *S)
 {
 	double random_value = (double)random() / RAND_MAX;
 	if (word_in_play(S) && (random_value > S->addword)) {
-		return;
+		return NULL;
 	}
 	if (! S->free) {
-		return;
+		return NULL;
 	}
-	add_word(S);
+	return add_word(S);
 }
 
 
-static void
+static struct word *
 add_word(struct state *S)
 {
 	struct word *n = S->free;
@@ -673,6 +673,7 @@ add_word(struct state *S)
 	putword(n);
 
 	*lastnext(S) = n;
+	return n;
 }
 
 
