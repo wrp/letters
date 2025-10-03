@@ -273,7 +273,7 @@ display_words(struct state *S)
 static void
 move_word(struct word *w)
 {
-	if ( ((tick % w->speed) != w->offset) || w->killed) {
+	if ( ((tick % w->tick_per_move) != w->offset) || w->killed) {
 		return;
 	}
 	w->x +=  w->lateral / 3.0;
@@ -666,8 +666,8 @@ add_word(struct state *S)
 
 	n->word = S->bonus ? bonusword() : getword();
 	len = n->word.len - 1;
-	n->speed = len > 6 ? 3 : len > 3 ? 2 : 1;
-	n->offset = tick % n->speed;
+	n->tick_per_move = len > 6 ? 3 : len > 3 ? 2 : 1;
+	n->offset = tick % n->tick_per_move;
 	n->matches = 0;
 	n->x = (float)(random() % ((COLS - 1) - (n->word.len - 1)));
 	n->y = 1;

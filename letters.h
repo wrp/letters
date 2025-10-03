@@ -31,7 +31,7 @@ struct word {
 	struct word *next;
 	float x;     /* horizontal coordinate of position */
 	int y;       /* vertical coordinate of position */
-	int speed;   /* number of ticks per move */
+	int tick_per_move;
 	int offset;  /* Added to ticks to control timing */
 	int matches; /* Length of matching prefix */
 	int killed;  /* word has been marked for deletion */
