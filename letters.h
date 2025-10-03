@@ -66,7 +66,7 @@ struct state {
 	float addword; /* Chance of getting a new word each tick */
 };
 
-void highlight(int);
+int highlight(int);
 void redraw(void);
 int underline(int);
 struct string getword(void);

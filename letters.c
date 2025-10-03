@@ -712,13 +712,10 @@ banner(struct state *S, const char *text, int delay_sec)
 }
 
 
-void
-highlight(int s)
+int
+highlight(int on)
 {
-	switch(s) {
-	case 0: attroff(A_STANDOUT); break;
-	case 1: attron(A_STANDOUT); break;
-	}
+	return on ? attron(A_STANDOUT) : attroff(A_STANDOUT);
 }
 
 
