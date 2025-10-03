@@ -176,6 +176,7 @@ show_scores(struct state *S)
 	char *header = "Top Ten Scores for Letter Invaders";
 	int x = (COLS - strlen(header)) / 2;
 	int y = (LINES - 12) / 3;
+	int on_board = 0;
 
 	read_scores();
 
@@ -188,17 +189,28 @@ show_scores(struct state *S)
 	underline(0);
 
 	for (char s[64]; NULL != (h = next_score(s, sizeof s)); ) {
-		highlight(h->score == S->score.points);
+		if (
+			! on_board &&
+			h->score == S->score.points &&
+			!strcmp(h->name, username()))
+		{
+			highlight(1);
+			on_board = 1;
+		}
 		mvaddstr(++y, x, s);
+		highlight(0);
+	}
+	if (!on_board) {
+		highlight(1);
+		mvprintw(y += 2, x, ">10 ");
+		printw("%-10s " SCORE_FMT,
+			username(),
+			S->level,
+			S->score.words,
+			S->score.points
+		);
 	}
 	highlight(0);
-
-	mvprintw(y += 2, x + 4, "%-10s" SCORE_FMT,
-		"Your score:",
-		S->level,
-		S->score.words,
-		S->score.points
-	);
 
 	refresh();
 
