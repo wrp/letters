@@ -27,16 +27,6 @@ struct dictionary {
 	size_t len;
 };
 
-void highlight(int);
-void redraw(void);
-int underline(int on);
-struct string getword(void);
-struct string bonusword(void);
-struct score_rec *next_score(char *buf, size_t siz);
-typedef void *(*reallocator)(void *, size_t);
-void initialize_dictionary(char *path, char *, reallocator);
-void free_dictionaries(void);
-
 struct word {
 	struct word *next;
 	float x;     /* horizontal coordinate of position */
@@ -76,6 +66,15 @@ struct state {
 	float addword; /* Chance of getting a new word each tick */
 };
 
+void highlight(int);
+void redraw(void);
+int underline(int);
+struct string getword(void);
+struct string bonusword(void);
+struct score_rec *next_score(char *, size_t);
+typedef void *(*reallocator)(void *, size_t);
+void initialize_dictionary(char *path, char *, reallocator);
+void free_dictionaries(void);
 
 
 /* number of words to be completed before level change */
