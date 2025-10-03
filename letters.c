@@ -44,6 +44,7 @@ void status(struct state *);
 void new_level(struct state *);
 int banner(struct state *, const char *, int);
 static void maybe_add_word(struct state *);
+static void add_word(struct state *);
 
 static void display_words(struct state *);
 
@@ -648,6 +649,13 @@ maybe_add_word(struct state *S)
 	if (! S->free) {
 		return;
 	}
+	add_word(S);
+}
+
+
+static void
+add_word(struct state *S)
+{
 	struct word *n = S->free;
 	S->free = n->next;
 	int  len;
