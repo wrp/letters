@@ -338,9 +338,9 @@ putword(struct word *w)
 	move(w->y, (int)w->x);
 	if (! w->killed ){
 		assert(idx < w->word.len);
-		highlight(1);
+		attron(A_STANDOUT);
 		addnstr(w->word.data, idx);
-		highlight(0);
+		attroff(A_STANDOUT);
 		addstr(w->word.data + w->matches);
 	} else {
 		for (int i = 0; i < w->word.len - 1; i += 1) {
@@ -539,7 +539,7 @@ game(struct state *S)
 void
 status(struct state *S)
 {
-	highlight(1);
+	attron(A_STANDOUT);
 	update_wpm(S);
 #define STATUS_WIDTH ( 0\
 	+ sizeof "Score:" + 7 \
@@ -556,7 +556,7 @@ status(struct state *S)
 	printw("Lives: %-3d", S->lives);
 	printw("WPM: %-4d", S->wpm);
 	clrtoeol();
-	highlight(0);
+	attroff(A_STANDOUT);
 }
 
 
@@ -709,13 +709,6 @@ banner(struct state *S, const char *text, int delay_sec)
 	delwin(boxw);
 	display_words(S);
 	return c;
-}
-
-
-int
-highlight(int on)
-{
-	return on ? attron(A_STANDOUT) : attroff(A_STANDOUT);
 }
 
 

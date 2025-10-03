@@ -181,9 +181,9 @@ show_scores(struct state *S)
 	read_scores();
 
 	erase();
-	highlight(1);
+	attron(A_STANDOUT);
 	mvaddstr(y, x, header);
-	highlight(0);
+	attroff(A_STANDOUT);
 	underline(1);
 	mvaddstr(y += 2, x, score_header);
 	underline(0);
@@ -194,14 +194,14 @@ show_scores(struct state *S)
 			h->score == S->score.points &&
 			!strcmp(h->name, username()))
 		{
-			highlight(1);
+			attron(A_STANDOUT);
 			on_board = 1;
 		}
 		mvaddstr(++y, x, s);
-		highlight(0);
+		attroff(A_STANDOUT);
 	}
 	if (!on_board) {
-		highlight(1);
+		attron(A_STANDOUT);
 		mvprintw(y += 2, x, ">10 ");
 		printw("%-10s " SCORE_FMT,
 			username(),
@@ -210,7 +210,7 @@ show_scores(struct state *S)
 			S->score.points
 		);
 	}
-	highlight(0);
+	attroff(A_STANDOUT);
 
 	refresh();
 
