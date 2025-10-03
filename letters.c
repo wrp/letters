@@ -19,7 +19,18 @@
  * Make the bonus round get faster.  The bonus round used to end
  * if you succesfully entered enough words, but that no longer happens.
  * We should decrement the itimer a little bit each time a word is
- * completed.  (Or something!)
+ * completed.  (Or something!)  Maybe just increase probability of
+ * new words in bonus round.
+ *
+ * Maybe retain the word list through a bonus round so that the
+ * previous words come back after the round.  Mostly this would enable
+ * a much cleaner, simpler code.  I am not really considering game
+ * mechanics with this though.  I just want to get rid of the new_level()
+ * function.
+ *
+ * Pause the timer during banners.  Or, rather, add a timer to calculate
+ * the pause time so that WPM could be both per-level and overall.  In
+ * fact, I like that idea: have two wpm counters and report them both.
  */
 
 # define CTRL(c)  (c & 0x1f)
