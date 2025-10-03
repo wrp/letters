@@ -383,7 +383,7 @@ check_matches(struct state *S, int key)
 				finalize_word(S, w);
 			}
 		} else {
-			w->matches = 0;
+			w->matches = key == w->word.data[0];
 		}
 		putword(w);
 	}
