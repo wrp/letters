@@ -26,7 +26,9 @@
  * previous words come back after the round.  Mostly this would enable
  * a much cleaner, simpler code.  I am not really considering game
  * mechanics with this though.  I just want to get rid of the new_level()
- * function.
+ * function.  Or, do not have a discrete bonus round at all.  Just start
+ * throwing in bonus words that do not decrement the lives counter
+ * when they hit the bottom.
  *
  * Pause the timer during banners.  Or, rather, add a timer to calculate
  * the pause time so that WPM could be both per-level and overall.  In
