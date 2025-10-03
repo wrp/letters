@@ -62,12 +62,6 @@ static struct word * add_word(struct state *);
 static void display_words(struct state *);
 
 
-/*
- * There are too many globals for my taste, but I took the easy way out in
- * a few places
- */
-int newdict = 0;
-
 void
 usage(const char *progname)
 {
@@ -155,7 +149,6 @@ handle_argument(struct state *S, char **argv)
 		break;
 	case 'd':
 		S->dictionary = arg + 2;
-		newdict = 1;
 		if (! arg[2]) {
 			fprintf(stderr, "-d option requires an argument\n");
 			exit(1);
@@ -255,7 +248,7 @@ exit:
 	free_dictionaries();
 	set_timer(0);
 	timeout(-1);
-	if (S->handicap == 1 && newdict == 0 && S->choice == NULL) {
+	if (S->handicap == 1 && ! S->dictionary && S->choice == NULL) {
 		update_scores(&S->score, S->level);
 	}
 	show_scores(S);
