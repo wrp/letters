@@ -64,7 +64,7 @@ struct state {
 	struct word *free; /* list of unused words */
 	struct score score;
 	jmp_buf jbuf;
-	long delay;
+	unsigned ms_per_tick;
 	int handicap;
 	int levels_completed;
 	time_t start_time; /* time the current level started */

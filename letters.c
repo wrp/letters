@@ -367,8 +367,8 @@ process_ctrl_key(struct state *S, int key)
 		break;
 	case CTRL('N'):
 		S->level += 1;
-		S->delay = S->handicap * DELAY(S->level);
-		set_timer(S->delay / 1000);
+		S->ms_per_tick = S->handicap * DELAY(S->level);
+		set_timer(S->ms_per_tick / 1000);
 		status(S);
 		break;
 	case CTRL('C'):
@@ -621,8 +621,8 @@ new_level(struct state *S)
 	if(S->level <= S->levels_completed++)
 		S->level += 1;
 
-	S->delay = S->handicap * DELAY(S->level);
-	set_timer(S->delay / 1000);
+	S->ms_per_tick = S->handicap * DELAY(S->level);
+	set_timer(S->ms_per_tick / 1000);
 
 	display_words(S);
 	if (S->score.words && ! ((S->levels_completed - 1) % LVL_PER_BONUS )) {
@@ -710,7 +710,7 @@ banner(struct state *S, const char *text, int delay_sec)
 		c = wgetch(boxw);
 		timeout(1000);
 	}
-	set_timer(S->delay / 1000);
+	set_timer(S->ms_per_tick / 1000);
 	delwin(boxw);
 	display_words(S);
 	return c;
