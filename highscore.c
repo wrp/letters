@@ -194,7 +194,7 @@ show_scores(struct state *S)
 	);
 
 	refresh();
-	sleep(1);
+
 	mvaddstr(y += 2, x + 2, "Press any key to continue");
 	getch();
 }
