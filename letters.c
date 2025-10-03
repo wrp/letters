@@ -642,14 +642,14 @@ word_in_play(struct state *S)
 static struct word *
 maybe_add_word(struct state *S)
 {
-	double random_value = (double)random() / RAND_MAX;
-	if (word_in_play(S) && (random_value > S->addword)) {
-		return NULL;
-	}
 	if (! S->free) {
 		return NULL;
+	} else if (! word_in_play(S)) {
+		return add_word(S);
+	} else if ( (double)random() / RAND_MAX < S->addword) {
+		return add_word(S);
 	}
-	return add_word(S);
+	return NULL;
 }
 
 
