@@ -393,11 +393,11 @@ check_matches(struct state *S, int key)
 			w->matches += 1;
 			if (w->matches == w->word.len - 1) {
 				finalize_word(S, w);
+				return;
 			}
 		} else {
 			w->matches = key == w->word.data[0];
 		}
-		putword(w);
 	}
 }
 
@@ -413,8 +413,7 @@ process_keys(struct state *S)
 		} else {
 			check_matches(S, key);
 		}
-		status(S);
-		refresh();
+		display_words(S);
 	}
 }
 
