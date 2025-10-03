@@ -32,7 +32,7 @@ struct word {
 	float x;     /* horizontal coordinate of position */
 	int y;       /* vertical coordinate of position */
 	int tick_per_move;
-	int offset;  /* Added to ticks to control timing */
+	int tick_mod; /* tick in which word entered game */
 	int matches; /* Length of matching prefix */
 	int killed;  /* word has been marked for deletion */
 	int lateral; /* control lateral motion */
