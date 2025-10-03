@@ -103,7 +103,6 @@ intrrpt(struct state *S)
 	case CTRL('C'):
 		longjmp(S->jbuf, 1);
 	default:
-		erase();
 		display_words(S);
 	}
 }
