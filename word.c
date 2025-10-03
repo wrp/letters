@@ -76,10 +76,10 @@ push_char(struct string *s, int c, reallocator r)
 
 
 static void
-initialize_dict_from_string(char *choice, reallocator r)
+initialize_dict_from_string(struct dictionary *d, char *choice, reallocator r)
 {
 	for (int i = 0; i < 1024; i += 1) {
-		push_string(&word_dict, build_random_string(choice, r), r);
+		push_string(d, build_random_string(choice, r), r);
 	}
 }
 
@@ -120,15 +120,22 @@ static void init_bonus_words(reallocator r);
 void
 initialize_dictionary(char *path, char *dict_string, reallocator r)
 {
+	char *bonus_chars =
+		"abcdefghijklmnopqrstuvwxyz"
+		"qazwsxol.p;/xcvbnm,<>\"'~z"
+		"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+		"0123456789"
+		"+!?.,@#$%^&*()-_[]{}~|\\";
+
 	if (dict_string) {
-		initialize_dict_from_string(dict_string, r);
+		initialize_dict_from_string(&word_dict, dict_string, r);
 	} else if (path) {
 		initialize_dict_from_path(path, r);
 	} else {
 		dict = default_dict;
 	}
 
-	init_bonus_words(r);
+	initialize_dict_from_string(&bonus_dict, bonus_chars, r);
 }
 
 struct string
@@ -157,20 +164,6 @@ free_dictionaries(void)
 {
 	free_dict(&word_dict);
 	free_dict(&bonus_dict);
-}
-
-static void
-init_bonus_words(reallocator r)
-{
-	char *values =
-		"abcdefghijklmnopqrstuvwxyz"
-		"qazwsxol.p;/xcvbnm,<>\"'~z"
-		"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-		"0123456789"
-		"+!?.,@#$%^&*()-_[]{}~|\\";
-	for (int i = 0; i < 1024; i += 1) {
-		push_string(&bonus_dict, build_random_string(values, r), r);
-	}
 }
 
 
