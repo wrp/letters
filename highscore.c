@@ -101,12 +101,22 @@ write_scores() {
 }
 
 
+char *
+username(void)
+{
+	struct passwd *p;
+	if((p = getpwuid(getuid())) == NULL) {
+		return "nobody";
+	} else {
+		return p->pw_name;
+	}
+}
+
 
 void
 update_scores(struct score *score, unsigned level)
 {
 	int i, j;
-	struct passwd *p;
 
 	read_scores();
 	for (i = 0; i < 10; i += 1) {
@@ -115,10 +125,7 @@ update_scores(struct score *score, unsigned level)
 			if (i < 9) {
 				memmove(h + 1, h, (9 - i) * sizeof *h);
 			}
-			if((p = getpwuid(getuid())) == NULL)
-				strcpy(h->name, "nobody");
-			else
-				strcpy(h->name, p->pw_name);
+			strcpy(h->name, username());
 			h->score = score->points;
 			h->words = score->words;
 			h->level = level;
