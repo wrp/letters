@@ -44,6 +44,8 @@
  * Maybe, instead of -l# to specify a starting level, we do --wpm to
  * specify a target wpm and compute (semi-accurately) the addwords
  * value needed that is appropriate for that typing speed.
+ *
+ * Add an option to dampen (or disable) lateral movement.
  */
 
 # define CTRL(c)  (c & 0x1f)
