@@ -104,21 +104,6 @@ intrrpt(struct state *S)
 }
 
 
-/* milliseconds between ticks */
-int
-DELAY(unsigned level)
-{
-	/* START_DELAY - level * (DELAY_CHANGE - (level * DECEL)) */
-	long lut[] = {
-		250000, 230400, 211600, 193600, 176400, 160000,
-		144400, 129600, 115600, 102400, 90000, 78400,
-		67600, 57600, 48400, 40000, 32400, 25600,
-		19600, 14400, 10000, 6400, 3600
-	};
-	return level < sizeof lut / sizeof *lut ? lut[level] : 10000;
-}
-
-
 static void
 handle_argument(struct state *S, char **argv)
 {
@@ -203,12 +188,14 @@ init(struct state *S, int argc, char **argv)
 	unsetenv("LINES");
 	allocate_words(S);
 
-	S->handicap = 1;
+	S->handicap = 0;
 	S->words = NULL;
 	S->lives = 2;
 	S->dictionary = NULL;
 	S->addword = 1.0/18.0;
 	parse_cmd_line(argc, argv, S);
+
+	S->ms_per_tick = (1 + (float)S->handicap / 20) * 250000;
 	initialize_dictionary(S->dictionary, S->choice, realloc);
 	check_tty();
 
@@ -248,7 +235,7 @@ exit:
 	free_dictionaries();
 	set_timer(0);
 	timeout(-1);
-	if (S->handicap == 1 && ! S->dictionary && S->choice == NULL) {
+	if (S->handicap && ! S->dictionary && S->choice == NULL) {
 		update_scores(&S->score, S->level);
 	}
 	show_scores(S);
@@ -362,7 +349,7 @@ process_ctrl_key(struct state *S, int key)
 		break;
 	case CTRL('N'):
 		S->level += 1;
-		S->ms_per_tick = S->handicap * DELAY(S->level);
+		S->ms_per_tick *= .95;
 		set_timer(S->ms_per_tick / 1000);
 		status(S);
 		break;
@@ -616,7 +603,7 @@ new_level(struct state *S)
 	if(S->level <= S->levels_completed++)
 		S->level += 1;
 
-	S->ms_per_tick = S->handicap * DELAY(S->level);
+	S->ms_per_tick *= .95;
 	set_timer(S->ms_per_tick / 1000);
 
 	display_words(S);
