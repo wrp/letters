@@ -80,10 +80,9 @@ void
 usage(const char *progname)
 {
 	printf(
-		"usage: %s [-h] [-H#] [-l#] [-ddictionary] [-sstring]\n",
+		"usage: %s [-h] [-H#] [-l#] [-ddictionary] [-sstring]\n\n\n",
 		progname
 	);
-	exit(0);
 }
 
 static void
@@ -119,12 +118,13 @@ intrrpt(struct state *S)
 
 
 static int
-handle_argument(struct state *S, char *arg)
+handle_argument(struct state *S, char *arg, char *progname)
 {
 	char *end;
 
 	switch(arg[1]) {
 	case 'h':
+		usage(progname);
 		puts(score_header);
 		for (char s[64]; next_score(s, sizeof s); ) {
 			printf("%s\n", s);
@@ -167,13 +167,17 @@ handle_argument(struct state *S, char *arg)
 static void
 parse_cmd_line(int argc, char **argv, struct state *S)
 {
-	char *progname;
-	progname = argv++[0];
+	char *progname = argv++[0];
+	char *slash = strrchr(progname, '/');
+
+	progname = slash ? slash + 1 : progname;
+
 	for(char *arg = *argv; arg; ) {
 		if((*argv)[0] == '-') {
-			argv += handle_argument(S, arg);
+			argv += handle_argument(S, arg, progname);
 		} else {
-			usage(progname);
+			fprintf(stderr, "Unexpected arugment: %s\n", arg);
+			exit(1);
 		}
 	}
 }
