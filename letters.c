@@ -79,10 +79,14 @@ static void display_words(struct state *);
 void
 usage(const char *progname)
 {
-	printf(
-		"usage: %s [-h] [-l #] [-d dictionary] [-s string]\n\n\n",
-		progname
-	);
+	printf("usage: %s ", progname);
+	puts(" [-hH] [-l start-level] [-d dictionary] [-s string]\n");
+	puts("option:");
+	puts("  -h     print usage statement");
+	puts("  -H     print high score list");
+	puts("  -l     start the game a start-level");
+	puts("  -d     initialize word list from the given path");
+	puts("  -s     generate random strings from characters in string");
 }
 
 static void
@@ -124,7 +128,7 @@ handle_argument(struct state *S, char **argv, char *progname)
 	char *arg = *argv;
 	char *v = (arg[1] && arg[2]) ? arg + 2 : argv[1];
 
-	if (v == NULL || *v == '\0') {
+	if (arg[1] != 'h' && arg[1] != 'H' && (v == NULL || *v == '\0')) {
 		fprintf(stderr, "Option -%c requires an argument\n", arg[1]);
 		exit(1);
 	}
@@ -132,6 +136,8 @@ handle_argument(struct state *S, char **argv, char *progname)
 	switch(arg[1]) {
 	case 'h':
 		usage(progname);
+		exit(0);
+	case 'H':
 		puts(score_header);
 		for (char s[64]; next_score(s, sizeof s); ) {
 			printf("%s\n", s);
