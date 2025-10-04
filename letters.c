@@ -123,13 +123,6 @@ handle_argument(struct state *S, char **argv)
 	char *arg = *argv;
 
 	switch(arg[1]) {
-	case 'H':
-		S->handicap = (int)strtol(arg + 2, &end, 0);
-		if (*end || S->handicap < 1 || S->handicap > 99) {
-			fprintf(stderr, "Invalid handicap %s\n", arg + 2);
-			exit(1);
-		}
-		break;
 	case 'h':
 		puts(score_header);
 		for (char s[64]; next_score(s, sizeof s); ) {
@@ -204,13 +197,12 @@ init(struct state *S, int argc, char **argv)
 	unsetenv("LINES");
 	initialize_words(S);
 
-	S->handicap = 0;
 	S->words = NULL;
 	S->lives = 2;
 	S->dictionary = NULL;
 	S->addword = 1.0/18.0;
 	S->decay_rate = .93;
-	S->ms_per_tick = (1 + (float)S->handicap / 20) * 250000;
+	S->ms_per_tick = 250000;
 
 	parse_cmd_line(argc, argv, S);
 
@@ -253,7 +245,7 @@ exit:
 	free_dictionaries();
 	set_timer(0);
 	timeout(-1);
-	if (S->handicap && ! S->dictionary && S->choice == NULL) {
+	if ( !S->dictionary && S->choice == NULL) {
 		update_scores(&S->score, S->level);
 	}
 	show_scores(S);

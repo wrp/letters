@@ -70,12 +70,6 @@ not increase until you have completed the number of rounds equal to your
 starting level.  In other words, if you start on level 5, you need to
 play through 5 rounds before the level increases to 6 (and the speed
 increases and scoring changes).
--H#	# is a handicap applied to the speed that the words fall.  By
-default the handicap is 1.  This is really only useful for someone just
-learning to type that need the words to fall slower than they normally do
-on level 1.  Since the speed is reduced drastically by higher handicaps,
-scores obtained with a handicap greater than 1 are not saved to the high
-score list.
 .IP
 -ddictionary
 	Dictionary is the pathname of an alternate source of randomly

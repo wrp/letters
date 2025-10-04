@@ -55,7 +55,6 @@ struct state {
 	struct score score;
 	jmp_buf jbuf;
 	unsigned ms_per_tick;
-	int handicap;
 	int levels_completed;
 	time_t start_time; /* time the current level started */
 	unsigned letters; /* number of keys correctly typed thislevel */
