@@ -118,11 +118,10 @@ intrrpt(struct state *S)
 }
 
 
-static void
-handle_argument(struct state *S, char **argv)
+static int
+handle_argument(struct state *S, char *arg)
 {
 	char *end;
-	char *arg = *argv;
 
 	switch(arg[1]) {
 	case 'h':
@@ -131,7 +130,6 @@ handle_argument(struct state *S, char **argv)
 			printf("%s\n", s);
 		}
 		exit(0);
-		break;
 	case 'l':
 		/* TODO: Convoluted spaghetti code will increment level
 		 * once before the game begins, so subtract one here. */
@@ -162,6 +160,7 @@ handle_argument(struct state *S, char **argv)
 		fprintf(stderr, "Unknown option: -%c\n", arg[1]);
 		exit(1);
 	}
+	return 1;
 }
 
 
@@ -169,10 +168,10 @@ static void
 parse_cmd_line(int argc, char **argv, struct state *S)
 {
 	char *progname;
-	progname = argv[0];
-	while(*++argv) {
+	progname = argv++[0];
+	for(char *arg = *argv; arg; ) {
 		if((*argv)[0] == '-') {
-			handle_argument(S, argv);
+			argv += handle_argument(S, arg);
 		} else {
 			usage(progname);
 		}
