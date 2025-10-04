@@ -126,7 +126,12 @@ handle_argument(struct state *S, char **argv)
 		exit(0);
 		break;
 	case 'l':
-		S->level = (int)strtol(arg + 2, &end, 0);
+		/* TODO: Convoluted spaghetti code will increment level
+		 * once before the game begins, so subtract one here. */
+		S->level = (int)strtol(arg + 2, &end, 0) - 1;
+		for (int i = 1; i < S->level; i += 1 ){
+			S->ms_per_tick *= S->decay_rate;
+		}
 		if (*end || S->level < 1) {
 			fprintf(stderr, "Invalid level %s\n", arg + 2);
 			exit(1);
@@ -193,9 +198,11 @@ init(struct state *S, int argc, char **argv)
 	S->lives = 2;
 	S->dictionary = NULL;
 	S->addword = 1.0/18.0;
+	S->decay_rate = .93;
+	S->ms_per_tick = (1 + (float)S->handicap / 20) * 250000;
+
 	parse_cmd_line(argc, argv, S);
 
-	S->ms_per_tick = (1 + (float)S->handicap / 20) * 250000;
 	initialize_dictionary(S->dictionary, S->choice, realloc);
 	check_tty();
 
@@ -349,7 +356,7 @@ process_ctrl_key(struct state *S, int key)
 		break;
 	case CTRL('N'):
 		S->level += 1;
-		S->ms_per_tick *= .95;
+		S->ms_per_tick *= S->decay_rate;
 		set_timer(S->ms_per_tick / 1000);
 		status(S);
 		break;
@@ -603,7 +610,7 @@ new_level(struct state *S)
 	if(S->level <= S->levels_completed++)
 		S->level += 1;
 
-	S->ms_per_tick *= .95;
+	S->ms_per_tick *= S->decay_rate;
 	set_timer(S->ms_per_tick / 1000);
 
 	display_words(S);

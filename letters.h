@@ -64,6 +64,7 @@ struct state {
 	char *dictionary; /* Path to dictionary file */
 	char *choice; /* String from which to construct random strings */
 	float addword; /* Chance of getting a new word each tick */
+	float decay_rate; /* Per-level increase in speed of game */
 };
 
 void redraw(void);
