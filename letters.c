@@ -59,6 +59,7 @@ static void set_timer(unsigned long);
 static void set_handlers(void);
 static void update_wpm(struct state *);
 static void finalize_word(struct state *S, struct word *w);
+static struct word word_store[256];
 
 void update_scores(struct score *, unsigned);
 void show_scores(struct state *S);
@@ -184,9 +185,8 @@ parse_cmd_line(int argc, char **argv, struct state *S)
 }
 
 
-struct word word_store[256];
 static void
-allocate_words(struct state *S)
+initialize_words(struct state *S)
 {
 	struct word *e = word_store + sizeof word_store / sizeof *word_store;
 
@@ -202,7 +202,7 @@ init(struct state *S, int argc, char **argv)
 {
 	unsetenv("COLUMNS");
 	unsetenv("LINES");
-	allocate_words(S);
+	initialize_words(S);
 
 	S->handicap = 0;
 	S->words = NULL;
