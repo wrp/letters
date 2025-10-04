@@ -57,7 +57,10 @@ struct state {
 	jmp_buf jbuf;
 	unsigned ms_per_tick;
 	int levels_completed;
-	time_t start_time; /* time the current level started */
+	struct {
+		time_t game;  /* time the game started */
+		time_t level; /* time the current level started */
+	} start_time;
 	unsigned letters; /* number of keys correctly typed this level */
 	int wpm;
 	bool bonus;   /* true if we're in a bonus round */

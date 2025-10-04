@@ -235,6 +235,7 @@ init(struct state *S, int argc, char **argv)
 	new_level(S);
 	status(S);
 	timeout(1000);
+	time(&S->start_time.game);
 }
 
 
@@ -590,10 +591,10 @@ update_wpm(struct state *S)
 	time_t curr_time;
 
 	time(&curr_time);
-	if (curr_time - S->start_time < 5) {
+	if (curr_time - S->start_time.level < 5) {
 		return;
 	}
-	S->wpm = (S->letters / 5) / ((curr_time - S->start_time) / 60.0);
+	S->wpm = (S->letters / 5) / ((curr_time - S->start_time.level) / 60.0);
 }
 
 
@@ -604,7 +605,7 @@ void
 new_level(struct state *S)
 {
 	update_wpm(S);
-	time(&S->start_time);
+	time(&S->start_time.level);
 	S->letters = 0;
 
 	/*
