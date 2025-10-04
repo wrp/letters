@@ -41,7 +41,6 @@ struct word {
 struct score {
 	unsigned points;
 	unsigned words; /* total number of words completed */
-	unsigned letters; /* total number of characters correctly typed  */
 };
 struct score_rec {
 	char	name[9];
@@ -61,7 +60,10 @@ struct state {
 		time_t game;  /* time the game started */
 		time_t level; /* time the current level started */
 	} start_time;
-	unsigned letters; /* number of keys correctly typed this level */
+	struct {
+		unsigned game;
+		unsigned level;
+	} letters;  /* number of keys correctly typed per game/level */
 	int wpm;
 	bool bonus;   /* true if we're in a bonus round */
 	char *dictionary; /* Path to dictionary file */

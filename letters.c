@@ -430,8 +430,8 @@ finalize_word(struct state *S, struct word *w)
 	assert (w->word.data[w->matches] == '\0');
 	S->score.points += w->word.len - 1 + (2 * S->level);
 	S->score.words += 1;
-	S->score.letters += w->word.len - 1;
-	S->letters += w->word.len - 1;
+	S->letters.game += w->word.len - 1;
+	S->letters.level += w->word.len - 1;
 	w->killed = 3;
 
 	for (struct word *w = S->words; w != NULL; w = w->next) {
@@ -594,7 +594,8 @@ update_wpm(struct state *S)
 	if (curr_time - S->start_time.level < 5) {
 		return;
 	}
-	S->wpm = (S->letters / 5) / ((curr_time - S->start_time.level) / 60.0);
+	S->wpm = (S->letters.level / 5) /
+		((curr_time - S->start_time.level) / 60.0);
 }
 
 
@@ -606,7 +607,7 @@ new_level(struct state *S)
 {
 	update_wpm(S);
 	time(&S->start_time.level);
-	S->letters = 0;
+	S->letters.level = 0;
 
 	/*
 	 * if we're inside a bonus round we don't need to change anything
