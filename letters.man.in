@@ -2,7 +2,7 @@
 .SH NAME
 letters \- a game to improve typing skills
 .SH SYNOPSIS
-\fBletters\fP [-q | -b] [-l#] [-H#] [-ddictionary | -sstring]
+\fBletters\fP [-l#] [-ddictionary | -sstring]
 .br
 \fBletters\fP [-h]
 .SH DESCRIPTION
@@ -59,11 +59,7 @@ ctrl-Z	Works as it should.  If your system has job control it will stop
 the process.
 .SH OPTIONS
 .IP
--q	quiet mode (default) - turn off the obnoxious beep
-.IP
 -h	Show high scores.
-.IP
--b	Beep when words are completed or mistyped.
 .IP
 -l#	# is the level number that you want to start at.  The level will
 not increase until you have completed the number of rounds equal to your
