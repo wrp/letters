@@ -80,7 +80,7 @@ void
 usage(const char *progname)
 {
 	printf(
-		"usage: %s [-h] [-l#] [-ddictionary] [-sstring]\n\n\n",
+		"usage: %s [-h] [-l #] [-d dictionary] [-s string]\n\n\n",
 		progname
 	);
 }
@@ -118,9 +118,16 @@ intrrpt(struct state *S)
 
 
 static int
-handle_argument(struct state *S, char *arg, char *progname)
+handle_argument(struct state *S, char **argv, char *progname)
 {
 	char *end;
+	char *arg = *argv;
+	char *v = (arg[1] && arg[2]) ? arg + 2 : argv[1];
+
+	if (v == NULL || *v == '\0') {
+		fprintf(stderr, "Option -%c requires an argument\n", arg[1]);
+		exit(1);
+	}
 
 	switch(arg[1]) {
 	case 'h':
@@ -133,34 +140,26 @@ handle_argument(struct state *S, char *arg, char *progname)
 	case 'l':
 		/* TODO: Convoluted spaghetti code will increment level
 		 * once before the game begins, so subtract one here. */
-		S->level = (int)strtol(arg + 2, &end, 0) - 1;
+		S->level = (int)strtol(v, &end, 0) - 1;
 		for (int i = 1; i < S->level; i += 1 ){
 			S->ms_per_tick *= S->decay_rate;
 		}
 		if (*end || S->level < 1) {
-			fprintf(stderr, "Invalid level %s\n", arg + 2);
+			fprintf(stderr, "Invalid level %s\n", v);
 			exit(1);
 		}
 		break;
 	case 'd':
-		S->dictionary = arg + 2;
-		if (! arg[2]) {
-			fprintf(stderr, "-d option requires an argument\n");
-			exit(1);
-		}
+		S->dictionary = v;
 		break;
 	case 's':
-		if (! arg[2]) {
-			fprintf(stderr, "-s option requires an argument\n");
-			exit(1);
-		}
-		S->choice = arg + 2;
+		S->choice = v;
 		break;
 	default:
 		fprintf(stderr, "Unknown option: -%c\n", arg[1]);
 		exit(1);
 	}
-	return 1;
+	return (v == arg + 2) ? 1 : 2;
 }
 
 
@@ -172,9 +171,9 @@ parse_cmd_line(int argc, char **argv, struct state *S)
 
 	progname = slash ? slash + 1 : progname;
 
-	for(char *arg = *argv; arg; ) {
-		if((*argv)[0] == '-') {
-			argv += handle_argument(S, arg, progname);
+	for (char *arg = *argv; arg; arg = *argv) {
+		if(arg[0] == '-' && arg[1] != '\0') {
+			argv += handle_argument(S, argv, progname);
 		} else {
 			fprintf(stderr, "Unexpected arugment: %s\n", arg);
 			exit(1);
