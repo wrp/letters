@@ -429,6 +429,7 @@ finalize_word(struct state *S, struct word *w)
 	assert (w->word.data[w->matches] == '\0');
 	S->score.points += w->word.len - 1 + (2 * S->level);
 	S->score.words += 1;
+	S->score.letters += w->word.len - 1;
 	S->letters += w->word.len - 1;
 	w->killed = 3;
 
