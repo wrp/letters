@@ -175,7 +175,7 @@ parse_cmd_line(int argc, char **argv, struct state *S)
 		if(arg[0] == '-' && arg[1] != '\0') {
 			argv += handle_argument(S, argv, progname);
 		} else {
-			fprintf(stderr, "Unexpected arugment: %s\n", arg);
+			fprintf(stderr, "Unexpected argument: %s\n", arg);
 			exit(1);
 		}
 	}
