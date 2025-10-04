@@ -80,7 +80,7 @@ void
 usage(const char *progname)
 {
 	printf(
-		"usage: %s [-h] [-H#] [-l#] [-ddictionary] [-sstring]\n\n\n",
+		"usage: %s [-h] [-l#] [-ddictionary] [-sstring]\n\n\n",
 		progname
 	);
 }
