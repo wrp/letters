@@ -126,12 +126,6 @@ handle_argument(struct state *S, char **argv, char *progname)
 {
 	char *end;
 	char *arg = *argv;
-	char *v = (arg[1] && arg[2]) ? arg + 2 : argv[1];
-
-	if (arg[1] != 'h' && arg[1] != 'H' && (v == NULL || *v == '\0')) {
-		fprintf(stderr, "Option -%c requires an argument\n", arg[1]);
-		exit(1);
-	}
 
 	switch(arg[1]) {
 	case 'h':
@@ -143,6 +137,15 @@ handle_argument(struct state *S, char **argv, char *progname)
 			printf("%s\n", s);
 		}
 		exit(0);
+	}
+
+	char *v = (arg[1] && arg[2]) ? arg + 2 : argv[1];
+	if (v == NULL || *v == '\0') {
+		fprintf(stderr, "Option -%c requires an argument\n", arg[1]);
+		exit(1);
+	}
+
+	switch(arg[1]) {
 	case 'l':
 		/* TODO: Convoluted spaghetti code will increment level
 		 * once before the game begins, so subtract one here. */
