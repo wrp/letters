@@ -19,6 +19,8 @@
 #include <time.h>
 #include <unistd.h>
 
+typedef void *(*reallocator)(void *, size_t);
+
 extern char *score_header;
 
 struct string {
@@ -80,17 +82,15 @@ struct state {
 	float decay_rate; /* Per-level increase in speed of game */
 };
 
-int die(const char *fmt, ... ) __attribute__ ((format (printf, 1, 2)));
-void redraw(void);
-struct string getword(void);
 struct string bonusword(void);
-struct score_rec *next_score(char *, size_t);
-typedef void *(*reallocator)(void *, size_t);
-void initialize_dictionary(char *path, char *, reallocator);
+int die(const char *fmt, ... ) __attribute__ ((format (printf, 1, 2)));
 void free_dictionaries(void);
-
-void update_scores(struct score *, unsigned);
+struct string getword(void);
+void initialize_dictionary(char *path, char *, reallocator);
+struct score_rec *next_score(char *, size_t);
+void redraw(void);
 void show_scores(struct state *S);
+void update_scores(struct score *, unsigned);
 
 
 /* number of words to be completed before level change */
