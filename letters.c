@@ -30,10 +30,6 @@
  * throwing in bonus words that do not decrement the lives counter
  * when they hit the bottom.
  *
- * Pause the timer during banners.  Or, rather, add a timer to calculate
- * the pause time so that WPM could be both per-level and overall.  In
- * fact, I like that idea: have two wpm counters and report them both.
- *
  * Make the decay rate dynamic.
  *
  * Perhaps instead of a dedicated bonus round, we make every Nth new
@@ -707,11 +703,26 @@ static void
 stop_clock(struct state *S)
 {
 	set_timer(0);
+	gettimeofday(&S->start_time.pause, NULL);
 }
 
 static void
 start_clock(struct state *S)
 {
+	struct timeval *g = &S->start_time.game;
+	struct timeval *h = &S->start_time.level;
+	struct timeval *p = &S->start_time.pause;
+
+	if (timerisset(p)) {
+		struct timeval now, diff;
+
+		gettimeofday(&now, NULL);
+		timersub(&now, p, &diff);
+		timeradd(g, &diff, g);
+		timeradd(h, &diff, h);
+		timerclear(p);
+	}
+
 	set_timer(S->ms_per_tick / 1000);
 }
 

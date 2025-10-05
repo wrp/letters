@@ -66,6 +66,7 @@ struct state {
 	struct {
 		struct timeval game;  /* time the game started */
 		struct timeval level; /* time the current level started */
+		struct timeval pause; /* time a pause started */
 	} start_time;
 	struct {
 		unsigned game;
