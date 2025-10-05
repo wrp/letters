@@ -751,7 +751,7 @@ banner(struct state *S, const char *text, int delay_sec)
 		}
 	} else {
 		timeout(-1);
-		c = wgetch(boxw);
+		c = getch();
 	}
 	timeout(1000);
 	delwin(boxw);
