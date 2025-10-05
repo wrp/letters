@@ -53,8 +53,6 @@
 # define CTRL(c)  (c & 0x1f)
 
 #include "letters.h"
-#include <signal.h>
-#include <sys/time.h>
 
 static volatile sig_atomic_t tick; /* total number of SIGALRM received */
 

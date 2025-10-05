@@ -5,12 +5,6 @@
  * copyright 2025 William Pursell (william.r.pursell@gmail.com)
  */
 
-#include <ctype.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include "letters.h"
 
 # define random lrand48
