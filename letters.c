@@ -16,11 +16,11 @@
  * so convoluted that a clean return was impossible, but things are
  * clean enough now that we could easily exit without the longjmp.
  *
- * Make the bonus round get faster.  The bonus round used to end
- * if you succesfully entered enough words, but that no longer happens.
- * We should decrement the itimer a little bit each time a word is
+ * Maybe make the bonus round get faster.
+ * We could decrement the itimer a little bit each time a word is
  * completed.  (Or something!)  Maybe just increase probability of
- * new words in bonus round.
+ * new words in bonus round.  Disable numbers used for WPM calculation
+ * during bonus rounds.
  *
  * Maybe retain the word list through a bonus round so that the
  * previous words come back after the round.  Mostly this would enable
