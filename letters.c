@@ -431,8 +431,8 @@ finalize_word(struct state *S, struct word *w)
 	assert (w->word.data[w->matches] == '\0');
 	S->score.points += w->word.len - 1 + (2 * S->level);
 	S->score.words += 1;
-	S->letters.game += w->word.len - 1;
-	S->letters.level += w->word.len - 1;
+	S->keys.game += w->word.len - 1;
+	S->keys.level += w->word.len - 1;
 	w->killed = 3;
 
 	for (struct word *w = S->words; w != NULL; w = w->next) {
@@ -617,8 +617,8 @@ update_wpm(struct state *S)
 	struct timeval now, diff;
 
 	gettimeofday(&now, NULL);
-	S->wpm.game = compute_wpm(&now, &S->start_time.game, S->letters.game);
-	S->wpm.level = compute_wpm(&now, &S->start_time.level, S->letters.level);
+	S->wpm.game = compute_wpm(&now, &S->start_time.game, S->keys.game);
+	S->wpm.level = compute_wpm(&now, &S->start_time.level, S->keys.level);
 }
 
 
@@ -630,7 +630,7 @@ new_level(struct state *S)
 {
 	update_wpm(S);
 	gettimeofday(&S->start_time.level, NULL);
-	S->letters.level = 0;
+	S->keys.level = 0;
 
 	/*
 	 * if we're inside a bonus round we don't need to change anything

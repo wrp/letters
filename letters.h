@@ -63,7 +63,7 @@ struct state {
 	struct {
 		unsigned game;
 		unsigned level;
-	} letters;  /* number of keys correctly typed per game/level */
+	} keys;  /* number of keys correctly typed per game/level */
 	struct {
 		int game;
 		int level;
