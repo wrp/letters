@@ -2,9 +2,11 @@
 
 #include <assert.h>
 #include <curses.h>
+#include <errno.h>
 #include <math.h>
 #include <pwd.h>
 #include <setjmp.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -75,6 +77,7 @@ struct state {
 	float decay_rate; /* Per-level increase in speed of game */
 };
 
+int die(const char *fmt, ... ) __attribute__ ((format (printf, 1, 2)));
 void redraw(void);
 struct string getword(void);
 struct string bonusword(void);

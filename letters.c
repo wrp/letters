@@ -103,8 +103,8 @@ static void
 check_tty(void)
 {
 	if (! isatty(STDIN_FILENO) || ! isatty(STDOUT_FILENO)) {
-		fputs("This game can only be played on a terminal!\n", stderr);
-		exit(EXIT_FAILURE);
+		errno = 0;
+		die("This game can only be played on a terminal!");
 	}
 }
 
@@ -143,8 +143,7 @@ handle_argument(struct state *S, char **argv, char *progname)
 
 	char *v = (arg[1] && arg[2]) ? arg + 2 : argv[1];
 	if (v == NULL || *v == '\0') {
-		fprintf(stderr, "Option -%c requires an argument\n", arg[1]);
-		exit(1);
+		die("Option -%c requires an argument", arg[1]);
 	}
 
 	switch(arg[1]) {
@@ -156,8 +155,7 @@ handle_argument(struct state *S, char **argv, char *progname)
 			S->ms_per_tick *= S->decay_rate;
 		}
 		if (*end || S->level < 1) {
-			fprintf(stderr, "Invalid level %s\n", v);
-			exit(1);
+			die("Invalid level %s", v);
 		}
 		break;
 	case 'd':
@@ -167,8 +165,7 @@ handle_argument(struct state *S, char **argv, char *progname)
 		S->choice = v;
 		break;
 	default:
-		fprintf(stderr, "Unknown option: -%c\n", arg[1]);
-		exit(1);
+		die("Unknown option: -%c", arg[1]);
 	}
 	return (v == arg + 2) ? 1 : 2;
 }
@@ -186,8 +183,7 @@ parse_cmd_line(int argc, char **argv, struct state *S)
 		if(arg[0] == '-' && arg[1] != '\0') {
 			argv += handle_argument(S, argv, progname);
 		} else {
-			fprintf(stderr, "Unexpected argument: %s\n", arg);
-			exit(1);
+			die("Unexpected argument: %s", arg);
 		}
 	}
 }
@@ -469,21 +465,15 @@ set_timer(unsigned long delay_msec)
 		.it_value = tp
 	};
 	if (getitimer(ITIMER_REAL, &old)) {
-		msg = "getitimer";
-		goto fail;
+		die("getitimer");
 	}
 	if (timerisset(&old.it_value) && timercmp(&old.it_value, &tp, <)) {
 		t.it_value = old.it_value;
 	}
 	if (setitimer(ITIMER_REAL, &t, NULL)) {
-		msg = "setitimer";
-		goto fail;
+		die("setitimer");
 	}
 	return;
-fail:
-	endwin();
-	perror(msg);
-	exit(1);
 }
 
 
@@ -758,7 +748,28 @@ set_handlers(void)
 	memset(&act, 0, sizeof act);
 	act.sa_sigaction = handle_signal;
 	if (sigaction(SIGALRM, &act, NULL)) {
-		perror("sigaction");
-		exit(1);
+		die("sigaction");
 	}
+}
+
+
+int
+die(const char *fmt, ...)
+{
+	va_list ap;
+	char *errstr = errno > 0 ? strerror(errno) : NULL;
+
+	endwin();
+
+	if (errstr) {
+		fprintf(stderr, "%s: ", errstr);
+	}
+
+	va_start(ap, fmt);
+	vfprintf(stderr, fmt, ap);
+	va_end(ap);
+
+	fputc('\n', stderr);
+
+	exit(EXIT_FAILURE);
 }
