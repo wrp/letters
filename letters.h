@@ -89,6 +89,9 @@ typedef void *(*reallocator)(void *, size_t);
 void initialize_dictionary(char *path, char *, reallocator);
 void free_dictionaries(void);
 
+void update_scores(struct score *, unsigned);
+void show_scores(struct state *S);
+
 
 /* number of words to be completed before level change */
 #define LEVEL_CHANGE 15

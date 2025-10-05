@@ -72,10 +72,6 @@ static void set_timer(unsigned long);
 static void status(struct state *);
 static void update_wpm(struct state *);
 
-void update_scores(struct score *, unsigned);
-void show_scores(struct state *S);
-
-
 
 void
 usage(const char *progname)
