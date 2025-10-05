@@ -277,7 +277,7 @@ move_word(struct word *w)
 	if ( ((tick % w->tick_per_move) != w->tick_mod) || w->killed) {
 		return;
 	}
-	w->x +=  w->lateral / 3.0;
+	w->x +=  w->lateral / 9.0;
 	if (w->x < 0.0) {
 		w->x = 0.0;
 		w->lateral *= -1;
