@@ -678,7 +678,7 @@ words_in_play(struct state *S, unsigned N)
 }
 
 
-/* If appropriate, create a new word and put in in play. */
+/* If appropriate, put a new word in play. */
 static struct word *
 maybe_add_word(struct state *S)
 {
