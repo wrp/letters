@@ -594,7 +594,7 @@ compute_wpm(const struct timeval *end, const struct timeval *start, int k)
 		return 0;
 	}
 	timersub(end, start, &diff);
-	double minutes = (diff.tv_sec + (diff.tv_usec / 1E9)) / 60.0;
+	double minutes = (diff.tv_sec + (diff.tv_usec / 1E6)) / 60.0;
 	return (k / 5) / minutes;
 }
 
