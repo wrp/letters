@@ -46,6 +46,8 @@
  * value needed that is appropriate for that typing speed.
  *
  * Add an option to dampen (or disable) lateral movement.
+ *
+ * Randomize the speed.  Occasionally have a long word be faster.
  */
 
 # define CTRL(c)  (c & 0x1f)
