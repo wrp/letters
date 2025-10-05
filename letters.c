@@ -61,6 +61,7 @@ static struct word word_store[256];
 static void finalize_word(struct state *S, struct word *w);
 static void game(struct state *);
 static int move_words(struct state *);
+static void new_level(struct state *);
 static void putword(struct word *);
 static void set_handlers(void);
 static void set_timer(unsigned long);
@@ -69,7 +70,6 @@ static void update_wpm(struct state *);
 void update_scores(struct score *, unsigned);
 void show_scores(struct state *S);
 void status(struct state *);
-void new_level(struct state *);
 int banner(struct state *, const char *, int);
 static struct word * maybe_add_word(struct state *);
 static struct word * add_word(struct state *);
@@ -616,7 +616,7 @@ update_wpm(struct state *S)
 /*
  * do stuff to change levels.  This is where special rounds can be stuck in.
  */
-void
+static void
 new_level(struct state *S)
 {
 	update_wpm(S);
