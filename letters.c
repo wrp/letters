@@ -69,11 +69,11 @@ static void new_level(struct state *);
 static void putword(struct word *);
 static void set_handlers(void);
 static void set_timer(unsigned long);
+static void status(struct state *);
 static void update_wpm(struct state *);
 
 void update_scores(struct score *, unsigned);
 void show_scores(struct state *S);
-void status(struct state *);
 
 
 
@@ -540,7 +540,7 @@ game(struct state *S)
 
 
 /* Update the status line. */
-void
+static void
 status(struct state *S)
 {
 	attron(A_STANDOUT);
