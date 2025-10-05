@@ -745,11 +745,15 @@ banner(struct state *S, const char *text, int delay_sec)
 	refresh();
 	if (delay_sec) {
 		sleep(delay_sec);
+		timeout(0);
+		while (getch() != ERR) {
+			;
+		}
 	} else {
 		timeout(-1);
 		c = wgetch(boxw);
-		timeout(1000);
 	}
+	timeout(1000);
 	delwin(boxw);
 	display_words(S);
 	start_clock(S);
