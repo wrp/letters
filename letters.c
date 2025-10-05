@@ -665,16 +665,16 @@ new_level(struct state *S)
 }
 
 
-/* Return true if at least one word is currently active */
+/* Return true if at least N words are currently active */
 static int
-word_in_play(struct state *S)
+words_in_play(struct state *S, unsigned N)
 {
-	for (struct word *w = S->words; w; w = w->next) {
+	for (struct word *w = S->words; w && N > 0; w = w->next) {
 		if (! w->killed) {
-			return 1;
+			N -= 1;
 		}
 	}
-	return 0;
+	return N == 0;
 }
 
 
@@ -684,7 +684,7 @@ maybe_add_word(struct state *S)
 {
 	if (! S->free) {
 		return NULL;
-	} else if (! word_in_play(S)) {
+	} else if (! words_in_play(S, 2)) {
 		return add_word(S);
 	} else if ( (double)random() / RAND_MAX < S->addword) {
 		return add_word(S);
