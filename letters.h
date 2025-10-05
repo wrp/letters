@@ -61,7 +61,7 @@ struct state {
 	struct word *free; /* list of unused words */
 	struct score score;
 	jmp_buf jbuf;
-	unsigned ms_per_tick;
+	unsigned us_per_tick;  /* micro-seconds pre tick */
 	int levels_completed;
 	struct {
 		struct timeval game;  /* time the game started */

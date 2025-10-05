@@ -143,7 +143,7 @@ handle_argument(struct state *S, char **argv, char *progname)
 		 * once before the game begins, so subtract one here. */
 		S->level = (int)strtol(v, &end, 0) - 1;
 		for (int i = 1; i < S->level; i += 1 ){
-			S->ms_per_tick *= S->decay_rate;
+			S->us_per_tick *= S->decay_rate;
 		}
 		if (*end || S->level < 1) {
 			die("Invalid level %s", v);
@@ -204,7 +204,7 @@ init(struct state *S, int argc, char **argv)
 	S->dictionary = NULL;
 	S->addword = 1.0/18.0;
 	S->decay_rate = .93;
-	S->ms_per_tick = 250000;
+	S->us_per_tick = 250000;
 
 	parse_cmd_line(argc, argv, S);
 
@@ -363,8 +363,8 @@ process_ctrl_key(struct state *S, int key)
 		break;
 	case CTRL('N'):
 		S->level += 1;
-		S->ms_per_tick *= S->decay_rate;
-		set_timer(S->ms_per_tick / 1000);
+		S->us_per_tick *= S->decay_rate;
+		set_timer(S->us_per_tick / 1000);
 		status(S);
 		break;
 	case CTRL('C'):
@@ -635,8 +635,8 @@ new_level(struct state *S)
 	if(S->level <= S->levels_completed++)
 		S->level += 1;
 
-	S->ms_per_tick *= S->decay_rate;
-	set_timer(S->ms_per_tick / 1000);
+	S->us_per_tick *= S->decay_rate;
+	set_timer(S->us_per_tick / 1000);
 
 	display_words(S);
 	if (S->score.words && ! ((S->levels_completed - 1) % LVL_PER_BONUS )) {
@@ -723,7 +723,7 @@ start_clock(struct state *S)
 		timerclear(p);
 	}
 
-	set_timer(S->ms_per_tick / 1000);
+	set_timer(S->us_per_tick / 1000);
 }
 
 /* momentarily display a banner message across the screen */
