@@ -62,10 +62,10 @@ static void set_handlers(void);
 static void update_wpm(struct state *);
 static void finalize_word(struct state *S, struct word *w);
 static struct word word_store[256];
+static void putword(struct word *);
 
 void update_scores(struct score *, unsigned);
 void show_scores(struct state *S);
-void putword(struct word *);
 static void game(struct state *);
 void status(struct state *);
 void new_level(struct state *);
@@ -338,7 +338,7 @@ move_words(struct state *S)
 
 
 /* write the word to the screen with already typed letters highlighted */
-void
+static void
 putword(struct word *w)
 {
 	int idx = w->matches;
