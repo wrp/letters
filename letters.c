@@ -58,6 +58,7 @@ static volatile sig_atomic_t tick; /* total number of SIGALRM received */
 
 static struct word word_store[256];
 
+static int banner(struct state *, const char *, int);
 static void finalize_word(struct state *S, struct word *w);
 static void game(struct state *);
 static int move_words(struct state *);
@@ -70,7 +71,6 @@ static void update_wpm(struct state *);
 void update_scores(struct score *, unsigned);
 void show_scores(struct state *S);
 void status(struct state *);
-int banner(struct state *, const char *, int);
 static struct word * maybe_add_word(struct state *);
 static struct word * add_word(struct state *);
 
@@ -709,7 +709,7 @@ add_word(struct state *S)
 
 
 /* momentarily display a banner message across the screen */
-int
+static int
 banner(struct state *S, const char *text, int delay_sec)
 {
 	int c = ERR;
