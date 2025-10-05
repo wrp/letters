@@ -235,7 +235,8 @@ init(struct state *S, int argc, char **argv)
 	new_level(S);
 	status(S);
 	timeout(1000);
-	time(&S->start_time.game);
+	gettimeofday(&S->start_time.game, NULL);
+	gettimeofday(&S->start_time.level, NULL);
 }
 
 
@@ -558,7 +559,7 @@ status(struct state *S)
 	+ sizeof "Level:" + 3 \
 	+ sizeof "Words:" + 6 \
 	+ sizeof "Lives:" + 3 \
-	+ sizeof "WPM:" + 4 \
+	+ sizeof "WPM:" + 9 \
 	)
 	move(0, COLS / 2 - (STATUS_WIDTH / 2));
 #undef STATUS_WIDTH
@@ -566,7 +567,7 @@ status(struct state *S)
 	printw("Level: %-3u", S->level);
 	printw("Words: %-6u", S->score.words);
 	printw("Lives: %-3d", S->lives);
-	printw("WPM: %-4d", S->wpm);
+	printw("WPM: %4d/%-4d", S->wpm.level, S->wpm.game);
 	clrtoeol();
 	attroff(A_STANDOUT);
 }
@@ -583,19 +584,41 @@ erase_word_list(struct state *S)
 	}
 }
 
+/* return true iff (e - s ) > N */
+static inline bool
+timeval_span_gt(const struct timeval *e, const struct timeval *s, time_t N)
+{
+	time_t dsec  = e->tv_sec  - s->tv_sec;
+	long   dusec = e->tv_usec - s->tv_usec;
 
-/* compute words per minute for the given level */
+	while (dusec < 0) {
+		dsec  -= 1;
+		dusec += 1E9L;
+	}
+	return dsec > N;
+}
+
+static int
+compute_wpm(const struct timeval *end, const struct timeval *start, int k)
+{
+	struct timeval diff;
+
+	if ( ! timeval_span_gt(end, start, 5)) {
+		return 0;
+	}
+	timersub(end, start, &diff);
+	double minutes = (diff.tv_sec + (diff.tv_usec / 1E9)) / 60.0;
+	return (k / 5) / minutes;
+}
+
 static void
 update_wpm(struct state *S)
 {
-	time_t curr_time;
+	struct timeval now, diff;
 
-	time(&curr_time);
-	if (curr_time - S->start_time.level < 5) {
-		return;
-	}
-	S->wpm = (S->letters.level / 5) /
-		((curr_time - S->start_time.level) / 60.0);
+	gettimeofday(&now, NULL);
+	S->wpm.game = compute_wpm(&now, &S->start_time.game, S->letters.game);
+	S->wpm.level = compute_wpm(&now, &S->start_time.level, S->letters.level);
 }
 
 
@@ -606,7 +629,7 @@ void
 new_level(struct state *S)
 {
 	update_wpm(S);
-	time(&S->start_time.level);
+	gettimeofday(&S->start_time.level, NULL);
 	S->letters.level = 0;
 
 	/*

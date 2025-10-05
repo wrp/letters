@@ -57,14 +57,17 @@ struct state {
 	unsigned ms_per_tick;
 	int levels_completed;
 	struct {
-		time_t game;  /* time the game started */
-		time_t level; /* time the current level started */
+		struct timeval game;  /* time the game started */
+		struct timeval level; /* time the current level started */
 	} start_time;
 	struct {
 		unsigned game;
 		unsigned level;
 	} letters;  /* number of keys correctly typed per game/level */
-	int wpm;
+	struct {
+		int game;
+		int level;
+	} wpm;
 	bool bonus;   /* true if we're in a bonus round */
 	char *dictionary; /* Path to dictionary file */
 	char *choice; /* String from which to construct random strings */
