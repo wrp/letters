@@ -703,6 +703,17 @@ add_word(struct state *S)
 	return n;
 }
 
+static void
+stop_clock(struct state *S)
+{
+	set_timer(0);
+}
+
+static void
+start_clock(struct state *S)
+{
+	set_timer(S->ms_per_tick / 1000);
+}
 
 /* momentarily display a banner message across the screen */
 static int
@@ -715,7 +726,7 @@ banner(struct state *S, const char *text, int delay_sec)
 	int yposition = LINES / 3;
 	int xposition = (COLS - len) / 2;
 
-	set_timer(0);
+	stop_clock(S);
 	WINDOW *boxw = newwin(height, width, yposition, xposition);
 	box(boxw, 0, 0);
 	mvwaddstr(boxw, 1, 3, text);
@@ -728,9 +739,9 @@ banner(struct state *S, const char *text, int delay_sec)
 		c = wgetch(boxw);
 		timeout(1000);
 	}
-	set_timer(S->ms_per_tick / 1000);
 	delwin(boxw);
 	display_words(S);
+	start_clock(S);
 	return c;
 }
 
