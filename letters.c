@@ -710,14 +710,14 @@ banner(struct state *S, const char *text, int delay_sec)
 {
 	int c = ERR;
 	int len = strlen(text);
+	int height = 3;
+	int width = 6 + len;
+	int yposition = LINES / 3;
+	int xposition = (COLS - len) / 2;
 
 	set_timer(0);
-#define HEIGHT 3
-	WINDOW *boxw = newwin(HEIGHT, 6 + len, LINES / 3, (COLS - len) / 2 );
-#undef HEIGHT
-
+	WINDOW *boxw = newwin(height, width, yposition, xposition);
 	box(boxw, 0, 0);
-
 	mvwaddstr(boxw, 1, 3, text);
 	wrefresh(boxw);
 	refresh();
