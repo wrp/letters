@@ -89,11 +89,10 @@ handle_signal(int s, siginfo_t *i, void *v)
 	tick += 1;
 }
 
-/* Ensure the process is running on a tty. */
 static void
 check_tty(void)
 {
-	if (! isatty(STDIN_FILENO) || ! isatty(STDOUT_FILENO)) {
+	if ( !(isatty(STDIN_FILENO) && isatty(STDOUT_FILENO)) ) {
 		errno = 0;
 		die("This game can only be played on a terminal!");
 	}
